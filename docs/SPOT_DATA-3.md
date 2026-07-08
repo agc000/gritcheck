@@ -13,7 +13,7 @@ Convert to `scraper/seed/spots.json`. Ask Alan about anything ambiguous. Never i
 |---|---|---|
 | UMBC Dining | https://dineoncampus.com/umbc/hours-of-operation | All dining spot hours |
 | AOK Library | https://library.umbc.edu/location.php#hours | Library (incl. Einstein Bros) hours |
-| UMBC OpenNow | ___ (Alan: find URL) | Live building unlock status — Phase 0: assess if scrapable |
+| ~~UMBC OpenNow~~ | — | Phase 0 verdict: **dead** — `github.com/umbc-sga/open-now`, hours hardcoded in app.js, last commit July 2019. Dropped. |
 
 **Rule:** if a spot's hours are on one of these pages, its Hours column below says `scrape:dining` or `scrape:library`. Manual hours are ONLY for spots with no published source — and Alan verifies those in person or via OpenNow, not from AI summaries (the hours in Alan's earlier research doc were contradictory; treat them as unverified).
 
@@ -34,15 +34,15 @@ Tags: coffee, vegetarian, vegan, halal, open_late, meal_swipe, mobile_order
 | Wild Greens | Commons | 39.255153, -76.711216 | scrape:dining | vegetarian, vegan | Always solid, never a line. | ___ |
 | Yellas | Commons | 39.255182, -76.711328 | scrape:dining | ___ | Very solid burger. | ___ |
 | Piccolo Italia | Commons | 39.255089, -76.711018 | scrape:dining | ___ | Solid pizza — same as the dining hall's, shorter walk. | ___ |
-| Pollo | Commons | ___ (Alan: confirm still open) | scrape:dining | ___ | ___ | ___ |
 | Blends and Bowls | Commons | 39.255090, -76.711006 | scrape:dining | vegetarian?, ___ | Below-average smoothies and bowls. | ___ |
 | Indian Kitchen | Commons | 39.255139, -76.711377 | scrape:dining | ___ | Mid Indian — fine, not the best. | ___ |
 | Copperhead Jack's | Commons | 39.255090, -76.711006 | scrape:dining | ___ | Chipotle-style bowls. Good every now and then. | ___ |
 | Sushi Do | Commons | 39.255250, -76.711275 | scrape:dining | ___ | Mid at best. | ___ |
-| Yum Shoppe (market) | Commons ground floor | 39.254551, -76.710894 | scrape:dining | ___ | Cheapest snacks and quick meals on campus. | ___ |
+| Commons Retriever Market (was Yum Shoppe) | Commons ground floor | 39.254551, -76.710894 | scrape:dining | ___ | Cheapest snacks and quick meals on campus. | ___ |
+| True Grit's Retriever Market | True Grit's (?) | ___ (Alan: coords) | scrape:dining | ___ (Alan: tags) | ___ | ___ |
 | Skylight Room | Commons 3rd floor | 39.255087, -76.711144 | scrape:dining | ___ | Sit-down spot upstairs. Check what your plan covers first. | ___ |
-| Admin Coffee Shop | Administration | 39.252959, -76.713397 | manual: ___ | coffee | **CONFLICT — Alan says mid; students call it a hidden gem with the best lunches. Alan decides.** | ___ |
-| Einstein Bros | AOK Library | 39.256313, -76.711555 | scrape:library | coffee | Solid bagels and desserts. Slow, and sells out late in the day. | ___ |
+| Admin Coffee Shop | Administration | 39.252959, -76.713397 | scrape:dining (feed name: "The Coffee Shoppe") | coffee | **CONFLICT — Alan says mid; students call it a hidden gem with the best lunches. Alan decides.** | ___ |
+| Einstein Bros | AOK Library | 39.256313, -76.711555 | scrape:dining (it's in the dining feed, not LibCal) | coffee | Solid bagels and desserts. Slow, and sells out late in the day. | ___ |
 
 **Student-sourced signals** (distilled from Reddit, unverified — useful for Typical pattern column): Chick-fil-A line peaks 12–1, calmer after 1; D-Hall lines shortest near end of dinner (~6:30–7:30); Einstein runs out of bagels late in the day; Halal Shack draws the longest Commons lines; D-Hall open very late (verify current close time). Treat these as hypotheses until Alan confirms — hours and concepts change year to year.
 
