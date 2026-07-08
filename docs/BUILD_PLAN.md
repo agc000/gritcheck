@@ -306,7 +306,7 @@ Tasks: Serwist service worker (cache shell + last-known data; offline shows cach
 **Exit:** Lighthouse PWA installable + perf ≥90; add-to-home-screen works on iOS Safari; Google can index spot pages.
 
 ### Phase 6 — Scraper in production + hardening
-Tasks: finalize scraper from Phase 0 spike; GH Actions cron (2×/day, plus manual dispatch); upsert with `source='scraped'`, keep `manual` overrides winning; failure alerting (Action failure → GitHub notification is enough); scraper unit tests on fixtures; error boundary + minimal logging in app; legal footer ("unofficial, built by a UMBC student"), simple privacy note (anonymous device ID, no accounts, no PII).
+Tasks: finalize scraper from Phase 0 spike — dining runs **Playwright/headless Chromium in GH Actions** and intercepts the dineoncampus JSON API (`apiv4.dineoncampus.com`; Cloudflare TLS fingerprinting 403s plain fetches, a real browser passes clean), library uses **LibCal's open JSON API** (`api3.libcal.com/api_hours_grid.php?iid=991`, plain fetch); **re-capture both fixtures in late August** — the Phase 0 snapshots are summer session with most venues closed all week; GH Actions cron (2×/day, plus manual dispatch); upsert with `source='scraped'`, keep `manual` overrides winning; failure alerting (Action failure → GitHub notification is enough); scraper unit tests on fixtures; error boundary + minimal logging in app; legal footer ("unofficial, built by a UMBC student"), simple privacy note (anonymous device ID, no accounts, no PII).
 **Exit:** hours update end-to-end from UMBC's site with no human touch; a deliberately broken fixture fails loudly, not silently.
 
 ### Phase 7 — Polish sprint + private beta
