@@ -1,0 +1,2748 @@
+{
+  "theLocations": [
+    {
+      "id": "586bcfa12cc8da3d267f4682",
+      "active": true,
+      "slug": "the-coffee-shoppe",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "The Coffee Shoppe",
+      "display_name": "The Coffee Shoppe",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 0,
+      "is_building": false,
+      "building_id": "5df7bedfc4b7ff10b9584c3c",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 13,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 13,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 13,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 13,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 13,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "587fc4143191a2391c28ecc0",
+      "active": true,
+      "slug": "chick-fil-a",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Chick-fil-A",
+      "display_name": "Chick-fil-A",
+      "use_display_name": true,
+      "translations": [],
+      "type": "concept",
+      "sort_order": 0,
+      "is_building": false,
+      "building_id": "5d8a3d4a1ca48e0f5c7b9453",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5b7dd40174cebf0e179513ae",
+      "active": true,
+      "slug": "einstein-brother-s-bagels",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Einstein Brother's Bagels",
+      "display_name": "Einstein Brother's Bagels",
+      "use_display_name": true,
+      "translations": [],
+      "type": "concept",
+      "sort_order": 0,
+      "is_building": false,
+      "building_id": "5d8a3d071ca48e0f7234a9f6",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5d5ad0294198d40d234ea0ff",
+      "active": true,
+      "slug": "halal-shack",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Halal Shack",
+      "display_name": "Halal Shack",
+      "use_display_name": true,
+      "translations": [],
+      "type": "concept",
+      "sort_order": 0,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5df7bf13c4b7ff10c2be4f7a",
+      "active": true,
+      "slug": "true-grit-s",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": false,
+      "pay_with_cc": false,
+      "pay_with_dining_dollars": false,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": false,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "True Grit's",
+      "display_name": "True Grit's",
+      "use_display_name": false,
+      "translations": [],
+      "type": "building",
+      "sort_order": 0,
+      "is_building": true,
+      "building_id": "",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "61f9d7c8a9f13a15d7c1a25e",
+      "active": true,
+      "slug": "true-grit-s",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": true,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "True Grit's",
+      "display_name": "True Grit's",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 0,
+      "is_building": false,
+      "building_id": "5df7bf13c4b7ff10c2be4f7a",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 9,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 13,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 17,
+              "start_minutes": 0,
+              "end_hour": 18,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 9,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 13,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 17,
+              "start_minutes": 0,
+              "end_hour": 18,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 9,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 13,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 17,
+              "start_minutes": 0,
+              "end_hour": 18,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 9,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 13,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 17,
+              "start_minutes": 0,
+              "end_hour": 18,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 9,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 13,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 17,
+              "start_minutes": 0,
+              "end_hour": 18,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 9,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 13,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 17,
+              "start_minutes": 0,
+              "end_hour": 18,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 7,
+              "start_minutes": 30,
+              "end_hour": 9,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 13,
+              "end_minutes": 0
+            },
+            {
+              "always_open": false,
+              "start_hour": 17,
+              "start_minutes": 0,
+              "end_hour": 18,
+              "end_minutes": 30
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "587e7b3fee596fb55f0c30d2",
+      "active": true,
+      "slug": "piccola-italia",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Piccola Italia",
+      "display_name": "Piccola Italia",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 1,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 14,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 14,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "587fc52c3191a23aa828ecc5",
+      "active": true,
+      "slug": "starbucks",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Starbucks",
+      "display_name": "Starbucks",
+      "use_display_name": true,
+      "translations": [],
+      "type": "concept",
+      "sort_order": 1,
+      "is_building": false,
+      "building_id": "5d8a3d4a1ca48e0f5c7b9453",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 16,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 16,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 16,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 16,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 16,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5c13ae7f8e45bf0bd5cef72f",
+      "active": true,
+      "slug": "true-grit-s-retriever-market",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": true,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "True Grit's Retriever Market",
+      "display_name": "True Grit's Retriever Market",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 1,
+      "is_building": false,
+      "building_id": "5df7bf13c4b7ff10c2be4f7a",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5d8a3d1a1ca48e0f6553e377",
+      "active": true,
+      "slug": "commons",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": false,
+      "pay_with_cc": false,
+      "pay_with_dining_dollars": false,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": false,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Commons",
+      "display_name": null,
+      "use_display_name": false,
+      "translations": [],
+      "type": "building",
+      "sort_order": 1,
+      "is_building": true,
+      "building_id": "",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "588f463b3191a2497a4cc091",
+      "active": true,
+      "slug": "wild-greens",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Wild Greens",
+      "display_name": "Wild Greens",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 2,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 14,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 14,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5d8a3d071ca48e0f7234a9f6",
+      "active": true,
+      "slug": "aok-library",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": false,
+      "pay_with_cc": false,
+      "pay_with_dining_dollars": false,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": false,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "AOK Library",
+      "display_name": null,
+      "use_display_name": false,
+      "translations": [],
+      "type": "building",
+      "sort_order": 2,
+      "is_building": true,
+      "building_id": "",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5d5acf41c4b7ff0f10147f4a",
+      "active": true,
+      "slug": "dunkin",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Dunkin",
+      "display_name": "Dunkin",
+      "use_display_name": true,
+      "translations": [],
+      "type": "concept",
+      "sort_order": 3,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5d8a3d4a1ca48e0f5c7b9453",
+      "active": true,
+      "slug": "university-center",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": false,
+      "pay_with_cc": false,
+      "pay_with_dining_dollars": false,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": false,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "University Center",
+      "display_name": null,
+      "use_display_name": false,
+      "translations": [],
+      "type": "building",
+      "sort_order": 3,
+      "is_building": true,
+      "building_id": "",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5a132a72a23ef203e1d41553",
+      "active": true,
+      "slug": "sushi-do",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Sushi Do",
+      "display_name": "Sushi Do",
+      "use_display_name": true,
+      "translations": [],
+      "type": "concept",
+      "sort_order": 4,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5df7bedfc4b7ff10b9584c3c",
+      "active": true,
+      "slug": "admin",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": false,
+      "pay_with_cc": false,
+      "pay_with_dining_dollars": false,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": false,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Admin",
+      "display_name": null,
+      "use_display_name": false,
+      "translations": [],
+      "type": "building",
+      "sort_order": 4,
+      "is_building": true,
+      "building_id": "",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "65369077c625af08babdef53",
+      "active": true,
+      "slug": "copperhead-jacks",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Copperhead Jacks",
+      "display_name": "Copperhead Jacks",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 5,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5c0fc459bddf430dfb73df2b",
+      "active": true,
+      "slug": "commons-retriever-market",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Commons Retriever Market",
+      "display_name": "Commons Retriever Market",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 6,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 15,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 15,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 15,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 15,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 8,
+              "start_minutes": 0,
+              "end_hour": 15,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "5b97c25e1178e90d90a74099",
+      "active": true,
+      "slug": "the-skylight-room",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "The Skylight Room",
+      "display_name": null,
+      "use_display_name": false,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 7,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "587f9cf7ee596fb5350cc155",
+      "active": true,
+      "slug": "yella-s",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Yella's",
+      "display_name": "Yella's",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 8,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 16,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 14,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 14,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": true,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 16,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "open",
+          "hours": [
+            {
+              "always_open": false,
+              "start_hour": 11,
+              "start_minutes": 0,
+              "end_hour": 16,
+              "end_minutes": 0
+            }
+          ],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": false,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "6979015f1208897b7d2db512",
+      "active": true,
+      "slug": "blends-and-bowls",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": false,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": false,
+      "pay_with_cc": false,
+      "pay_with_dining_dollars": false,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": false,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Blends and Bowls",
+      "display_name": null,
+      "use_display_name": false,
+      "translations": [],
+      "type": "menubuilder",
+      "sort_order": 9,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    },
+    {
+      "id": "64ef51dee45d430b6f906839",
+      "active": true,
+      "slug": "indian-kitchen",
+      "has_delivery_robots": false,
+      "has_food_lockers": false,
+      "is_delivery": false,
+      "is_delivery_only": false,
+      "is_dine_in": false,
+      "is_mobile": true,
+      "is_mobile_only": false,
+      "is_open_late": false,
+      "is_takeout": false,
+      "is_takeout_only": false,
+      "occupancy": "na",
+      "pay_with_apple_pay": false,
+      "pay_with_cash": true,
+      "pay_with_cc": true,
+      "pay_with_dining_dollars": true,
+      "pay_with_google_pay": false,
+      "pay_with_meal_exchange": false,
+      "pay_with_meal_trade": false,
+      "pay_with_meal_swipe": true,
+      "pay_with_retail_swipe": false,
+      "pay_with_samsung_pay": false,
+      "pay_with_meal_plan": false,
+      "custom_payment_types": [],
+      "name": "Indian Kitchen",
+      "display_name": "Indian Kitchen",
+      "use_display_name": true,
+      "translations": [],
+      "type": "webtrition",
+      "sort_order": 10,
+      "is_building": false,
+      "building_id": "5d8a3d1a1ca48e0f6553e377",
+      "week": [
+        {
+          "day": 0,
+          "date": "2026-07-05",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 1,
+          "date": "2026-07-06",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 2,
+          "date": "2026-07-07",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 3,
+          "date": "2026-07-08",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 4,
+          "date": "2026-07-09",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 5,
+          "date": "2026-07-10",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        },
+        {
+          "day": 6,
+          "date": "2026-07-11",
+          "status": "closed",
+          "hours": [],
+          "meal_periods": [],
+          "has_special_hours": false,
+          "closed": true,
+          "always_open": false
+        }
+      ],
+      "meal_period_schedules": []
+    }
+  ]
+}
