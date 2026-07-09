@@ -1,5 +1,10 @@
 # DATA_NEEDED — running "Alan provides" checklist
 
+> **Phase 0 CLOSED July 7, 2026 — with one documented exception:** study-spot rows (§3
+> below) are still pending from Alan. When they land, add them to `scraper/seed/spots.json`
+> and re-run `node scraper/seed/validate.ts`. That re-seed is the only remaining Phase 0
+> step and does not block Phase 1's infrastructure work.
+
 Phase 0 recon is done (July 7, 2026). Sources are figured out; what's below is everything
 still needed from Alan, in priority order. Check items off by editing
 [SPOT_DATA-3.md](SPOT_DATA-3.md) — that file stays the source of truth for spot facts.
@@ -33,6 +38,8 @@ closed-all-week. Re-capture fixtures in late August for realistic fall data befo
   Also: the consensus-line CONFLICT (you: mid; students: hidden gem) still needs your call.
 - [ ] **Einstein Bros:** it's in the *dining* feed (`einstein-brother-s-bagels`), so hours come
   from `scrape:dining`, not `scrape:library` as SPOT_DATA currently says. Confirm.
+- [ ] **Piccolo vs Piccola Italia:** feed slug mapping stays `piccola-italia`; Alan will confirm
+  the sign in person — the display name may flip.
 
 ## 2. Food spot gaps in SPOT_DATA-3.md
 
