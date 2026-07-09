@@ -66,6 +66,6 @@ closed-all-week. Re-capture fixtures in late August for realistic fall data befo
 
 ## 5. Phase 1 blockers (accounts — needed before any Supabase/Vercel work)
 
-- [ ] Supabase account created.
-- [ ] Vercel account created.
-- [ ] **Domain purchased** — name TBD by Alan.
+- [x] Supabase account created. Project linked; schema + seed live (Phase 1).
+- [x] Vercel account exists (GitHub login).
+- [x] **Domain purchased** — `gritcheck.live` on Porkbun, auto-renew on.
