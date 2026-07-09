@@ -1,0 +1,33 @@
+name: CI
+
+# Red CI blocks the phase (BUILD_PLAN Phase 1). Runs on every push and PR.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 24 strips TypeScript types natively, so the scraper's .ts scripts
+      # run without a transpile step.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Validates scraper/seed/spots.json against the zod schema and cross-checks
+      # source slugs against the captured dining fixture.
+      - name: Test
+        run: npm test
