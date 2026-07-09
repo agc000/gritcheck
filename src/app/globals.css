@@ -1,26 +1,51 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Design tokens — BUILD_PLAN §4.1. The design system is law (§0.4):
+ * Tailwind's default palette is wiped (--color-*: initial) so only these
+ * approved colors compile. Gold is a signal (Update button, active filter,
+ * Best bet wash, selected building), never decoration. go/hold/skip/closed
+ * are status-only.
+ */
+@theme {
+  --color-*: initial;
+
+  --color-black: #121110;
+  --color-map-bg: #191813;
+  --color-ink: #1d1b16;
+  --color-sheet: #ffffff;
+
+  --color-gold: #ffc20e;
+  --color-gold-soft: rgba(255, 194, 14, 0.09);
+
+  --color-line: #eeede8;
+  --color-soft: #f7f6f3;
+  --color-muted: #77746c;
+  --color-faint: #aca9a0;
+
+  --color-go: #178a50;
+  --color-hold: #b37400;
+  --color-skip: #c2402f;
+  --color-closed: #9a978d;
+
+  /* Archivo for UI; Spline Sans Mono for timestamps/data only (§4.1). */
+  --font-*: initial;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-spline-mono), ui-monospace, monospace;
+
+  /* Radii: 20px sheet, 12–14px cards/controls, 999px pills (rounded-full). */
+  --radius-*: initial;
+  --radius-sheet: 20px;
+  --radius-card: 14px;
+  --radius-control: 12px;
+
+  /* Spacing stays on Tailwind's default 4px grid. */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background: var(--color-black);
+    color: var(--color-sheet);
+    font-family: var(--font-sans);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
