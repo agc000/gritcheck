@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { FilterChips } from "@/components/FilterChips";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SpotRow } from "@/components/SpotRow";
+import { CHIPS_BY_CATEGORY, matchesChip } from "@/lib/filters";
 import type { Category, SpotListItem } from "@/lib/types";
 
 // Client owner of browse state (tab now; filters/sort in tasks 5–6). Local
@@ -17,9 +19,20 @@ export function SpotBrowser({
   nowMs: number;
 }) {
   const [category, setCategory] = useState<Category>("food");
+  // Chip selection is per-category so switching tabs doesn't carry a stale
+  // filter across ("Vegan" means nothing on the Study list).
+  const [chipByCategory, setChipByCategory] = useState<
+    Record<Category, string | null>
+  >({ food: null, study: null });
   const now = new Date(nowMs);
 
-  const visible = items.filter((item) => item.category === category);
+  const chips = CHIPS_BY_CATEGORY[category];
+  const activeChip = chips.find((c) => c.id === chipByCategory[category]) ?? null;
+
+  const visible = items.filter(
+    (item) =>
+      item.category === category && matchesChip(activeChip, item.attributes),
+  );
 
   // Best bet = the top row of the sorted list (§1.3) — the sort order IS the
   // recommendation. Task 6 supplies real sorting; until then list order rules.
@@ -32,12 +45,24 @@ export function SpotBrowser({
     <div>
       <div className="sticky top-0 z-10 bg-sheet px-4 pt-1 pb-3">
         <SegmentedControl value={category} onChange={setCategory} />
+        {/* Subbar (mockup): chips left; sort menu joins in task 6. */}
+        <div className="mt-3 flex items-center gap-2">
+          <FilterChips
+            chips={chips}
+            activeId={chipByCategory[category]}
+            onChange={(id) =>
+              setChipByCategory((prev) => ({ ...prev, [category]: id }))
+            }
+          />
+        </div>
       </div>
 
       {visible.length === 0 ? (
         // PLACEHOLDER empty state — Grits + proper copy land in task 8.
         <p className="px-5 py-10 text-center text-sm text-muted">
-          No {category} spots yet.
+          {activeChip
+            ? `Nothing matches “${activeChip.label}” right now.`
+            : `No ${category} spots yet.`}
         </p>
       ) : (
         <>
