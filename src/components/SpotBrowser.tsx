@@ -2,13 +2,22 @@
 
 import { useState } from "react";
 import { SegmentedControl } from "@/components/SegmentedControl";
+import { SpotRow } from "@/components/SpotRow";
 import type { Category, SpotListItem } from "@/lib/types";
 
 // Client owner of browse state (tab now; filters/sort in tasks 5–6). Local
 // component state, not a store or URL — it's ephemeral view state with exactly
 // one consumer, and the full spot list is already in props (§12 Phase 2).
-export function SpotBrowser({ items }: { items: SpotListItem[] }) {
+// `nowMs` comes from the server render so hydration sees identical output.
+export function SpotBrowser({
+  items,
+  nowMs,
+}: {
+  items: SpotListItem[];
+  nowMs: number;
+}) {
   const [category, setCategory] = useState<Category>("food");
+  const now = new Date(nowMs);
 
   const visible = items.filter((item) => item.category === category);
 
@@ -24,22 +33,10 @@ export function SpotBrowser({ items }: { items: SpotListItem[] }) {
           No {category} spots yet.
         </p>
       ) : (
-        // PLACEHOLDER list markup — replaced by SpotRow/StatusBadge in task 3.
-        <ul className="divide-y divide-line px-5">
+        <ul className="divide-y divide-line">
           {visible.map((item) => (
-            <li
-              key={item.slug}
-              className="flex items-baseline justify-between gap-4 py-3"
-            >
-              <div>
-                <div className="font-medium">{item.name}</div>
-                <div className="text-sm text-muted">{item.building}</div>
-              </div>
-              <div
-                className={`shrink-0 font-mono text-xs ${item.isOpen ? "text-go" : "text-closed"}`}
-              >
-                {item.isOpen ? "open" : "closed"}
-              </div>
+            <li key={item.slug}>
+              <SpotRow item={item} now={now} />
             </li>
           ))}
         </ul>
