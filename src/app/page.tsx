@@ -1,20 +1,41 @@
 import { Sheet } from "@/components/Sheet";
+import { SpotBrowser } from "@/components/SpotBrowser";
 import { supabase } from "@/lib/supabase";
+import type { Category, SpotListItem } from "@/lib/types";
 
 // Rendered per-request so the sheet always shows live rows.
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [{ data: spots, error }, { data: status }] = await Promise.all([
+  const [{ data: spots, error }, { data: statuses }] = await Promise.all([
     supabase
       .from("spots")
-      .select("slug,name,category,building,consensus")
-      .order("category")
+      .select("slug,name,category,building,consensus,attributes,baseline")
       .order("name"),
-    supabase.from("spot_current_status").select("slug,is_open,confidence"),
+    supabase.from("spot_current_status").select("*"),
   ]);
 
-  const statusBySlug = new Map((status ?? []).map((s) => [s.slug, s]));
+  const statusBySlug = new Map((statuses ?? []).map((s) => [s.slug, s]));
+
+  const items: SpotListItem[] = (spots ?? []).map((spot) => {
+    const live = statusBySlug.get(spot.slug);
+    return {
+      slug: spot.slug,
+      name: spot.name,
+      category: spot.category as Category,
+      building: spot.building,
+      consensus: spot.consensus,
+      attributes: spot.attributes,
+      baseline: spot.baseline,
+      isOpen: live?.is_open ?? false,
+      confidence: live?.confidence ?? null,
+      line: live?.line ?? null,
+      crowd: live?.crowd ?? null,
+      noise: live?.noise ?? null,
+      worthItPct: live?.worth_it_pct ?? null,
+      lastUpdateAt: live?.last_update_at ?? null,
+    };
+  });
 
   return (
     <main className="fixed inset-0 bg-map-bg">
@@ -25,28 +46,7 @@ export default async function Home() {
             Failed to load spots: {error.message}
           </p>
         ) : (
-          // PLACEHOLDER list markup — replaced by SpotRow/StatusBadge in task 3.
-          <ul className="divide-y divide-line px-5">
-            {spots?.map((spot) => {
-              const live = statusBySlug.get(spot.slug);
-              return (
-                <li
-                  key={spot.slug}
-                  className="flex items-baseline justify-between gap-4 py-3"
-                >
-                  <div>
-                    <div className="font-medium">{spot.name}</div>
-                    <div className="text-sm text-muted">{spot.building}</div>
-                  </div>
-                  <div
-                    className={`shrink-0 font-mono text-xs ${live?.is_open ? "text-go" : "text-closed"}`}
-                  >
-                    {live?.is_open ? "open" : "closed"}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <SpotBrowser items={items} />
         )}
       </Sheet>
     </main>
