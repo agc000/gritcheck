@@ -21,6 +21,13 @@ export function SpotBrowser({
 
   const visible = items.filter((item) => item.category === category);
 
+  // Best bet = the top row of the sorted list (§1.3) — the sort order IS the
+  // recommendation. Task 6 supplies real sorting; until then list order rules.
+  // Never crown a closed spot: recommending somewhere you can't go is worse
+  // than recommending nothing.
+  const bestBet = visible[0]?.isOpen ? visible[0] : null;
+  const rest = bestBet ? visible.slice(1) : visible;
+
   return (
     <div>
       <div className="sticky top-0 z-10 bg-sheet px-4 pt-1 pb-3">
@@ -33,13 +40,16 @@ export function SpotBrowser({
           No {category} spots yet.
         </p>
       ) : (
-        <ul className="divide-y divide-line">
-          {visible.map((item) => (
-            <li key={item.slug}>
-              <SpotRow item={item} now={now} />
-            </li>
-          ))}
-        </ul>
+        <>
+          {bestBet && <SpotRow item={bestBet} now={now} best />}
+          <ul className="divide-y divide-line">
+            {rest.map((item) => (
+              <li key={item.slug}>
+                <SpotRow item={item} now={now} />
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
