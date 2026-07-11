@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { UIEvent } from "react";
 import { Drawer } from "vaul";
 
@@ -15,6 +15,22 @@ const SNAP_FULL = 0.9;
 
 export function Sheet({ children }: { children: React.ReactNode }) {
   const [snap, setSnap] = useState<number | string | null>(SNAP_DEFAULT);
+
+  // Tapping the visible map collapses the sheet to the peek sliver: "show me
+  // the map" gets a dedicated one-tap gesture instead of competing with list
+  // scrolling for the drag gesture (Alan's two-swipes-to-map report). A
+  // document listener because the map lives outside this tree; drag-pans on
+  // the map don't emit click, so panning never collapses the sheet. Phase 3
+  // building/marker taps must take precedence when they land (open the spot,
+  // not just collapse).
+  useEffect(() => {
+    const onMapTap = (e: MouseEvent) => {
+      const target = e.target as Element | null;
+      if (target?.closest(".maplibregl-canvas")) setSnap(SNAP_PEEK);
+    };
+    document.addEventListener("click", onMapTap);
+    return () => document.removeEventListener("click", onMapTap);
+  }, []);
 
   return (
     <Drawer.Root
