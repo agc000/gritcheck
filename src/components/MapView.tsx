@@ -7,18 +7,22 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 // One marker per building (grouped server-side in page.tsx — the Commons
 // holds ~10 vendors on one roof, so per-spot pins would stack illegibly).
+import {
+  CATEGORY_EVENT,
+  EXPAND_SHEET_EVENT,
+  type CategoryEventDetail,
+} from "@/lib/map-events";
+import type { Category } from "@/lib/types";
+
 export type BuildingMarker = {
   building: string;
   lat: number;
   lng: number;
   spots: number;
   slugs: string[];
+  food: boolean;
+  study: boolean;
 };
-
-// Cross-component signal: building tap on a multi-spot building raises the
-// sheet (Sheet.tsx listens). A module event keeps map and sheet decoupled —
-// they live in separate trees under the server-component home page.
-export const EXPAND_SHEET_EVENT = "gritcheck:expand-sheet";
 
 // Campus camera. Extents are PLACEHOLDER — Alan to confirm on the campus walk
 // (§Phase 3 "Alan provides"). Bounds keep the map pinned to UMBC's core so it
@@ -108,7 +112,12 @@ export default function MapView({
       features: buildings.map((b) => ({
         type: "Feature",
         geometry: { type: "Point", coordinates: [b.lng, b.lat] },
-        properties: { building: b.building, spots: b.spots },
+        properties: {
+          building: b.building,
+          spots: b.spots,
+          food: b.food,
+          study: b.study,
+        },
       })),
     };
 
@@ -138,7 +147,9 @@ export default function MapView({
           "case",
           ["boolean", ["feature-state", "selected"], false],
           "#FFC20E",
+          ["boolean", ["feature-state", "active"], true],
           "#3B372C",
+          "#2B2820",
         ],
         "fill-extrusion-height": ["get", "height"],
         "fill-extrusion-opacity": 0.95,
@@ -216,6 +227,36 @@ export default function MapView({
         "text-halo-width": 1.3,
       },
     });
+
+    // Category sync (Alan, 2026-07-11): the map highlights only buildings
+    // holding spots of the active sheet tab — Food buildings on Food, Study
+    // on Study. Inactive buildings drop to the dim context color and lose
+    // dot/label. Study currently dims everything (no study coords seeded
+    // yet); it lights up the moment Part 3 data lands.
+    const applyCategory = (category: Category) => {
+      const visible = ["==", ["get", category], true] as maplibregl.FilterSpecification;
+      map.setFilter("spot-buildings-dot", visible);
+      map.setFilter("spot-buildings-label", visible);
+      clearSelection();
+      for (const b of buildings) {
+        map.setFeatureState(
+          { source: "campus-buildings", id: b.building },
+          { active: category === "food" ? b.food : b.study },
+        );
+      }
+    };
+    applyCategory("food"); // sheet's default tab
+
+    const onCategory = (e: Event) => {
+      applyCategory((e as CustomEvent<CategoryEventDetail>).detail.category);
+    };
+    window.addEventListener(CATEGORY_EVENT, onCategory);
+    // Cleanup note: deps are stable for a given page load (server-computed
+    // buildings, router), so this effect runs once; the early-return path
+    // above never re-registers listeners.
+    return () => {
+      window.removeEventListener(CATEGORY_EVENT, onCategory);
+    };
   }, [buildings, styleLoaded, router]);
 
   // Size with h/w, not inset-0: MapLibre's own CSS forces the container to

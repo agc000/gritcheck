@@ -6,6 +6,7 @@ import { SegmentedControl } from "@/components/SegmentedControl";
 import { SortMenu } from "@/components/SortMenu";
 import { SpotRow } from "@/components/SpotRow";
 import { CHIPS_BY_CATEGORY, matchesChip } from "@/lib/filters";
+import { CATEGORY_EVENT, type CategoryEventDetail } from "@/lib/map-events";
 import { SORTS_BY_CATEGORY, sortSpots } from "@/lib/sort";
 import type { Category, SpotListItem } from "@/lib/types";
 
@@ -73,7 +74,18 @@ export function SpotBrowser({
   return (
     <div>
       <div className="sticky top-0 z-10 bg-sheet px-4 pt-1 pb-3">
-        <SegmentedControl value={category} onChange={setCategory} />
+        <SegmentedControl
+          value={category}
+          onChange={(next) => {
+            setCategory(next);
+            // Map highlights follow the active tab (MapView listens).
+            window.dispatchEvent(
+              new CustomEvent<CategoryEventDetail>(CATEGORY_EVENT, {
+                detail: { category: next },
+              }),
+            );
+          }}
+        />
         {/* Subbar (mockup): chips left, sort right. */}
         <div className="mt-3 flex items-center gap-2">
           <FilterChips

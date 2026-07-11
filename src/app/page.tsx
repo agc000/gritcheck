@@ -24,16 +24,27 @@ export default async function Home() {
       .trim();
   const acc = new Map<
     string,
-    { lat: number; lng: number; n: number; slugs: string[] }
+    {
+      lat: number;
+      lng: number;
+      n: number;
+      slugs: string[];
+      food: boolean;
+      study: boolean;
+    }
   >();
   for (const item of items) {
     const key = buildingKey(item.building);
-    const a = acc.get(key) ?? { lat: 0, lng: 0, n: 0, slugs: [] };
+    const a =
+      acc.get(key) ??
+      { lat: 0, lng: 0, n: 0, slugs: [], food: false, study: false };
     acc.set(key, {
       lat: a.lat + item.lat,
       lng: a.lng + item.lng,
       n: a.n + 1,
       slugs: [...a.slugs, item.slug],
+      food: a.food || item.category === "food",
+      study: a.study || item.category === "study",
     });
   }
   const buildings = [...acc.entries()].map(([building, a]) => ({
@@ -42,6 +53,8 @@ export default async function Home() {
     lng: a.lng / a.n,
     spots: a.n,
     slugs: a.slugs,
+    food: a.food,
+    study: a.study,
   }));
 
   return (

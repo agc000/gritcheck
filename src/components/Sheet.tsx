@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { UIEvent } from "react";
 import { Drawer } from "vaul";
 
-import { EXPAND_SHEET_EVENT } from "./MapView";
+import { EXPAND_SHEET_EVENT } from "@/lib/map-events";
 import { UpdateButton } from "./UpdateButton";
 
 // §4.2: snap points at ~15% (peek), ~55% (default), ~90% (full). vaul is the
