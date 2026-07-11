@@ -205,8 +205,8 @@ Canonical reference: `docs/DESIGN_REFERENCE.html` (mockup v7). When in doubt, op
 ```
 --black:#121110  --map-bg:#191813  --ink:#EFEEE9   --sheet:#141A28
 --gold:#FFC20E   --gold-soft:rgba(255,194,14,.12)
---line:#242C3E   --soft:#1B2232   --muted:#99A0B2  --faint:#626A7E
---go:#2CB56E     --hold:#D9952E   --skip:#E25B47   --closed:#7A8194
+--line:#242C3E   --soft:#1B2232   --muted:#99A0B2  --faint:#7E869A
+--go:#2CB56E     --hold:#D9952E   --skip:#E25B47   --closed:#828A9C
 Type: "Avenir Next" (Apple system font) with Figtree (webfont) fallback for UI;
       Spline Sans Mono for timestamps/data only.
 Radii: 12px sheet, 8px cards, 6px controls, 6px chips/sort (rounded-md).

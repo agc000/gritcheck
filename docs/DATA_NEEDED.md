@@ -1,5 +1,41 @@
 # DATA_NEEDED — running "Alan provides" checklist
 
+> **Consolidated priority list (2026-07-11, Phase 3 close).** Everything below
+> in one place, ordered by product leverage. Formats: edit SPOT_DATA-3.md or
+> just answer in chat — CC converts to seed JSON and loads the DB.
+>
+> **P0 — makes the app look alive (do these first):**
+> 1. **Current hours for 4–6 key spots** (Chick-fil-A, Starbucks, Halal Shack,
+>    True Grit's, Einstein, AOK) — per day of week, opens/closes. Manual seed
+>    now; the Phase 6 scraper takes over later. Zero hours rows = every row
+>    gray "Closed" — this single item flips the whole app to alive.
+> 2. **Baseline typical patterns (§3.4) for the same spots** — per day-part,
+>    the words students would say: e.g. CFA: mon–fri morning=quiet,
+>    midday=packed, afternoon=normal, evening=quiet; weekends=empty.
+>    This is the zero-users "metric" the meter idea runs on until Phase 4
+>    live reports exist.
+>
+> **P1 — unblocks the Study tab + map:**
+> 3. **Study zones (Part 3)**: lat/lng per zone (Google Maps right-click →
+>    copy). ILSB and Engineering have NO coords anywhere. Plus per zone:
+>    outlets good/limited/bad, tags, seating, hours (or "follows building"),
+>    consensus line, typical pattern. Add the 6–12 zones you actually use.
+> 4. **Roster decisions (§1 below)**: Pollo dead? · Yum Shoppe = Commons
+>    Retriever Market? · add True Grit's Retriever Market (+coords)? · Admin
+>    Coffee Shop consensus conflict — your call · Einstein hours source ·
+>    Piccolo vs Piccola sign check.
+>
+> **P2 — quality pass:**
+> 5. Missing tags for ~9 food spots (§2 below; meal_swipe prefillable for review).
+> 6. Consensus lines: approve/rewrite every DRAFT in your voice (≤90 chars).
+> 7. **Canonical building name per spot** (new, from map-label work): one
+>    building key each — e.g. "Commons", not "Commons ground floor" — CC
+>    currently normalizes heuristically.
+> 8. Walk-time anchors (2–3 points, lat/lng) — powers walk-time sub-lines.
+> 9. **Walked lat/lng confirmation** for food spots (Phase 3 exit criterion —
+>    open the prod build on your phone at each spot; 30 minutes total).
+>
+
 > **Phase 0 CLOSED July 7, 2026 — with one documented exception:** study-spot rows (§3
 > below) are still pending from Alan. When they land, add them to `scraper/seed/spots.json`
 > and re-run `node scraper/seed/validate.ts`. That re-seed is the only remaining Phase 0
