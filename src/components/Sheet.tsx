@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import type { UIEvent } from "react";
 import { Drawer } from "vaul";
+
+import { UpdateButton } from "./UpdateButton";
 
 // §4.2: snap points at ~15% (peek), ~55% (default), ~90% (full). vaul is the
 // maintained sheet library the plan mandates — it owns the drag physics
@@ -33,6 +36,9 @@ export function Sheet({ children }: { children: React.ReactNode }) {
           aria-describedby={undefined}
         >
           <Drawer.Title className="sr-only">Campus spots</Drawer.Title>
+          {/* Inside Drawer.Content so it rides the sheet edge through every
+              snap and drag — §4.2 "riding above the sheet edge". */}
+          <UpdateButton />
           {/* Grabber bar — the drag affordance. */}
           <div className="mx-auto mt-2.5 mb-1.5 h-1 w-9 shrink-0 rounded-full bg-line" />
           {/* Scroll the list at the default AND full snaps — only lock it at
@@ -40,7 +46,18 @@ export function Sheet({ children }: { children: React.ReactNode }) {
               scroll. vaul hands off drag-vs-scroll by scroll position. */}
           {/* overscroll-none keeps iOS rubber-band scrolling from fighting
               the drawer's own drag physics (phone-gate stutter report). */}
+          {/* data-vaul-no-drag while scrolled: below the full snap the sheet
+              has translateY > 0, and vaul's shouldDrag short-circuits on that
+              BEFORE checking scrollTop — so a mid-list swipe would drag the
+              whole sheet (Alan's phone repro: scroll to bottom, swipe down,
+              sheet collapses). The attribute is vaul's own opt-out; toggled
+              directly on the node (no re-render per scroll frame). At
+              scrollTop 0 it comes off, so drag-to-collapse still works. */}
           <div
+            onScroll={(e: UIEvent<HTMLDivElement>) => {
+              const el = e.currentTarget;
+              el.toggleAttribute("data-vaul-no-drag", el.scrollTop > 0);
+            }}
             className={`min-h-0 flex-1 overscroll-none ${snap === SNAP_PEEK ? "overflow-hidden" : "overflow-y-auto"}`}
           >
             {children}
