@@ -72,6 +72,8 @@ User accounts/auth · reviews or star ratings · chat rooms · gym category · p
 
 **Languages: TypeScript everywhere + SQL** (schema, RLS, aggregation). No Python, no FastAPI, no Docker, no AWS — deliberate; Alan's other projects cover those. The interview line: *"Postgres with RLS is the API; I removed a whole tier."*
 
+*Amended 2026-07-11 (Alan, Phase 3 map kickoff): the map camera uses a **fixed ~30° pitch (non-interactive)**, a deliberate change from the original "pitch off" lock, so hand-authored extruded campus buildings read as dimensional and deliver the Phase 3 "pop" bar. Rotation stays off and the camera stays bounded to campus. Full rule and reasoning in §4.2.*
+
 ### 2.2 System shape
 ```
 [UMBC hours pages] --(GH Actions cron, 2×/day)--> [Supabase Postgres]
@@ -220,7 +222,9 @@ filter chips + sort button de-pilled from 999px to 6px rounded-rectangles — th
 Gold is a **signal**, not decoration: Update button, active filter state, Best bet wash, selected building. If gold appears anywhere else, it's wrong. Green/amber/red/gray appear **only** as status colors.
 
 ### 4.2 Screen architecture (locked, from v7)
-- **Home = full-screen MapLibre map** (custom dark-gold style, locked to campus bounds, pitch/rotation disabled) with buildings as tap targets; status glow halos on active buildings.
+- **Home = full-screen MapLibre map** (custom dark-gold style, locked to campus bounds, **rotation disabled, pitch fixed at ~30° and non-interactive**) with buildings as tap targets; status glow halos on active buildings.
+
+  *Amended 2026-07-11 (Alan, Phase 3 map kickoff): "pitch/rotation disabled" → "rotation disabled, pitch fixed ~30°, non-interactive." Reasoning, deliberately weighed against the §12 Phase 3 glanceability/LCP rationale for the original lock: (1) **Glanceability is preserved** — the pitch is fixed and the user cannot move the camera, so there is still exactly one canonical view; what the original lock protects against is user-controlled tilt/rotate (disorienting, breaks "one glance = one decision"), not a single authored angle. (2) **The angle is load-bearing for the product's feel** — MapLibre `fill-extrusion` only reads as 3D when the camera has pitch; at pitch 0 building height is invisible. A fixed ~30° is what makes the hand-authored campus buildings "pop," the explicit Phase 3 "cool" bar. (3) **The LCP/Core Web Vitals cost is bounded and gated, not assumed** — extrusion over a small bounded campus scene is a measurable cost, and Phase 3's exit already requires Lighthouse perf ≥85 with the map mounted; the fixed pitch lives or dies by that gate. (4) **The two properties that most protect orientation and performance — rotation off and camera bounds — are untouched.***
 - **Bottom sheet** over the map: drag with snap points at ~15% (peek), ~55% (default), ~90% (full). Grabber bar. Momentum + rubber-banding. Use a maintained sheet library; do not hand-roll physics.
 - Sheet contents top-to-bottom: **Food | Study segmented control** (sliding thumb) → **filter chips row + sort menu** → **list**.
 - **List rows (Beli style):** no card boxes; hairline dividers; name + sub-line left; status word with dot + freshness mono right. **One glance = one decision** — a plain row carries name, ONE status word, freshness, and nothing else.
