@@ -1,7 +1,24 @@
 import Link from "next/link";
 import { StatusBadge } from "@/components/StatusBadge";
+import { CHIPS_BY_CATEGORY } from "@/lib/filters";
 import { getVerdict } from "@/lib/status";
 import type { SpotListItem } from "@/lib/types";
+
+// Mockup sub-line pattern: "Coffee · Commons" — up to two attribute
+// descriptors, then building. Truthful by construction: descriptors are the
+// same chip predicates the filters use. (Walk time joins when §Phase 0's
+// anchor points exist.)
+function subLine(item: SpotListItem): string {
+  const a = item.attributes;
+  const descriptors =
+    typeof a === "object" && a !== null && !Array.isArray(a)
+      ? CHIPS_BY_CATEGORY[item.category]
+          .filter((chip) => chip.match(a as Record<string, never>))
+          .slice(0, 2)
+          .map((chip) => chip.label)
+      : [];
+  return [...descriptors, item.building].join(" · ");
+}
 
 // One glance = one decision (§4.2): name + sub-line left, ONE status word +
 // freshness right. Beli-style — no card box; the hairline divider comes from
@@ -43,7 +60,7 @@ export function SpotRow({
           {item.name}
         </div>
         <div className="mt-[2.5px] text-xs leading-[1.4] text-muted">
-          {item.building}
+          {subLine(item)}
         </div>
         {best && item.consensus && (
           <div className="mt-1 text-xs italic text-muted">

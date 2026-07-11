@@ -1,3 +1,4 @@
+import { MapCanvas } from "@/components/MapCanvas";
 import { Sheet } from "@/components/Sheet";
 import { SpotBrowser } from "@/components/SpotBrowser";
 import { getSpotList } from "@/lib/spots";
@@ -10,7 +11,8 @@ export default async function Home() {
 
   return (
     <main className="fixed inset-0 bg-map-bg">
-      {/* Static dark placeholder this phase — MapLibre lands in Phase 3 (§Phase 2). */}
+      {/* Illustrated static placeholder this phase — MapLibre lands in Phase 3. */}
+      <MapCanvas />
       <Sheet>
         {error ? (
           <p className="px-5 py-4 text-sm text-skip">
