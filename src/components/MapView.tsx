@@ -10,6 +10,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import {
   CATEGORY_EVENT,
   EXPAND_SHEET_EVENT,
+  RECENTER_EVENT,
   type CategoryEventDetail,
 } from "@/lib/map-events";
 import type { Category } from "@/lib/types";
@@ -22,6 +23,7 @@ export type BuildingMarker = {
   slugs: string[];
   food: boolean;
   study: boolean;
+  open: boolean;
 };
 
 // Campus camera. Extents are PLACEHOLDER — Alan to confirm on the campus walk
@@ -88,6 +90,14 @@ export default function MapView({
     map.once("load", () => {
       map.resize();
       setStyleLoaded(true);
+      // Collapse the compact attribution to its ⓘ toggle immediately: it
+      // auto-expands on load, and its text block literally became the page's
+      // LCP element in the Lighthouse gate. OSM's mobile guidance accepts
+      // the collapsed toggle; the text stays one tap away.
+      map
+        .getContainer()
+        .querySelector(".maplibregl-ctrl-attrib")
+        ?.classList.remove("maplibregl-compact-show");
     });
     const ro = new ResizeObserver(() => map.resize());
     ro.observe(containerRef.current);
@@ -117,6 +127,7 @@ export default function MapView({
           spots: b.spots,
           food: b.food,
           study: b.study,
+          open: b.open,
         },
       })),
     };
@@ -203,10 +214,18 @@ export default function MapView({
       id: "spot-buildings-dot",
       type: "circle",
       source: "spot-buildings",
+      // Status tone v1 (§4.3 semantics): go-green when any spot inside is
+      // open, closed-gray otherwise. All gray until hours are seeded — honest
+      // by construction. Per-verdict glow lands with Phase 4 live statuses.
       paint: {
-        "circle-radius": 3,
-        "circle-color": "#DAD7CE",
-        "circle-opacity": 0.9,
+        "circle-radius": 3.5,
+        "circle-color": [
+          "case",
+          ["==", ["get", "open"], true],
+          "#2CB56E",
+          "#8B93A4",
+        ],
+        "circle-opacity": 0.95,
       },
     });
     map.addLayer({
@@ -251,11 +270,27 @@ export default function MapView({
       applyCategory((e as CustomEvent<CategoryEventDetail>).detail.category);
     };
     window.addEventListener(CATEGORY_EVENT, onCategory);
+
+    // Recenter: ease the camera home (§Phase 3 task). Motion duration sits in
+    // the §4.6 window ballpark; easeTo respects prefers-reduced-motion via
+    // MapLibre's own reduced-motion handling.
+    const onRecenter = () => {
+      map.easeTo({
+        center: CAMPUS_CENTER,
+        zoom: 14.6,
+        bearing: 0,
+        pitch: CAMPUS_PITCH,
+        duration: 600,
+      });
+    };
+    window.addEventListener(RECENTER_EVENT, onRecenter);
+
     // Cleanup note: deps are stable for a given page load (server-computed
     // buildings, router), so this effect runs once; the early-return path
     // above never re-registers listeners.
     return () => {
       window.removeEventListener(CATEGORY_EVENT, onCategory);
+      window.removeEventListener(RECENTER_EVENT, onRecenter);
     };
   }, [buildings, styleLoaded, router]);
 

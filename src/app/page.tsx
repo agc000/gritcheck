@@ -31,13 +31,14 @@ export default async function Home() {
       slugs: string[];
       food: boolean;
       study: boolean;
+      open: boolean;
     }
   >();
   for (const item of items) {
     const key = buildingKey(item.building);
     const a =
       acc.get(key) ??
-      { lat: 0, lng: 0, n: 0, slugs: [], food: false, study: false };
+      { lat: 0, lng: 0, n: 0, slugs: [], food: false, study: false, open: false };
     acc.set(key, {
       lat: a.lat + item.lat,
       lng: a.lng + item.lng,
@@ -45,6 +46,9 @@ export default async function Home() {
       slugs: [...a.slugs, item.slug],
       food: a.food || item.category === "food",
       study: a.study || item.category === "study",
+      // Building-level status v1: open if ANY spot inside is open. Richer
+      // per-verdict glow (line/crowd colors) arrives with Phase 4 statuses.
+      open: a.open || item.isOpen,
     });
   }
   const buildings = [...acc.entries()].map(([building, a]) => ({
@@ -55,6 +59,7 @@ export default async function Home() {
     slugs: a.slugs,
     food: a.food,
     study: a.study,
+    open: a.open,
   }));
 
   return (

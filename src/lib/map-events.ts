@@ -13,3 +13,6 @@ export const EXPAND_SHEET_EVENT = "gritcheck:expand-sheet";
 export const CATEGORY_EVENT = "gritcheck:category";
 
 export type CategoryEventDetail = { category: Category };
+
+// Recenter control (Sheet chrome) → MapView eases the camera home.
+export const RECENTER_EVENT = "gritcheck:recenter";

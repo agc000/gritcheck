@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { UIEvent } from "react";
 import { Drawer } from "vaul";
 
-import { EXPAND_SHEET_EVENT } from "@/lib/map-events";
+import { EXPAND_SHEET_EVENT, RECENTER_EVENT } from "@/lib/map-events";
 import { UpdateButton } from "./UpdateButton";
 
 // §4.2: snap points at ~15% (peek), ~55% (default), ~90% (full). vaul is the
@@ -64,6 +64,28 @@ export function Sheet({ children }: { children: React.ReactNode }) {
           {/* Inside Drawer.Content so it rides the sheet edge through every
               snap and drag — §4.2 "riding above the sheet edge". */}
           <UpdateButton />
+          {/* Recenter: utility control, so ink-on-dark, not gold (§4.1 —
+              gold is signal only). Mirrors the FAB on the left edge. */}
+          <button
+            type="button"
+            aria-label="Recenter map on campus"
+            data-vaul-no-drag
+            onClick={() => window.dispatchEvent(new CustomEvent(RECENTER_EVENT))}
+            className="absolute -top-15 left-[max(1rem,env(safe-area-inset-left))] flex h-11 w-11 items-center justify-center rounded-full bg-black/80 text-ink shadow-[0_4px_16px_rgba(0,0,0,0.35)] transition-transform duration-150 ease-out active:scale-97 motion-reduce:transition-none"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden
+              className="h-4.5 w-4.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <circle cx="12" cy="12" r="6.5" />
+              <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" />
+              <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3" strokeLinecap="round" />
+            </svg>
+          </button>
           {/* Grabber bar — the drag affordance. */}
           <div className="mx-auto mt-2.5 mb-1.5 h-1 w-9 shrink-0 rounded-full bg-line" />
           {/* Scroll the list at the default AND full snaps — only lock it at

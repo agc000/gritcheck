@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 import type { BuildingMarker } from "./MapView";
 
@@ -14,9 +15,23 @@ const MapView = dynamic(() => import("./MapView"), {
 });
 
 export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
+  // Mount the GL map only after the browser goes idle: the list is the
+  // product's 5-second answer (§1.1) and paints from SSR immediately — the
+  // map must never compete with it for the main thread (Lighthouse gate:
+  // maplibre eval was 4.3s of throttled TBT when mounted eagerly).
+  const [mapReady, setMapReady] = useState(false);
+  useEffect(() => {
+    if ("requestIdleCallback" in window) {
+      const id = requestIdleCallback(() => setMapReady(true), { timeout: 1500 });
+      return () => cancelIdleCallback(id);
+    }
+    const t = setTimeout(() => setMapReady(true), 350); // Safari fallback
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div className="absolute inset-0">
-      <MapView buildings={buildings} />
+      {mapReady && <MapView buildings={buildings} />}
 
       {/* Top bar: Grits mark + wordmark (mockup .map-top). Visual only (§4.7).
           Padding clears the iOS notch/status bar in standalone PWA mode. */}
