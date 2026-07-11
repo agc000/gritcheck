@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { StatusBadge } from "@/components/StatusBadge";
 import { getVerdict } from "@/lib/status";
 import type { SpotListItem } from "@/lib/types";
@@ -19,7 +20,8 @@ export function SpotRow({
   const verdict = getVerdict(item, now);
 
   return (
-    <div
+    <Link
+      href={`/spots/${item.slug}`}
       className={`flex items-center justify-between gap-3 transition-colors duration-100 ${
         best
           ? "mx-2.5 mb-1.5 rounded-card bg-gold-soft px-3.5 py-3.75"
@@ -61,6 +63,6 @@ export function SpotRow({
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
