@@ -203,10 +203,10 @@ Canonical reference: `docs/DESIGN_REFERENCE.html` (mockup v7). When in doubt, op
 
 ### 4.1 Tokens
 ```
---black:#121110  --map-bg:#191813  --ink:#1D1B16   --sheet:#FFFFFF
---gold:#FFC20E   --gold-soft:rgba(255,194,14,.09)
---line:#EEEDE8   --soft:#F7F6F3   --muted:#77746C  --faint:#ACA9A0
---go:#178A50     --hold:#B37400   --skip:#C2402F   --closed:#9A978D
+--black:#121110  --map-bg:#191813  --ink:#EFEEE9   --sheet:#141A28
+--gold:#FFC20E   --gold-soft:rgba(255,194,14,.12)
+--line:#242C3E   --soft:#1B2232   --muted:#99A0B2  --faint:#626A7E
+--go:#2CB56E     --hold:#D9952E   --skip:#E25B47   --closed:#7A8194
 Type: "Avenir Next" (Apple system font) with Figtree (webfont) fallback for UI;
       Spline Sans Mono for timestamps/data only.
 Radii: 12px sheet, 8px cards, 6px controls, 6px chips/sort (rounded-md).
@@ -219,6 +219,15 @@ non-Apple devices load. Mockup v7 predates this amendment; §4.1 wins where they
 filter chips + sort button de-pilled from 999px to 6px rounded-rectangles — the
 "utility tool, not consumer bubble app" direction. Status dots stay circular
 (semantic). Confirmed: the design system has NO gradients anywhere; flat fills only.*
+*Amended 2026-07-11 (Alan, Phase 3 "navy sheet"): sheet flipped from white
+(#FFFFFF) to UMBC-dining navy (#141A28); ink and the neutral ramp flipped
+light-on-dark; status colors brightened for dark-surface contrast; gold-soft
+raised to .12 for visibility on navy. Reasons: map↔sheet cohesion (the white
+sheet had a hard seam against the dark map), gold signals read stronger on
+navy, and the dark-navy UI is already campus-familiar from dineoncampus.
+Component consequence: the segmented-control thumb is now the elevated --line
+surface (a white thumb vanishes on navy), active label --ink. The §4.8
+contrast audit must be re-run against the dark palette before phase close.*
 Gold is a **signal**, not decoration: Update button, active filter state, Best bet wash, selected building. If gold appears anywhere else, it's wrong. Green/amber/red/gray appear **only** as status colors.
 
 ### 4.2 Screen architecture (locked, from v7)

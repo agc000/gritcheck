@@ -22,7 +22,9 @@ export function MapCanvas() {
         className="pointer-events-none absolute inset-x-0 top-0 flex items-center px-4 pt-[max(1rem,env(safe-area-inset-top))]"
         aria-hidden
       >
-        <div className="flex items-center gap-2 text-[15px] font-extrabold tracking-[0.02em] text-sheet">
+        {/* text-ink, not text-sheet: sheet is a surface color in the navy
+            experiment, ink is guaranteed light-on-dark. */}
+        <div className="flex items-center gap-2 text-[15px] font-extrabold tracking-[0.02em] text-ink">
           <svg viewBox="0 0 64 64" aria-hidden className="h-5.5 w-5.5">
             <ellipse cx="32" cy="34" rx="20" ry="19" fill="#FFC20E" />
             <path d="M13 26c-3-6 0-14 5-16 2 4 3 8 2 12z" fill="#FFC20E" />

@@ -10,23 +10,25 @@
 @theme {
   --color-*: initial;
 
+  /* Navy palette per §4.1 (amended 2026-07-11): UMBC-dining navy sheet,
+     light-on-dark neutrals, status colors brightened for dark surfaces. */
   --color-black: #121110;
   --color-map-bg: #191813;
-  --color-ink: #1d1b16;
-  --color-sheet: #ffffff;
+  --color-ink: #efeee9;
+  --color-sheet: #141a28;
 
   --color-gold: #ffc20e;
-  --color-gold-soft: rgba(255, 194, 14, 0.09);
+  --color-gold-soft: rgba(255, 194, 14, 0.12);
 
-  --color-line: #eeede8;
-  --color-soft: #f7f6f3;
-  --color-muted: #77746c;
-  --color-faint: #aca9a0;
+  --color-line: #242c3e;
+  --color-soft: #1b2232;
+  --color-muted: #99a0b2;
+  --color-faint: #626a7e;
 
-  --color-go: #178a50;
-  --color-hold: #b37400;
-  --color-skip: #c2402f;
-  --color-closed: #9a978d;
+  --color-go: #2cb56e;
+  --color-hold: #d9952e;
+  --color-skip: #e25b47;
+  --color-closed: #7a8194;
 
   /* Avenir Next on Apple devices, Figtree webfont elsewhere; Spline Sans
      Mono for timestamps/data only (§4.1, amended 2026-07-10). */
@@ -48,7 +50,7 @@
 @layer base {
   body {
     background: var(--color-black);
-    color: var(--color-sheet);
+    color: var(--color-ink);
     font-family: var(--font-sans);
   }
 }
