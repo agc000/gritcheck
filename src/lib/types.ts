@@ -1,4 +1,5 @@
 import type { Database } from "./database.types";
+import type { HoursInterval } from "./time";
 
 export type SpotRow = Database["public"]["Tables"]["spots"]["Row"];
 export type SpotStatusRow =
@@ -14,9 +15,13 @@ export type SpotListItem = {
   name: string;
   category: Category;
   building: string;
+  lat: number;
+  lng: number;
   consensus: string | null;
   attributes: SpotRow["attributes"];
   baseline: SpotRow["baseline"];
+  /** Today's open intervals (plus yesterday's if they cross midnight). */
+  hours: HoursInterval[];
   isOpen: boolean;
   confidence: string | null;
   line: string | null;

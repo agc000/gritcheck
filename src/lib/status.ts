@@ -1,4 +1,5 @@
 import type { Json } from "./database.types";
+import { nextOpensToday, nyClock } from "./time";
 import type { SpotListItem } from "./types";
 
 // UI verdicts (§4.3): one word + one status color per row. This maps the
@@ -46,13 +47,14 @@ export function baselineWord(baseline: Json, now: Date): string | null {
   if (typeof baseline !== "object" || baseline === null || Array.isArray(baseline)) {
     return null;
   }
-  const day = now.getDay();
-  const dayKey = day === 0 || day === 6 ? "sat-sun" : "mon-fri";
+  // Campus time, not server time — Vercel renders in UTC (§5.4).
+  const { dow, minutes } = nyClock(now);
+  const dayKey = dow === 0 || dow === 6 ? "sat-sun" : "mon-fri";
   const slots = (baseline as Record<string, Json>)[dayKey];
   if (typeof slots !== "object" || slots === null || Array.isArray(slots)) {
     return null;
   }
-  const hour = now.getHours();
+  const hour = minutes / 60;
   const part = DAY_PARTS.find((p) => hour >= p.from && hour < p.to)?.part;
   const record = slots as Record<string, Json>;
   const word = (part && record[part]) ?? record["all"];
@@ -76,7 +78,13 @@ function freshness(lastUpdateAt: string | null, now: Date) {
 
 export function getVerdict(item: SpotListItem, now: Date): Verdict {
   if (!item.isOpen) {
-    return { word: "Closed", tone: "closed", fresh: null, freshTone: "faint" };
+    // "opens 7 AM" when there's a later opening today (mockup's closed row).
+    return {
+      word: "Closed",
+      tone: "closed",
+      fresh: nextOpensToday(item.hours, nyClock(now).minutes),
+      freshTone: "faint",
+    };
   }
 
   // Live data path: the view only reports fields inside the 3 h window, and
