@@ -52,7 +52,7 @@ Reporting is engineered as **reciprocity** (you just benefited; close the loop),
 - **Moderation minimum:** flag button on comments; auto-hide at 2 flags; device-ID rate limiting.
 
 ### 1.4 Explicit NON-goals for v1 (do not build; see §10)
-User accounts/auth · reviews or star ratings · chat rooms · gym category · push notifications · native app · menus · favorites · photos · leaderboards/points · admin dashboard beyond Supabase Studio · email (no Resend) · historical "popular times" charts (needs weeks of real data — post-launch).
+User accounts/auth · reviews or star ratings · chat rooms · gym category · push notifications · native app · menus · favorites · photos · leaderboards/points (design captured in §13; build stays out of v1) · admin dashboard beyond Supabase Studio · email (no Resend) · historical "popular times" charts (needs weeks of real data — post-launch).
 
 ---
 
@@ -356,7 +356,7 @@ Fixed cost: domain (~$15/yr). Everything else $0 at launch. Upgrade triggers, no
 | UMBC trademark friction | Original mascot (Grits ≠ Chip), "unofficial" footer, no UMBC logos; pitch SGA for blessing post-launch |
 
 ## 10. Post-traction unlocks (triggers, not promises)
-Historical "popular times" charts (≥3 wks of data) · Gym/RAC category (≥500 WAU or loud demand) · Web push "tell me when RAC empties" (≥1,000 installs) · LLM-derived consensus lines from comments (≥50 comments/spot — strong resume feature) · spot activity streams → chat (≥500 WAU **and** moderation plan) · Cloudflare Turnstile on updates (only if scripted abuse observed, §5.5) · native/Expo app (only if PWA install friction is provably the bottleneck) · other campuses (never before UMBC is won).
+Historical "popular times" charts (≥3 wks of data) · Gym/RAC category (≥500 WAU or loud demand) · Web push "tell me when RAC empties" (≥1,000 installs) · LLM-derived consensus lines from comments (≥50 comments/spot — strong resume feature) · spot activity streams → chat (≥500 WAU **and** moderation plan) · Cloudflare Turnstile on updates (only if scripted abuse observed, §5.5) · native/Expo app (only if PWA install friction is provably the bottleneck) · contribution incentive system (design locked in §13; earliest start post-Phase-4, default post-v1.0.0) · other campuses (never before UMBC is won).
 
 ## 11. Session prompts for Claude Code
 Phase kickoff: *"Read docs/BUILD_PLAN.md §0 and §Phase N. Restate the phase's exit criteria in your own words, list the tasks in order, flag anything in 'Alan provides' that's missing, then start task 1. Small commits."*
@@ -378,6 +378,44 @@ Phase close: *"Pose me this phase's §12 questions. If my answer is wrong or sha
 **Phase 5:** Explain stale-while-revalidate like you're teaching a freshman. What are the three Core Web Vitals and which one does the map threaten? Why PWA over native for *this* product — give the distribution argument, not just the effort argument.
 **Phase 6:** Why must the scraper be idempotent (what's an upsert)? Why is "fail loudly" a design goal — what's the horror story of a scraper failing silently? Where do secrets live and what never touches the client bundle?
 **Phase 7 / meta (rehearse these aloud — they're the interview):** "Walk me through what happens when a user opens the app" (full request lifecycle, cold vs warm cache). "How do you stop one person from poisoning the data?" (§5.5, tell it as a story). "How would this scale to 100 campuses?" (what breaks first: Realtime connections, then tile hosting, then moderation — and what's deliberately single-campus). "What would you build differently with 10 engineers?" (honest answer: almost nothing at this scale — that's the point).
+
+---
+
+## 13. Contribution Incentive System (design locked, build deferred — post-Phase-4)
+
+**Status: forward design capture, not current scope.** Nothing here gets built, scaffolded, or "prepared for" (§0.3) until its trigger. Earliest technical start: after Phase 4 ships the update flow (the thing being incentivized must exist). Default slot: **post-v1.0.0** — §1.4 keeps leaderboards/points out of the v1 launch; pulling this forward requires deliberately amending that contract, not just finishing Phase 4.
+
+### 13.1 Problem statement
+GritCheck's value depends on user-submitted updates. An update costs the contributor ~5 seconds and, by default, returns nothing. This system closes that loop. The primary retention driver is and remains the utility itself (§1.1); incentives exist to serve **contribution rate**, not visit frequency. Litmus test for every mechanic below: would it survive contact with a real 19-year-old, or would it get screenshotted into a group chat as cringe (§4.7)? If in doubt, cut.
+
+### 13.2 Location-verified contribution prompts
+- When the app is **open** and foreground geolocation places the user at/near a spot, surface a contextual one-tap prompt: *"How's the line at Chick-fil-A?"*
+- Multi-vendor locations (The Commons) disambiguate first: *"Which spot are you checking?"* — building-level GPS is the realistic accuracy floor indoors.
+- **Location permission is never a gate.** Request it contextually at first benefit — first "Closest" sort or first update attempt — never on page load. A permission dialog before the app has proven useful is how you buy a permanent "Block".
+- Location is consumed on-device to pick the prompt; **coordinates are never stored or transmitted** (consistent with the §5.5 no-PII posture).
+- **PWA constraint (accepted):** foreground-only geolocation; no background geofencing. The prompt fires when the app is opened at a spot, not because the user walked past one. This is a feature — it keeps the mechanic non-creepy.
+- **Prompt budget:** shares the §4.2 follow-up prompt's cap — max 1 contextual prompt per session, never both, never nag. The reciprocity follow-up outranks the location prompt when both are eligible.
+- Presence-verification doubles as **data-quality defense**: a "verified nearby" weight bump (or badge) makes remote trolling weaker without adding any friction for honest reporters (§5.5's proportionality principle).
+
+### 13.3 Status mechanics (primary)
+The Waze / Google Local Guides model — **status, not stuff**:
+- **Contribution streaks** (days with ≥1 update). Streaks lapse gracefully — a missed day shrinks, never zeroes, the number. Streak pressure is how apps become homework.
+- **Cumulative campus impact:** "Your updates helped ~N Retrievers this week" — N derived honestly from view counts of spots you updated while your report was the live one. Dry, factual, specific (§4.7); no confetti.
+- **Campus leaderboard** (top contributors by handle-less identifier the user names locally, e.g. "quiet-fox-41"): opt-in display, weekly reset so week 1's grinders don't own it forever.
+
+### 13.4 Cosmetic unlocks (secondary)
+Points spendable on personalization only: theme/accent variants, map style variants, Grits flair (icon hats, not talking). **Launch the incentive system with 1–2 unlocks max** to prove the loop; expand only on engagement evidence. This is a retention feature, never launch-critical, and never purchasable — points come from contributions or nowhere.
+
+### 13.5 Identity approach
+- **Points ledger lives device-local** (localStorage/IndexedDB) — preserves the locked no-auth constraint (§1.4). Note: the server already knows anonymous `device_id`s for rate limiting (§3.1/§5.5); what stays local is the *accounting*, so no new server-side identity surface is created.
+- **Accepted tradeoffs, documented:** ledger clears with browser data; no cross-device sync. Accepted risk: cosmetics aren't worth farming — anyone dedicated enough to farm a Grits hat is generating useful data anyway (rate limits still apply).
+- **Escalation paths, only if evidence demands:** server-side points accounting keyed to the existing anonymous device_id → optional opt-in identity. In that order, each gated on observed need, never speculatively.
+
+### 13.6 Rejected: freetext location messages
+Anonymous, unmoderated, location-tagged freetext on a campus is the **Yik Yak failure mode**: harassment with no accountability (no accounts = no bans that stick), targeting of specific people/places, and an unbounded moderation burden a solo builder cannot carry. **Rejected before build, permanently.** If social texture is ever wanted, it is *structured input only* — preset reactions, votes, the existing 80-char moderated comments (§5.5) — never open freetext. This rejection is load-bearing; do not relitigate it in a future session without Alan explicitly reopening it here.
+
+### 13.7 Sequencing & real-world rewards
+Design locked now (this section). Build after the update-posting flow exists and v1 has shipped (see header). **Real-world rewards (dining discounts, SGA partnerships) are explicitly post-traction:** WAU numbers earn that meeting; the meeting doesn't earn the WAU. Nothing in this section creates schema, code, or UI obligations for Phases 2–7.
 
 ---
 *Written July 2026 with Claude (Fable 5). Amend deliberately; drift never.*
