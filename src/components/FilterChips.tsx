@@ -17,7 +17,7 @@ export function FilterChips({
   // before: pseudo stretches the hit area to ≥44px (§4.8) without touching
   // the 35px visual — the mockup's chip proportions are law.
   const chipClass = (selected: boolean) =>
-    `relative flex-none rounded-full border px-3.5 py-1.75 text-[12.5px] font-semibold transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-1.25 motion-reduce:transition-none ${
+    `relative flex-none rounded-md border px-3.5 py-1.75 text-[12.5px] font-semibold transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-1.25 motion-reduce:transition-none ${
       selected
         ? "border-black bg-black text-gold"
         : "border-line bg-sheet text-muted"

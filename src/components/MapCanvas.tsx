@@ -72,8 +72,9 @@ export function MapCanvas() {
         </g>
       </svg>
 
-      {/* Top bar: Grits mark + wordmark (mockup .map-top). Visual only (§4.7). */}
-      <div className="absolute inset-x-0 top-0 flex items-center px-4 pt-4">
+      {/* Top bar: Grits mark + wordmark (mockup .map-top). Visual only (§4.7).
+          Padding clears the iOS notch/status bar in standalone PWA mode. */}
+      <div className="absolute inset-x-0 top-0 flex items-center px-4 pt-[max(1rem,env(safe-area-inset-top))]">
         <div className="flex items-center gap-2 text-[15px] font-extrabold tracking-[0.02em] text-sheet">
           <svg viewBox="0 0 64 64" aria-hidden className="h-5.5 w-5.5">
             <ellipse cx="32" cy="34" rx="20" ry="19" fill="#FFC20E" />

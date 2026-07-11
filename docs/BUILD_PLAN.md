@@ -207,11 +207,16 @@ Canonical reference: `docs/DESIGN_REFERENCE.html` (mockup v7). When in doubt, op
 --go:#178A50     --hold:#B37400   --skip:#C2402F   --closed:#9A978D
 Type: "Avenir Next" (Apple system font) with Figtree (webfont) fallback for UI;
       Spline Sans Mono for timestamps/data only.
-Radii: 14px sheet, 10px cards, 8px controls, 999px pills. Spacing on a 4px grid.
+Radii: 12px sheet, 8px cards, 6px controls, 6px chips/sort (rounded-md).
+Spacing on a 4px grid.
 ```
 *Amended 2026-07-10 (Alan, phone-gate review): type was Archivo, radii were 20/12–14.
 Avenir Next cannot be self-hosted (Apple license) — Figtree is the matched fallback
 non-Apple devices load. Mockup v7 predates this amendment; §4.1 wins where they differ.*
+*Amended 2026-07-10 (Alan, "sharper, no bubble"): radii tightened to 12/8/6, and
+filter chips + sort button de-pilled from 999px to 6px rounded-rectangles — the
+"utility tool, not consumer bubble app" direction. Status dots stay circular
+(semantic). Confirmed: the design system has NO gradients anywhere; flat fills only.*
 Gold is a **signal**, not decoration: Update button, active filter state, Best bet wash, selected building. If gold appears anywhere else, it's wrong. Green/amber/red/gray appear **only** as status colors.
 
 ### 4.2 Screen architecture (locked, from v7)

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Figtree, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -20,6 +20,14 @@ export const metadata: Metadata = {
   title: "GritCheck",
   description:
     "Live food and study spots at UMBC — know the best place to go, and whether to trust it.",
+};
+
+// viewport-fit=cover exposes env(safe-area-inset-*) so content can clear the
+// iOS notch/home indicator in standalone PWA mode.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
