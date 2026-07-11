@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Archivo, Spline_Sans_Mono } from "next/font/google";
+import { Figtree, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 
-// Archivo carries all UI text (§4.1). Variable font, so no weight list —
-// 400–800 are all reachable via font-weight utilities.
-const archivo = Archivo({
-  variable: "--font-archivo",
+// UI type is Avenir Next (§4.1, amended 2026-07-10) — an Apple system font
+// that can't be self-hosted. Figtree is the matched fallback that non-Apple
+// devices download; the stack order in globals.css puts Avenir Next first.
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
 });
 
@@ -29,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${splineMono.variable} h-full antialiased`}
+      className={`${figtree.variable} ${splineMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

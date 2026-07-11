@@ -205,9 +205,13 @@ Canonical reference: `docs/DESIGN_REFERENCE.html` (mockup v7). When in doubt, op
 --gold:#FFC20E   --gold-soft:rgba(255,194,14,.09)
 --line:#EEEDE8   --soft:#F7F6F3   --muted:#77746C  --faint:#ACA9A0
 --go:#178A50     --hold:#B37400   --skip:#C2402F   --closed:#9A978D
-Type: Archivo (400/500/600/700/800) for UI; Spline Sans Mono for timestamps/data only.
-Radii: 20px sheet, 12–14px cards/controls, 999px pills. Spacing on a 4px grid.
+Type: "Avenir Next" (Apple system font) with Figtree (webfont) fallback for UI;
+      Spline Sans Mono for timestamps/data only.
+Radii: 14px sheet, 10px cards, 8px controls, 999px pills. Spacing on a 4px grid.
 ```
+*Amended 2026-07-10 (Alan, phone-gate review): type was Archivo, radii were 20/12–14.
+Avenir Next cannot be self-hosted (Apple license) — Figtree is the matched fallback
+non-Apple devices load. Mockup v7 predates this amendment; §4.1 wins where they differ.*
 Gold is a **signal**, not decoration: Update button, active filter state, Best bet wash, selected building. If gold appears anywhere else, it's wrong. Green/amber/red/gray appear **only** as status colors.
 
 ### 4.2 Screen architecture (locked, from v7)

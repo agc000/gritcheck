@@ -58,7 +58,7 @@ export function SortMenu({
                   onChange(option.id);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center justify-between rounded-[9px] px-3 py-3 text-left text-[13.5px] font-semibold ${
+                className={`flex w-full items-center justify-between rounded-[5px] px-3 py-3 text-left text-[13.5px] font-semibold ${
                   selected ? "bg-gold-soft text-black" : "text-ink hover:bg-soft"
                 }`}
               >

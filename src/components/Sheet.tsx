@@ -30,8 +30,10 @@ export function Sheet({ children }: { children: React.ReactNode }) {
           <Drawer.Title className="sr-only">Campus spots</Drawer.Title>
           {/* Grabber bar — the drag affordance. */}
           <div className="mx-auto mt-2.5 mb-1.5 h-1 w-9 shrink-0 rounded-full bg-line" />
+          {/* overscroll-none keeps iOS rubber-band scrolling from fighting
+              the drawer's own drag physics (phone-gate stutter report). */}
           <div
-            className={`min-h-0 flex-1 ${snap === SNAP_FULL ? "overflow-y-auto" : "overflow-hidden"}`}
+            className={`min-h-0 flex-1 overscroll-none ${snap === SNAP_FULL ? "overflow-y-auto" : "overflow-hidden"}`}
           >
             {children}
           </div>

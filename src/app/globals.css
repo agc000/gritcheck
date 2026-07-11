@@ -28,16 +28,19 @@
   --color-skip: #c2402f;
   --color-closed: #9a978d;
 
-  /* Archivo for UI; Spline Sans Mono for timestamps/data only (§4.1). */
+  /* Avenir Next on Apple devices, Figtree webfont elsewhere; Spline Sans
+     Mono for timestamps/data only (§4.1, amended 2026-07-10). */
   --font-*: initial;
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Avenir Next", var(--font-figtree), ui-sans-serif, system-ui,
+    sans-serif;
   --font-mono: var(--font-spline-mono), ui-monospace, monospace;
 
-  /* Radii: 20px sheet, 12–14px cards/controls, 999px pills (rounded-full). */
+  /* Radii (§4.1, amended 2026-07-10 — "sharper lines"): 14px sheet, 10px
+     cards, 8px controls, 999px pills (rounded-full). */
   --radius-*: initial;
-  --radius-sheet: 20px;
-  --radius-card: 14px;
-  --radius-control: 12px;
+  --radius-sheet: 14px;
+  --radius-card: 10px;
+  --radius-control: 8px;
 
   /* Spacing stays on Tailwind's default 4px grid. */
 }
