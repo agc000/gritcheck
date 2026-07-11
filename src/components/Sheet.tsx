@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { UIEvent } from "react";
 import { Drawer } from "vaul";
 
+import { EXPAND_SHEET_EVENT } from "./MapView";
 import { UpdateButton } from "./UpdateButton";
 
 // §4.2: snap points at ~15% (peek), ~55% (default), ~90% (full). vaul is the
@@ -29,7 +30,15 @@ export function Sheet({ children }: { children: React.ReactNode }) {
       if (target?.closest(".maplibregl-canvas")) setSnap(SNAP_PEEK);
     };
     document.addEventListener("click", onMapTap);
-    return () => document.removeEventListener("click", onMapTap);
+    // Multi-spot building tap (MapView) raises the sheet to browse that
+    // building's spots. MapView stops propagation on those taps, so the
+    // collapse listener above never fights this.
+    const onExpand = () => setSnap(SNAP_DEFAULT);
+    window.addEventListener(EXPAND_SHEET_EVENT, onExpand);
+    return () => {
+      document.removeEventListener("click", onMapTap);
+      window.removeEventListener(EXPAND_SHEET_EVENT, onExpand);
+    };
   }, []);
 
   return (

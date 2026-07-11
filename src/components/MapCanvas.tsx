@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 
+import type { BuildingMarker } from "./MapView";
+
 // MapLibre reaches for window/document, so the GL view is client-only and never
 // server-rendered. Loading it this way is also our graceful degradation (§Phase
 // 3): the dark map-bg fallback, the brand chrome below, and the whole sheet/list
@@ -11,10 +13,10 @@ const MapView = dynamic(() => import("./MapView"), {
   loading: () => <div className="absolute inset-0 bg-map-bg" />,
 });
 
-export function MapCanvas() {
+export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
   return (
     <div className="absolute inset-0">
-      <MapView />
+      <MapView buildings={buildings} />
 
       {/* Top bar: Grits mark + wordmark (mockup .map-top). Visual only (§4.7).
           Padding clears the iOS notch/status bar in standalone PWA mode. */}
