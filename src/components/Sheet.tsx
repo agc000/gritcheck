@@ -21,6 +21,11 @@ export function Sheet({ children }: { children: React.ReactNode }) {
       snapPoints={[SNAP_PEEK, SNAP_DEFAULT, SNAP_FULL]}
       activeSnapPoint={snap}
       setActiveSnapPoint={setSnap}
+      // vaul's default is 100ms: a fast swipe right after a scroll fling gets
+      // reinterpreted as a sheet drag and collapses the snap (Alan's phone
+      // report). 500ms keeps consecutive scroll swipes as scrolls; a deliberate
+      // pause-then-drag still moves the sheet.
+      scrollLockTimeout={500}
     >
       <Drawer.Portal>
         <Drawer.Content

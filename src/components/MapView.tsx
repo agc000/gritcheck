@@ -8,9 +8,12 @@ import "maplibre-gl/dist/maplibre-gl.css";
 // (§Phase 3 "Alan provides"). Bounds keep the map pinned to UMBC's core so it
 // can never be panned to open ocean; center/zoom frame the academic row.
 const CAMPUS_BOUNDS: maplibregl.LngLatBoundsLike = [
-  [-76.7165, 39.2505], // SW  // PLACEHOLDER — Alan to confirm
-  [-76.7045, 39.2585], // NE  // PLACEHOLDER — Alan to confirm
+  [-76.7215, 39.2465], // SW  // PLACEHOLDER — Alan to confirm
+  [-76.6995, 39.2625], // NE  // PLACEHOLDER — Alan to confirm
 ];
+// Note: at the default zoom the viewport nearly spans CAMPUS_BOUNDS, so
+// maxBounds effectively pins the center — retune bounds, not center, to
+// change the default framing.
 const CAMPUS_CENTER: [number, number] = [-76.7105, 39.2548]; // PLACEHOLDER
 const CAMPUS_PITCH = 30; // fixed, non-interactive (§4.2, amended 2026-07-11)
 
@@ -25,7 +28,7 @@ export default function MapView() {
       container: containerRef.current,
       style: "/map-style.json",
       center: CAMPUS_CENTER,
-      zoom: 15.2,
+      zoom: 14.6,
       minZoom: 14,
       maxZoom: 18,
       pitch: CAMPUS_PITCH,
