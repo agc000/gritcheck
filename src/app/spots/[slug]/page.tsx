@@ -90,9 +90,15 @@ export default async function SpotPage({
     .map((chip) => chip.label);
 
   return (
-    <main className="mx-auto min-h-dvh max-w-lg bg-sheet px-4.5 pb-10 text-ink">
+    // w-full matters: body is a flex column, and mx-auto on a flex item
+    // otherwise collapses the page to fit-content width.
+    <main className="mx-auto min-h-dvh w-full max-w-lg bg-sheet px-4.5 pb-10 text-ink">
       <nav className="pt-4">
-        <Link href="/" className="text-sm font-semibold text-muted">
+        {/* Padded to a ≥44px tap target (§4.8); negative margin keeps layout. */}
+        <Link
+          href="/"
+          className="-my-3 -ml-2 inline-block px-2 py-3 text-sm font-semibold text-muted"
+        >
           ← Map
         </Link>
       </nav>
@@ -110,7 +116,7 @@ export default async function SpotPage({
           {verdict.fresh && (
             <span
               className={`font-mono text-xs ${
-                verdict.freshTone === "hold" ? "text-hold" : "text-faint"
+                verdict.freshTone === "hold" ? "text-hold" : "text-muted"
               }`}
             >
               {verdict.fresh.startsWith("opens") || verdict.fresh.startsWith("typical")
@@ -130,7 +136,7 @@ export default async function SpotPage({
       </section>
 
       <section className="mt-5 border-t border-line pt-4">
-        <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-faint">
+        <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-muted">
           Hours today
         </h2>
         <p className="mt-1.5 text-sm font-semibold">
@@ -140,7 +146,7 @@ export default async function SpotPage({
 
       {attributeLabels.length > 0 && (
         <section className="mt-5 border-t border-line pt-4">
-          <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-faint">
+          <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-muted">
             Good to know
           </h2>
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -158,7 +164,7 @@ export default async function SpotPage({
 
       {item.consensus && (
         <section className="mt-5 border-t border-line pt-4">
-          <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-faint">
+          <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-muted">
             The consensus
           </h2>
           <p className="mt-1.5 text-sm italic text-muted">
@@ -169,7 +175,7 @@ export default async function SpotPage({
 
       {item.worthItPct !== null && (
         <section className="mt-5 border-t border-line pt-4">
-          <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-faint">
+          <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-muted">
             Worth it
           </h2>
           <p className="mt-1.5 text-sm font-semibold">

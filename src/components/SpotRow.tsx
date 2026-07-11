@@ -56,7 +56,7 @@ export function SpotRow({
         {verdict.fresh && (
           <div
             className={`mt-0.75 font-mono text-[10px] ${
-              verdict.freshTone === "hold" ? "text-hold" : "text-faint"
+              verdict.freshTone === "hold" ? "text-hold" : "text-muted"
             }`}
           >
             {verdict.fresh}

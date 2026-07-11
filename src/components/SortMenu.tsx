@@ -34,7 +34,7 @@ export function SortMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.25 whitespace-nowrap rounded-full bg-soft px-[13px] py-2 text-xs font-bold text-ink"
+        className="relative flex items-center gap-1.25 whitespace-nowrap rounded-full bg-soft px-3.25 py-2 text-xs font-bold text-ink before:absolute before:inset-x-0 before:-inset-y-1.5"
       >
         <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
           <path d="M4 7h16M7 12h10M10 17h4" />
@@ -45,7 +45,7 @@ export function SortMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+8px)] z-20 min-w-[180px] overflow-hidden rounded-card border border-line bg-sheet p-[5px] shadow-[0_12px_32px_rgba(0,0,0,0.14)]"
+          className="absolute right-0 top-[calc(100%+8px)] z-20 min-w-45 overflow-hidden rounded-card border border-line bg-sheet p-1.25 shadow-[0_12px_32px_rgba(0,0,0,0.14)]"
         >
           {options.map((option) => {
             const selected = option.id === activeId;
@@ -58,7 +58,7 @@ export function SortMenu({
                   onChange(option.id);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center justify-between rounded-[9px] px-3 py-2.5 text-left text-[13.5px] font-semibold ${
+                className={`flex w-full items-center justify-between rounded-[9px] px-3 py-3 text-left text-[13.5px] font-semibold ${
                   selected ? "bg-gold-soft text-black" : "text-ink hover:bg-soft"
                 }`}
               >
