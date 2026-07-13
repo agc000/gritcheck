@@ -71,6 +71,11 @@ closed-all-week. Re-capture fixtures in late August for realistic fall data befo
 - [x] **"Chinese spot upstairs":** RESOLVED 2026-07-13 — it's Sushi Do; its baseline upgraded
   from UNVERIFIED-derived to [ALAN] lighter-line.
 - [ ] **True Grit's Retriever Market** exists in the feed but not in your roster. Add it as a spot?
+- [x] **"Retriever Burger Company"** RESOLVED 2026-07-13 — Alan: RBC is the OLD name,
+  Yellas is current. The official where-to-eat page is stale; roster unchanged.
+- [ ] **Einstein Bros: "open 7 days a week during semester"** per the same official page —
+  our provisional Mon–Fri seed is summer-plausible but wrong for fall. Scraper (Phase 6)
+  will correct it; if seeding again before then, add weekend rows.
 - [ ] **Admin Coffee Shop:** feed calls it "The Coffee Shoppe" (building: Admin) and it **is**
   scrapable — SPOT_DATA's `manual: ___` can become `scrape:dining`. Confirm same place.
   Also: the consensus-line CONFLICT (you: mid; students: hidden gem) still needs your call.
@@ -90,6 +95,15 @@ closed-all-week. Re-capture fixtures in late August for realistic fall data befo
 - [ ] **Consensus lines:** all marked DRAFT — approve or rewrite each in your voice.
 
 ## 3. Study spots (the biggest gap — Part 3 is ~10% filled)
+
+> **2026-07-13, from library.umbc.edu/studyspaces.php [OFFICIAL]** — two strong zone
+> candidates beyond the 4 already seeded, pending Alan's on-foot confirm:
+> - **AOK 2nd Floor study area**: whiteboards, big tables, large monitors with cables —
+>   upgrades SPOT_DATA's old "(?)" guess to documented. Also: 16 reservable group rooms
+>   (3h cap) + 12 first-come 4-seat open rooms library-wide.
+> - **AOK Atrium**: open 24h (separate from RLC), conversation OK — a second 24h zone.
+> - PC counts if useful for sub-lines: floors 3–4 have 22 PCs, 5–6 have 32, floors 1/2/7
+>   share 160.
 
 - [ ] Lat/lng for every study row (ILSB floors, AOK floors, Engineering, UC, Commons).
 - [ ] Confirm which AOK floors are real zones (7th confirmed; 1st/2nd are `(?)` guesses).
