@@ -1,0 +1,710 @@
+{
+ "_meta": {
+  "source": "docs/HOURS_BASELINES-1.md + LibCal api_hours_grid (2026-07-13)",
+  "note": "Provisional manual seed; Phase 6 scraper replaces rows tagged manual-provisional."
+ },
+ "hours": [
+  {
+   "slug": "chick-fil-a",
+   "day_of_week": 1,
+   "opens": "09:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "chick-fil-a",
+   "day_of_week": 2,
+   "opens": "09:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "chick-fil-a",
+   "day_of_week": 3,
+   "opens": "09:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "chick-fil-a",
+   "day_of_week": 4,
+   "opens": "09:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "chick-fil-a",
+   "day_of_week": 5,
+   "opens": "09:00",
+   "closes": "16:00"
+  },
+  {
+   "slug": "chick-fil-a",
+   "day_of_week": 6,
+   "opens": "09:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "admin-coffee-shop",
+   "day_of_week": 1,
+   "opens": "07:30",
+   "closes": "14:00"
+  },
+  {
+   "slug": "admin-coffee-shop",
+   "day_of_week": 2,
+   "opens": "07:30",
+   "closes": "14:00"
+  },
+  {
+   "slug": "admin-coffee-shop",
+   "day_of_week": 3,
+   "opens": "07:30",
+   "closes": "14:00"
+  },
+  {
+   "slug": "admin-coffee-shop",
+   "day_of_week": 4,
+   "opens": "07:30",
+   "closes": "14:00"
+  },
+  {
+   "slug": "admin-coffee-shop",
+   "day_of_week": 5,
+   "opens": "07:30",
+   "closes": "14:00"
+  },
+  {
+   "slug": "blends-and-bowls",
+   "day_of_week": 1,
+   "opens": "08:30",
+   "closes": "17:00"
+  },
+  {
+   "slug": "blends-and-bowls",
+   "day_of_week": 2,
+   "opens": "08:30",
+   "closes": "17:00"
+  },
+  {
+   "slug": "blends-and-bowls",
+   "day_of_week": 3,
+   "opens": "08:30",
+   "closes": "17:00"
+  },
+  {
+   "slug": "blends-and-bowls",
+   "day_of_week": 4,
+   "opens": "08:30",
+   "closes": "17:00"
+  },
+  {
+   "slug": "blends-and-bowls",
+   "day_of_week": 5,
+   "opens": "08:30",
+   "closes": "17:00"
+  },
+  {
+   "slug": "commons-retriever-market",
+   "day_of_week": 1,
+   "opens": "07:30",
+   "closes": "23:00"
+  },
+  {
+   "slug": "commons-retriever-market",
+   "day_of_week": 2,
+   "opens": "07:30",
+   "closes": "23:00"
+  },
+  {
+   "slug": "commons-retriever-market",
+   "day_of_week": 3,
+   "opens": "07:30",
+   "closes": "23:00"
+  },
+  {
+   "slug": "commons-retriever-market",
+   "day_of_week": 4,
+   "opens": "07:30",
+   "closes": "23:00"
+  },
+  {
+   "slug": "copperhead-jacks",
+   "day_of_week": 1,
+   "opens": "11:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "copperhead-jacks",
+   "day_of_week": 2,
+   "opens": "11:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "copperhead-jacks",
+   "day_of_week": 3,
+   "opens": "11:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "copperhead-jacks",
+   "day_of_week": 4,
+   "opens": "11:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "copperhead-jacks",
+   "day_of_week": 5,
+   "opens": "11:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "dunkin",
+   "day_of_week": 1,
+   "opens": "07:30",
+   "closes": "16:00"
+  },
+  {
+   "slug": "dunkin",
+   "day_of_week": 2,
+   "opens": "07:30",
+   "closes": "16:00"
+  },
+  {
+   "slug": "dunkin",
+   "day_of_week": 3,
+   "opens": "07:30",
+   "closes": "16:00"
+  },
+  {
+   "slug": "dunkin",
+   "day_of_week": 4,
+   "opens": "07:30",
+   "closes": "16:00"
+  },
+  {
+   "slug": "dunkin",
+   "day_of_week": 5,
+   "opens": "07:30",
+   "closes": "16:00"
+  },
+  {
+   "slug": "einstein-bros",
+   "day_of_week": 1,
+   "opens": "07:30",
+   "closes": "21:00"
+  },
+  {
+   "slug": "einstein-bros",
+   "day_of_week": 2,
+   "opens": "07:30",
+   "closes": "21:00"
+  },
+  {
+   "slug": "einstein-bros",
+   "day_of_week": 3,
+   "opens": "07:30",
+   "closes": "21:00"
+  },
+  {
+   "slug": "einstein-bros",
+   "day_of_week": 4,
+   "opens": "07:30",
+   "closes": "21:00"
+  },
+  {
+   "slug": "einstein-bros",
+   "day_of_week": 5,
+   "opens": "07:30",
+   "closes": "21:00"
+  },
+  {
+   "slug": "halal-shack",
+   "day_of_week": 1,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "halal-shack",
+   "day_of_week": 2,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "halal-shack",
+   "day_of_week": 3,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "halal-shack",
+   "day_of_week": 4,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "halal-shack",
+   "day_of_week": 5,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "yellas",
+   "day_of_week": 1,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "yellas",
+   "day_of_week": 2,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "yellas",
+   "day_of_week": 3,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "yellas",
+   "day_of_week": 4,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "yellas",
+   "day_of_week": 5,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "piccolo-italia",
+   "day_of_week": 1,
+   "opens": "11:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "piccolo-italia",
+   "day_of_week": 2,
+   "opens": "11:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "piccolo-italia",
+   "day_of_week": 3,
+   "opens": "11:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "piccolo-italia",
+   "day_of_week": 4,
+   "opens": "11:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "piccolo-italia",
+   "day_of_week": 5,
+   "opens": "11:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "wild-greens",
+   "day_of_week": 1,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "wild-greens",
+   "day_of_week": 2,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "wild-greens",
+   "day_of_week": 3,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "wild-greens",
+   "day_of_week": 4,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "wild-greens",
+   "day_of_week": 5,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "sushi-do",
+   "day_of_week": 1,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "sushi-do",
+   "day_of_week": 2,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "sushi-do",
+   "day_of_week": 3,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "sushi-do",
+   "day_of_week": 4,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "sushi-do",
+   "day_of_week": 5,
+   "opens": "11:00",
+   "closes": "22:00"
+  },
+  {
+   "slug": "indian-kitchen",
+   "day_of_week": 1,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "indian-kitchen",
+   "day_of_week": 2,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "indian-kitchen",
+   "day_of_week": 3,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "indian-kitchen",
+   "day_of_week": 4,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "indian-kitchen",
+   "day_of_week": 5,
+   "opens": "11:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "starbucks",
+   "day_of_week": 1,
+   "opens": "08:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "starbucks",
+   "day_of_week": 2,
+   "opens": "08:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "starbucks",
+   "day_of_week": 3,
+   "opens": "08:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "starbucks",
+   "day_of_week": 4,
+   "opens": "08:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "starbucks",
+   "day_of_week": 5,
+   "opens": "08:00",
+   "closes": "18:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 0,
+   "opens": "07:30",
+   "closes": "09:30"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 0,
+   "opens": "11:00",
+   "closes": "14:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 0,
+   "opens": "16:30",
+   "closes": "20:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 0,
+   "opens": "21:00",
+   "closes": "00:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 1,
+   "opens": "07:30",
+   "closes": "09:30"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 1,
+   "opens": "11:00",
+   "closes": "14:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 1,
+   "opens": "16:30",
+   "closes": "20:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 1,
+   "opens": "21:00",
+   "closes": "00:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 2,
+   "opens": "07:30",
+   "closes": "09:30"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 2,
+   "opens": "11:00",
+   "closes": "14:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 2,
+   "opens": "16:30",
+   "closes": "20:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 2,
+   "opens": "21:00",
+   "closes": "00:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 3,
+   "opens": "07:30",
+   "closes": "09:30"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 3,
+   "opens": "11:00",
+   "closes": "14:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 3,
+   "opens": "16:30",
+   "closes": "20:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 3,
+   "opens": "21:00",
+   "closes": "00:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 4,
+   "opens": "07:30",
+   "closes": "09:30"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 4,
+   "opens": "11:00",
+   "closes": "14:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 4,
+   "opens": "16:30",
+   "closes": "20:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 4,
+   "opens": "21:00",
+   "closes": "00:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 5,
+   "opens": "07:30",
+   "closes": "09:30"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 5,
+   "opens": "11:00",
+   "closes": "14:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 5,
+   "opens": "16:30",
+   "closes": "20:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 5,
+   "opens": "21:00",
+   "closes": "00:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 6,
+   "opens": "07:30",
+   "closes": "09:30"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 6,
+   "opens": "11:00",
+   "closes": "14:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 6,
+   "opens": "16:30",
+   "closes": "20:00"
+  },
+  {
+   "slug": "true-grits",
+   "day_of_week": 6,
+   "opens": "21:00",
+   "closes": "00:00"
+  },
+  {
+   "slug": "aok-3rd-4th-floor",
+   "day_of_week": 0,
+   "opens": "12:00",
+   "closes": "19:00"
+  },
+  {
+   "slug": "aok-3rd-4th-floor",
+   "day_of_week": 1,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-3rd-4th-floor",
+   "day_of_week": 2,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-3rd-4th-floor",
+   "day_of_week": 3,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-3rd-4th-floor",
+   "day_of_week": 4,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-3rd-4th-floor",
+   "day_of_week": 5,
+   "opens": "08:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "aok-5th-6th-floor",
+   "day_of_week": 0,
+   "opens": "12:00",
+   "closes": "19:00"
+  },
+  {
+   "slug": "aok-5th-6th-floor",
+   "day_of_week": 1,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-5th-6th-floor",
+   "day_of_week": 2,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-5th-6th-floor",
+   "day_of_week": 3,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-5th-6th-floor",
+   "day_of_week": 4,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-5th-6th-floor",
+   "day_of_week": 5,
+   "opens": "08:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "aok-rlc",
+   "day_of_week": 0,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-rlc",
+   "day_of_week": 1,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-rlc",
+   "day_of_week": 2,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-rlc",
+   "day_of_week": 3,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-rlc",
+   "day_of_week": 4,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-rlc",
+   "day_of_week": 5,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-rlc",
+   "day_of_week": 6,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  }
+ ]
+}

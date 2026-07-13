@@ -53,13 +53,19 @@ Tags: coffee, vegetarian, vegan, halal, open_late, meal_swipe, mobile_order
 
 Tags: silent, group_ok, whiteboards, open_24h, near_food · Outlets: good / limited / bad · Seating: tables / couches / mixed
 
+> **2026-07-13 update (HOURS_BASELINES-1.md):** AOK rows corrected against the
+> library's published floor structure and SEEDED: RLC 1st floor (24h, group,
+> whiteboards), 3rd/4th (Quiet), 5th/6th (Absolute Quiet). The old "7th Floor
+> silent" guess was wrong — 7th is event space, not study space. Commons Top
+> Floor also seeded. Rows below reflect that.
+
 | Name | Building | Lat, Lng | Hours | Outlets | Tags | Seating | Consensus line | Typical pattern |
 |---|---|---|---|---|---|---|---|---|
 | ILSB — 2nd Floor | ILSB | ___ | manual: M–Th 7:30a–10p, F 7:30a–5p, closed wknd (Alan: verify) | good? | ___ | ___ | ___ | ___ |
 | ILSB — 1st Floor (?) | ILSB | ___ | manual: same as above? | ___ | ___ | ___ | ___ | ___ |
-| AOK Library — 7th Floor | AOK | ___ | scrape:library | ___ | silent, ___ | ___ | ___ | ___ |
-| AOK Library — 2nd Floor (?) | AOK | ___ | scrape:library | ___ | group_ok, whiteboards?, ___ | ___ | ___ | ___ |
-| AOK Library — 1st Floor (?) | AOK | ___ | scrape:library | ___ | ___ | ___ | ___ | ___ |
+| AOK — Retriever Learning Commons (1st Fl) — SEEDED | AOK | 39.256313, -76.711555 | 24h [OFFICIAL] | ___ | group_ok, whiteboards, open_24h | ___ | ___ | seeded v0 |
+| AOK — 3rd/4th Floor (Quiet) — SEEDED | AOK | 39.256313, -76.711555 | scrape:library (lid 27; provisional seeded) | ___ | (quiet — name carries it) | ___ | ___ | seeded v0 |
+| AOK — 5th/6th Floor (Absolute Quiet) — SEEDED | AOK | 39.256313, -76.711555 | scrape:library (lid 27; provisional seeded) | ___ | silent | ___ | ___ | seeded v0 |
 | Engineering Atrium (?) | Engineering | ___ | manual: ___ | ___ | ___ | ___ | ___ | ___ |
 | UC — 2nd Floor (?) | University Center | ___ | manual: ___ | ___ | ___ | ___ | ___ | ___ |
 | Commons — 2nd Floor (?) | Commons | ___ | manual: follows Commons bldg | ___ | group_ok, near_food, ___ | ___ | ___ | ___ |

@@ -1,13 +1,14 @@
 {
   "_meta": {
-    "status": "PARTIAL — food spots only. Study spots pending: every Part 3 row in docs/SPOT_DATA-3.md is missing lat/lng (and most other fields), so none are seedable yet. True Grit's Retriever Market also excluded (no coords).",
+    "status": "Phase 3 data pass — hours+baselines from docs/HOURS_BASELINES-1.md (provisional)",
     "generated": "2026-07-07",
     "notes": [
       "Consensus lines are UNAPPROVED DRAFTS from SPOT_DATA-3.md — Alan approves/rewrites before launch (§3.3).",
       "Admin Coffee Shop consensus is null pending Alan's call on the mid-vs-hidden-gem conflict.",
       "All baselines are empty pending Alan's typical-pattern column (§3.4).",
       "Attributes only reflect tags Alan has filled; missing tags are omitted, not false.",
-      "hours_source.source_slug values come from scraper/fixtures/dineoncampus-weekly-schedule.json; the dining feed spells it 'Piccola Italia' (source of truth for the slug), SPOT_DATA says 'Piccolo Italia' (kept as display name pending Alan)."
+      "hours_source.source_slug values come from scraper/fixtures/dineoncampus-weekly-schedule.json; the dining feed spells it 'Piccola Italia' (source of truth for the slug), SPOT_DATA says 'Piccolo Italia' (kept as display name pending Alan).",
+      "2026-07-13: baselines translated from Alan's patterns; 4 study zones added (AOK×3 official structure, Commons top floor); UNVERIFIED/GAP left empty per §0.7."
     ]
   },
   "spots": [
@@ -18,10 +19,27 @@
       "building": "True Grit's (residential side)",
       "lat": 39.255866,
       "lng": -76.707668,
-      "attributes": { "meal_swipe": true, "halal": true, "vegetarian": true, "open_late": true },
+      "attributes": {
+        "meal_swipe": true,
+        "halal": true,
+        "vegetarian": true,
+        "open_late": true
+      },
       "consensus": "Hit or miss, but rarely a line. Clutch for late night.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "true-grit-s" }
+      "baseline": {
+        "mon-fri": {
+          "morning": "quiet",
+          "midday": "normal",
+          "evening": "packed"
+        },
+        "sat-sun": {
+          "all": "normal"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "true-grit-s"
+      }
     },
     {
       "slug": "chick-fil-a",
@@ -32,8 +50,21 @@
       "lng": -76.713173,
       "attributes": {},
       "consensus": "Always solid, always a line. Go after 1pm.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "chick-fil-a" }
+      "baseline": {
+        "mon-fri": {
+          "morning": "normal",
+          "midday": "normal",
+          "afternoon": "quiet",
+          "evening": "packed"
+        },
+        "sat-sun": {
+          "all": "normal"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "chick-fil-a"
+      }
     },
     {
       "slug": "starbucks",
@@ -42,10 +73,16 @@
       "building": "University Center",
       "lat": 39.254465,
       "lng": -76.713014,
-      "attributes": { "coffee": true, "mobile_order": true },
+      "attributes": {
+        "coffee": true,
+        "mobile_order": true
+      },
       "consensus": "Same Starbucks as anywhere. Mobile order skips the line.",
       "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "starbucks" }
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "starbucks"
+      }
     },
     {
       "slug": "halal-shack",
@@ -54,10 +91,21 @@
       "building": "Commons",
       "lat": 39.255193,
       "lng": -76.71136,
-      "attributes": { "halal": true },
+      "attributes": {
+        "halal": true
+      },
       "consensus": "Best food in the Commons — everyone knows it, hence the line.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "halal-shack" }
+      "baseline": {
+        "mon-fri": {
+          "midday": "packed",
+          "afternoon": "packed",
+          "evening": "packed"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "halal-shack"
+      }
     },
     {
       "slug": "dunkin",
@@ -66,10 +114,21 @@
       "building": "Commons",
       "lat": 39.254574,
       "lng": -76.710936,
-      "attributes": { "coffee": true },
+      "attributes": {
+        "coffee": true
+      },
       "consensus": "Weaker than off-campus Dunkin. Double-check your order.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "dunkin" }
+      "baseline": {
+        "mon-fri": {
+          "morning": "packed",
+          "midday": "normal",
+          "afternoon": "normal"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "dunkin"
+      }
     },
     {
       "slug": "wild-greens",
@@ -78,10 +137,20 @@
       "building": "Commons",
       "lat": 39.255153,
       "lng": -76.711216,
-      "attributes": { "vegetarian": true, "vegan": true },
+      "attributes": {
+        "vegetarian": true,
+        "vegan": true
+      },
       "consensus": "Always solid, never a line.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "wild-greens" }
+      "baseline": {
+        "mon-fri": {
+          "all": "quiet"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "wild-greens"
+      }
     },
     {
       "slug": "yellas",
@@ -92,8 +161,16 @@
       "lng": -76.711328,
       "attributes": {},
       "consensus": "Very solid burger.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "yella-s" }
+      "baseline": {
+        "mon-fri": {
+          "midday": "packed",
+          "afternoon": "packed"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "yella-s"
+      }
     },
     {
       "slug": "piccolo-italia",
@@ -104,8 +181,15 @@
       "lng": -76.711018,
       "attributes": {},
       "consensus": "Solid pizza — same as the dining hall's, shorter walk.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "piccola-italia" }
+      "baseline": {
+        "mon-fri": {
+          "all": "quiet"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "piccola-italia"
+      }
     },
     {
       "slug": "blends-and-bowls",
@@ -116,8 +200,15 @@
       "lng": -76.711006,
       "attributes": {},
       "consensus": "Below-average smoothies and bowls.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "blends-and-bowls" }
+      "baseline": {
+        "mon-fri": {
+          "all": "normal"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "blends-and-bowls"
+      }
     },
     {
       "slug": "indian-kitchen",
@@ -129,7 +220,10 @@
       "attributes": {},
       "consensus": "Mid Indian — fine, not the best.",
       "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "indian-kitchen" }
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "indian-kitchen"
+      }
     },
     {
       "slug": "copperhead-jacks",
@@ -140,8 +234,17 @@
       "lng": -76.711006,
       "attributes": {},
       "consensus": "Chipotle-style bowls. Good every now and then.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "copperhead-jacks" }
+      "baseline": {
+        "mon-fri": {
+          "midday": "packed",
+          "afternoon": "normal",
+          "evening": "normal"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "copperhead-jacks"
+      }
     },
     {
       "slug": "sushi-do",
@@ -152,8 +255,15 @@
       "lng": -76.711275,
       "attributes": {},
       "consensus": "Mid at best.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "sushi-do" }
+      "baseline": {
+        "mon-fri": {
+          "all": "quiet"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "sushi-do"
+      }
     },
     {
       "slug": "commons-retriever-market",
@@ -164,8 +274,15 @@
       "lng": -76.710894,
       "attributes": {},
       "consensus": "Cheapest snacks and quick meals on campus.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "commons-retriever-market" }
+      "baseline": {
+        "mon-fri": {
+          "all": "quiet"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "commons-retriever-market"
+      }
     },
     {
       "slug": "skylight-room",
@@ -177,7 +294,10 @@
       "attributes": {},
       "consensus": "Sit-down spot upstairs. Check what your plan covers first.",
       "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "the-skylight-room" }
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "the-skylight-room"
+      }
     },
     {
       "slug": "admin-coffee-shop",
@@ -186,10 +306,21 @@
       "building": "Administration",
       "lat": 39.252959,
       "lng": -76.713397,
-      "attributes": { "coffee": true },
+      "attributes": {
+        "coffee": true
+      },
       "consensus": null,
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "the-coffee-shoppe" }
+      "baseline": {
+        "mon-fri": {
+          "morning": "quiet",
+          "midday": "normal",
+          "afternoon": "quiet"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "the-coffee-shoppe"
+      }
     },
     {
       "slug": "einstein-bros",
@@ -198,10 +329,112 @@
       "building": "AOK Library",
       "lat": 39.256313,
       "lng": -76.711555,
-      "attributes": { "coffee": true },
+      "attributes": {
+        "coffee": true
+      },
       "consensus": "Solid bagels and desserts. Slow, and sells out late in the day.",
-      "baseline": {},
-      "hours_source": { "kind": "dining", "source_slug": "einstein-brother-s-bagels" }
+      "baseline": {
+        "mon-fri": {
+          "morning": "quiet",
+          "midday": "normal",
+          "afternoon": "normal",
+          "evening": "normal"
+        }
+      },
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "einstein-brother-s-bagels"
+      }
+    },
+    {
+      "slug": "aok-rlc",
+      "name": "AOK — Retriever Learning Commons",
+      "category": "study",
+      "building": "AOK Library",
+      "lat": 39.256313,
+      "lng": -76.711555,
+      "attributes": {
+        "group_ok": true,
+        "whiteboards": true,
+        "open_24h": true
+      },
+      "consensus": null,
+      "baseline": {
+        "mon-fri": {
+          "all": "normal"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
+      "hours_source": {
+        "kind": "library",
+        "source_lid": 469
+      }
+    },
+    {
+      "slug": "aok-3rd-4th-floor",
+      "name": "AOK — 3rd/4th Floor (Quiet)",
+      "category": "study",
+      "building": "AOK Library",
+      "lat": 39.256313,
+      "lng": -76.711555,
+      "attributes": {},
+      "consensus": null,
+      "baseline": {
+        "mon-fri": {
+          "midday": "packed",
+          "afternoon": "packed"
+        }
+      },
+      "hours_source": {
+        "kind": "library",
+        "source_lid": 27
+      }
+    },
+    {
+      "slug": "aok-5th-6th-floor",
+      "name": "AOK — 5th/6th Floor (Absolute Quiet)",
+      "category": "study",
+      "building": "AOK Library",
+      "lat": 39.256313,
+      "lng": -76.711555,
+      "attributes": {
+        "silent": true
+      },
+      "consensus": null,
+      "baseline": {
+        "mon-fri": {
+          "midday": "packed"
+        }
+      },
+      "hours_source": {
+        "kind": "library",
+        "source_lid": 27
+      }
+    },
+    {
+      "slug": "commons-top-floor",
+      "name": "Commons — Top Floor",
+      "category": "study",
+      "building": "Commons",
+      "lat": 39.2551,
+      "lng": -76.7112,
+      "attributes": {
+        "near_food": true
+      },
+      "consensus": null,
+      "baseline": {
+        "mon-fri": {
+          "morning": "normal",
+          "midday": "packed",
+          "afternoon": "packed",
+          "evening": "normal"
+        }
+      },
+      "hours_source": {
+        "kind": "manual"
+      }
     }
   ]
 }

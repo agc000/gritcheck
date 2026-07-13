@@ -66,8 +66,10 @@ closed-all-week. Re-capture fixtures in late August for realistic fall data befo
 ## 1. Roster decisions (blocks the seed file — quick answers)
 
 - [ ] **Pollo:** absent from the dining feed entirely. Confirm it's gone and delete the row?
-- [ ] **Yum Shoppe:** the feed has `commons-retriever-market` ("Commons Retriever Market") and no
-  "Yum Shoppe". Same place, renamed? If yes I'll map the slug and keep your display name.
+- [x] **Yum Shoppe / "CRM":** RESOLVED 2026-07-13 — Alan confirmed CRM = Commons Retriever
+  Market; hours (Mon–Thu 7:30a–11p) + light-line baseline seeded on that row.
+- [x] **"Chinese spot upstairs":** RESOLVED 2026-07-13 — it's Sushi Do; its baseline upgraded
+  from UNVERIFIED-derived to [ALAN] lighter-line.
 - [ ] **True Grit's Retriever Market** exists in the feed but not in your roster. Add it as a spot?
 - [ ] **Admin Coffee Shop:** feed calls it "The Coffee Shoppe" (building: Admin) and it **is**
   scrapable — SPOT_DATA's `manual: ___` can become `scrape:dining`. Confirm same place.
