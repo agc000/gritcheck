@@ -705,6 +705,84 @@
    "day_of_week": 6,
    "opens": "00:00",
    "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-2nd-floor",
+   "day_of_week": 0,
+   "opens": "12:00",
+   "closes": "19:00"
+  },
+  {
+   "slug": "aok-2nd-floor",
+   "day_of_week": 1,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-2nd-floor",
+   "day_of_week": 2,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-2nd-floor",
+   "day_of_week": 3,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-2nd-floor",
+   "day_of_week": 4,
+   "opens": "08:00",
+   "closes": "20:00"
+  },
+  {
+   "slug": "aok-2nd-floor",
+   "day_of_week": 5,
+   "opens": "08:00",
+   "closes": "17:00"
+  },
+  {
+   "slug": "aok-atrium",
+   "day_of_week": 0,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-atrium",
+   "day_of_week": 1,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-atrium",
+   "day_of_week": 2,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-atrium",
+   "day_of_week": 3,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-atrium",
+   "day_of_week": 4,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-atrium",
+   "day_of_week": 5,
+   "opens": "00:00",
+   "closes": "23:59:59"
+  },
+  {
+   "slug": "aok-atrium",
+   "day_of_week": 6,
+   "opens": "00:00",
+   "closes": "23:59:59"
   }
  ]
 }

@@ -8,7 +8,8 @@
       "All baselines are empty pending Alan's typical-pattern column (§3.4).",
       "Attributes only reflect tags Alan has filled; missing tags are omitted, not false.",
       "hours_source.source_slug values come from scraper/fixtures/dineoncampus-weekly-schedule.json; the dining feed spells it 'Piccola Italia' (source of truth for the slug), SPOT_DATA says 'Piccolo Italia' (kept as display name pending Alan).",
-      "2026-07-13: baselines translated from Alan's patterns; 4 study zones added (AOK×3 official structure, Commons top floor); UNVERIFIED/GAP left empty per §0.7."
+      "2026-07-13: baselines translated from Alan's patterns; 4 study zones added (AOK×3 official structure, Commons top floor); UNVERIFIED/GAP left empty per §0.7.",
+      "2026-07-13b: AOK 2nd Floor + Atrium added from official studyspaces page; Yellas/RBC roster question resolved (Yellas current)."
     ]
   },
   "spots": [
@@ -430,6 +431,56 @@
           "midday": "packed",
           "afternoon": "packed",
           "evening": "normal"
+        }
+      },
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "aok-2nd-floor",
+      "name": "AOK — 2nd Floor Study Area",
+      "category": "study",
+      "building": "AOK Library",
+      "lat": 39.256313,
+      "lng": -76.711555,
+      "attributes": {
+        "group_ok": true,
+        "whiteboards": true,
+        "seating": "tables"
+      },
+      "consensus": null,
+      "baseline": {
+        "mon-fri": {
+          "all": "normal"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
+      "hours_source": {
+        "kind": "library",
+        "source_lid": 27
+      }
+    },
+    {
+      "slug": "aok-atrium",
+      "name": "AOK — Atrium (24h)",
+      "category": "study",
+      "building": "AOK Library",
+      "lat": 39.256313,
+      "lng": -76.711555,
+      "attributes": {
+        "group_ok": true,
+        "open_24h": true
+      },
+      "consensus": null,
+      "baseline": {
+        "mon-fri": {
+          "all": "normal"
+        },
+        "sat-sun": {
+          "all": "quiet"
         }
       },
       "hours_source": {
