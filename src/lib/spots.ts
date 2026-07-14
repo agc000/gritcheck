@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { supabase } from "./supabase";
 import { nyClock, timeToMinutes, type HoursInterval } from "./time";
 import type { Category, SpotListItem } from "./types";
@@ -84,7 +85,11 @@ export async function getSpotList(): Promise<{
 
 // Single-spot fetch for the SSR detail page (§4.2). Returns null for unknown
 // or inactive slugs (RLS already hides inactive rows) → the route 404s.
-export async function getSpotDetail(slug: string): Promise<{
+// cache(): generateMetadata and the page body both call this — dedupe to one
+// Supabase round-trip per request.
+export const getSpotDetail = cache(async function getSpotDetail(
+  slug: string,
+): Promise<{
   item: SpotListItem;
   nowMs: number;
 } | null> {
@@ -132,4 +137,4 @@ export async function getSpotDetail(slug: string): Promise<{
     },
     nowMs,
   };
-}
+});

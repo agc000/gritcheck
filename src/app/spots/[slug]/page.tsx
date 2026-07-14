@@ -92,7 +92,7 @@ export default async function SpotPage({
   return (
     // w-full matters: body is a flex column, and mx-auto on a flex item
     // otherwise collapses the page to fit-content width.
-    <main className="mx-auto min-h-dvh w-full max-w-lg bg-sheet px-4.5 pb-10 text-ink">
+    <main className="animate-page-enter mx-auto min-h-dvh w-full max-w-lg bg-sheet px-4.5 pb-10 text-ink">
       <nav className="pt-4">
         {/* Padded to a ≥44px tap target (§4.8); negative margin keeps layout. */}
         <Link
@@ -184,6 +184,17 @@ export default async function SpotPage({
           </p>
         </section>
       )}
+
+      {/* §9 trademark posture: the unofficial disclaimer ships on the SSR
+          pages search engines index. Full legal footer + privacy note is
+          Phase 6. */}
+      <footer className="mt-8 border-t border-line pt-4">
+        <p className="text-[11px] leading-relaxed text-faint">
+          GritCheck is an unofficial student project and is not affiliated
+          with, endorsed by, or sponsored by UMBC. Hours and conditions are
+          community-reported and may be inaccurate.
+        </p>
+      </footer>
     </main>
   );
 }

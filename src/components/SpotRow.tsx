@@ -39,6 +39,11 @@ export function SpotRow({
   return (
     <Link
       href={`/spots/${item.slug}`}
+      // Full prefetch (Next 16: dynamic routes get no data prefetch by
+      // default): each visible row fetches its detail payload on viewport
+      // entry, so the tap-to-detail transition is instant in production.
+      // ~16 spots × a small RSC payload — cheap insurance.
+      prefetch={true}
       className={`flex items-center justify-between gap-3 transition-colors duration-100 ${
         best
           ? "mx-2.5 mb-1.5 rounded-card bg-gold-soft px-3.5 py-3.75"
