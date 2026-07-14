@@ -36,6 +36,8 @@
   --font-sans: "Avenir Next", var(--font-figtree), ui-sans-serif, system-ui,
     sans-serif;
   --font-mono: var(--font-spline-mono), ui-monospace, monospace;
+  /* Logo lockup ONLY (§4.1 amendment 2026-07-14) — never UI text. */
+  --font-grotesk: var(--font-space-grotesk), var(--font-sans);
 
   /* Radii (§4.1, amended 2026-07-10 — "sharper lines"): 14px sheet, 10px
      cards, 8px controls, 999px pills (rounded-full). */

@@ -228,6 +228,13 @@ navy, and the dark-navy UI is already campus-familiar from dineoncampus.
 Component consequence: the segmented-control thumb is now the elevated --line
 surface (a white thumb vanishes on navy), active label --ink. The §4.8
 contrast audit must be re-run against the dark palette before phase close.*
+*Amended 2026-07-14 (Alan, logo system — docs/GritCheck Logo System-print.pdf):
+the brand mark is **the Check-Pin** — one solid pin, checkmark as negative
+space, gold on navy (navy on light for print). Lockup: "Grit" 700 / "Check"
+400 in **Space Grotesk + one gold dot full stop — Space Grotesk is the lockup
+font ONLY, never UI text** (UI stays Avenir Next/Figtree). The pin replaces
+the Grits dog-face as logo/app icon; Grits remains the mascot for empty
+states, 404, and marketing art (§4.7 unchanged in spirit: mark ≠ mascot).*
 Gold is a **signal**, not decoration: Update button, active filter state, Best bet wash, selected building. If gold appears anywhere else, it's wrong. Green/amber/red/gray appear **only** as status colors.
 
 ### 4.2 Screen architecture (locked, from v7)

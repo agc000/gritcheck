@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Spline_Sans_Mono } from "next/font/google";
+import { Figtree, Space_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 
 // UI type is Avenir Next (§4.1, amended 2026-07-10) — an Apple system font
@@ -20,6 +20,15 @@ const figtree = Figtree({
 const splineMono = Spline_Sans_Mono({
   variable: "--font-spline-mono",
   subsets: ["latin"],
+  display: "optional",
+});
+
+// Space Grotesk is the LOGO LOCKUP font only (§4.1 amendment 2026-07-14,
+// GritCheck Logo System PDF) — never UI text. Two weights, tiny subset.
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "700"],
   display: "optional",
 });
 
@@ -45,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${figtree.variable} ${splineMono.variable} h-full antialiased`}
+      className={`${figtree.variable} ${splineMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

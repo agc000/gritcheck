@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- GritCheck app icon: Check-Pin on navy (logo system PDF, 2026-07-14).
+       Next.js serves this as the favicon/app icon automatically. -->
+  <rect width="64" height="64" rx="14" fill="#141A28"/>
+  <path fill="#FFC20E" fill-rule="evenodd" d="M32 8c-9.9 0-18 8-18 17.8C14 35.6 23.3 43.7 32 52.3c8.7-8.6 18-16.7 18-26.5C50 16 41.9 8 32 8Zm-3.4 29.6-7.7-7.7 4-4 3.7 3.6 10.1-10.1 4 4-14.1 14.2Z"/>
+</svg>
