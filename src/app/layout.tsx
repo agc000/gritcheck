@@ -5,15 +5,22 @@ import "./globals.css";
 // UI type is Avenir Next (§4.1, amended 2026-07-10) — an Apple system font
 // that can't be self-hosted. Figtree is the matched fallback that non-Apple
 // devices download; the stack order in globals.css puts Avenir Next first.
+// display "optional" (PSI audit 2026-07-13): with the default "swap", a late
+// webfont on slow 4G re-stamps the largest text's paint time and drags LCP
+// out by seconds. "optional" paints the metric-matched fallback and skips the
+// swap on slow first visits; Apple devices always use local Avenir Next and
+// never notice; Figtree is cached for every later visit.
 const figtree = Figtree({
   variable: "--font-figtree",
   subsets: ["latin"],
+  display: "optional",
 });
 
 // Spline Sans Mono is reserved for timestamps/data (freshness, worth-it %).
 const splineMono = Spline_Sans_Mono({
   variable: "--font-spline-mono",
   subsets: ["latin"],
+  display: "optional",
 });
 
 export const metadata: Metadata = {

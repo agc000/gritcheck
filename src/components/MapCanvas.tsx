@@ -21,11 +21,15 @@ export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
   // maplibre eval was 4.3s of throttled TBT when mounted eagerly).
   const [mapReady, setMapReady] = useState(false);
   useEffect(() => {
+    // timeout 4000 (was 1500, PSI audit): on slow devices the 1.5s cap made
+    // maplibre eval land inside the LCP window, starving the main thread so
+    // even server-painted text couldn't repaint (92% "render delay"). Idle
+    // devices still mount immediately; only busy ones wait longer.
     if ("requestIdleCallback" in window) {
-      const id = requestIdleCallback(() => setMapReady(true), { timeout: 1500 });
+      const id = requestIdleCallback(() => setMapReady(true), { timeout: 4000 });
       return () => cancelIdleCallback(id);
     }
-    const t = setTimeout(() => setMapReady(true), 350); // Safari fallback
+    const t = setTimeout(() => setMapReady(true), 600); // Safari fallback
     return () => clearTimeout(t);
   }, []);
 

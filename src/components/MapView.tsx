@@ -87,23 +87,44 @@ export default function MapView({
     // layout has settled, so MapLibre can measure a stale container size and
     // render into a stunted (black) canvas. Re-measure on load and whenever the
     // container actually changes size.
+    // Keep the compact attribution collapsed to its ⓘ toggle: expanded, its
+    // text block is the biggest paint on screen and stole LCP (PSI audit).
+    // MapLibre re-expands it internally (add/resize paths), and event-order
+    // fixes proved unreliable — so a MutationObserver strips the class the
+    // moment anything re-adds it. The user's own ⓘ tap is honored (their
+    // toggle wins for as long as they keep it open), which keeps the OSM
+    // attribution requirement satisfied: one tap away, never suppressed.
+    const attrib = map.getContainer().querySelector(".maplibregl-ctrl-attrib");
+    let userToggledAt = 0;
+    attrib
+      ?.querySelector(".maplibregl-ctrl-attrib-button")
+      ?.addEventListener("click", () => {
+        userToggledAt = Date.now();
+      }, true);
+    const attribGuard = new MutationObserver(() => {
+      if (
+        attrib &&
+        Date.now() - userToggledAt > 1000 &&
+        attrib.classList.contains("maplibregl-compact-show")
+      ) {
+        attrib.classList.remove("maplibregl-compact-show");
+      }
+    });
+    if (attrib) {
+      attrib.classList.remove("maplibregl-compact-show");
+      attribGuard.observe(attrib, { attributes: true, attributeFilter: ["class"] });
+    }
+
     map.once("load", () => {
       map.resize();
       setStyleLoaded(true);
-      // Collapse the compact attribution to its ⓘ toggle immediately: it
-      // auto-expands on load, and its text block literally became the page's
-      // LCP element in the Lighthouse gate. OSM's mobile guidance accepts
-      // the collapsed toggle; the text stays one tap away.
-      map
-        .getContainer()
-        .querySelector(".maplibregl-ctrl-attrib")
-        ?.classList.remove("maplibregl-compact-show");
     });
     const ro = new ResizeObserver(() => map.resize());
     ro.observe(containerRef.current);
 
     return () => {
       ro.disconnect();
+      attribGuard.disconnect();
       map.remove();
       mapRef.current = null;
     };
