@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import type { UIEvent } from "react";
 import { Drawer } from "vaul";
 
@@ -14,6 +14,10 @@ const SNAP_PEEK = 0.15;
 const SNAP_DEFAULT = 0.55;
 const SNAP_FULL = 0.9;
 
+// Never fires — useSyncExternalStore only needs the server/client snapshots
+// to answer "has hydration happened", no subscription involved.
+const emptySubscribe = () => () => {};
+
 export function Sheet({ children }: { children: React.ReactNode }) {
   const [snap, setSnap] = useState<number | string | null>(SNAP_DEFAULT);
   // SSR strategy (PSI audit 2026-07-13): vaul/Radix only render drawer
@@ -23,15 +27,23 @@ export function Sheet({ children }: { children: React.ReactNode }) {
   // default-snap position, and the real drawer replaces it in place on
   // mount. Identical geometry and classes → no jump, no CLS; the swap is
   // exactly the moment interactivity exists anyway.
-  const [mounted, setMounted] = useState(false);
+  // "Hydrated yet?" without an effect (react-hooks/set-state-in-effect is a
+  // CI error): server snapshot false → SSR renders the twin; client snapshot
+  // true → drawer takes over right at hydration.
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   // The twin outlives the drawer mount by ~700ms: vaul paints its content
   // offscreen and slides it up via compositor transform (which never
   // repaints, so LCP would otherwise lose the sheet entirely), and without
   // the overlap the screen goes sheet-less during the slide. Sliding over
-  // identical pixels makes the handoff invisible.
+  // identical pixels makes the handoff invisible. (setState inside the
+  // timeout callback is async — not the synchronous-in-effect pattern the
+  // lint rule bans.)
   const [twinGone, setTwinGone] = useState(false);
   useEffect(() => {
-    setMounted(true);
     const t = setTimeout(() => setTwinGone(true), 700);
     return () => clearTimeout(t);
   }, []);
