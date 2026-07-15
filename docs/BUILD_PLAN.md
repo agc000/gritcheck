@@ -324,7 +324,25 @@ Tasks: bottom sheet with snap points; Food|Study segmented control; SpotRow + St
 ### Phase 3 — The map
 Tasks: MapLibre with OpenFreeMap tiles; custom style JSON (dark charcoal base, muted labels, gold accent on campus buildings — style the JSON by hand, this is brand work); camera locked to campus bounds, rotation/pitch off; spot markers colored by status with glow for active; building/marker tap → opens sheet to that spot; recenter control; graceful fallback (list still fully works if tiles fail).
 **Alan provides:** confirmation of final lat/lng per spot (walk campus with the dev build).
-**Exit:** map feels premium (the "cool" bar Alan set); tap-through works; Lighthouse perf ≥85 with map mounted.
+**Exit (amended 2026-07-15, Alan — supersedes the prior "Lighthouse perf ≥85" numeric gate):**
+map feels premium (the "cool" bar); tap-through works; **core answer server-painted
+≤2.5s on slow-4G mobile (LCP), CLS 0, A11y/BP/SEO 100/100/100; absolute PSI perf
+score documented (63, dominated by map-runtime main-thread cost).**
+*Reasoning: the gate's intent was "the map must not wreck the 5-second answer."
+Intent is met — the answer is server-painted (SSR twin) before the map boots
+(LCP 5.7s → 2.5s, CLS 0). We are deliberately not chasing 85 against an
+indivisible vendor chunk.*
+**DEBT — TBT ~2,440ms:** MapLibre parse/eval + React hydration. NOT addressed by
+SW caching (caching skips fetch, not execution) — paid on every load, cached or
+cold. Mount is already double-deferred (`next/dynamic ssr:false` + idle-gated,
+so eval does not contend with list hydration on Chromium); two known soft spots:
+the 4s idle-timeout cap can force contention on very slow devices, and Safari's
+600ms fallback timer (no rIC) can land mid-hydration on older iPhones. Revisit
+via interaction-gated mount / longer Safari fallback / lower-priority hydration.
+**Unowned by any current phase.**
+**DEBT — pre-launch data pass (moved out of this gate):** walked lat/lng
+confirmation; ILSB + Engineering coords; on-foot outlets/seating pass.
+**Phase 3 CLOSED 2026-07-15.**
 
 ### Phase 4 — Live layer: updates, decay, Realtime
 Tasks: Edge Function `submit-update` with §5.5 limits + tests; Update sheet flow (§4.2) with geolocation pre-select; decay view live → rows show real verdicts + confidence; Realtime subscription updating open clients; follow-up prompt mechanic; comment display + flag/auto-hide; `events` instrumentation for the §8.4 metrics.
@@ -403,6 +421,50 @@ Phase close: *"Pose me this phase's §12 questions. If my answer is wrong or sha
 **Phase 1:** Explain Row Level Security to someone who's only built Express/FastAPI apps — what tier of code does it eliminate, and what's the tradeoff? Why are migrations checked into git ("schema is code")? What do generated TypeScript types from the DB schema actually prevent?
 **Phase 2:** Server components vs client components in the App Router — which parts of GritCheck are which, and why? Where does filter/sort state live and why not in a global store? Why does the recommendation being "the sort order" simplify the whole product?
 **Phase 3:** Raster vs vector tiles — what's actually different on the wire and on the GPU? Why lock the camera to campus bounds (name the UX *and* the performance reason)? What's graceful degradation, concretely, when tiles fail?
+
+*Phase 3 ANSWERED (ritual amended 2026-07-15: Q+A recorded together, no grading loop):*
+
+**① Raster vs vector.** On the wire: raster tiles are pre-rendered PNG/JPEG
+images — the style is baked in server-side, every zoom level is a fresh image
+download, and changing the look means re-rendering the entire tile pyramid.
+Vector tiles (MVT/protobuf, what OpenFreeMap serves) are compressed *geometry
+with attributes* — points, lines, polygons tagged by layer — and one payload
+serves a range of zooms by overzooming. On the GPU: raster tiles are texture
+quads (decode, upload, scale — blurry between zooms, restyle impossible);
+vector geometry is tessellated into triangles and styled at draw time by
+shaders — crisp at any zoom and pitch, restyled instantly, labels re-laid out
+client-side. Why it mattered for brand: the entire dark-gold identity is a
+hand-authored style JSON applied client-side to open geometry — we own the
+look without hosting a single tile. With raster we'd accept someone else's
+colors or run our own render farm; and the fixed-pitch extruded buildings are
+only possible because the client has real geometry to extrude.
+
+**② The camera lock.** UX: the product answers one question about one campus —
+a free camera lets a student fling themselves to downtown Baltimore or zoom
+into a parking lot; bounds guarantee every possible frame contains the answer
+space, and rotation-off preserves the north-up frame so the map matches the
+student's walking memory of campus — that IS glanceability. Perf: a bounded
+camera bounds the *tile universe* — campus at z14–18 is a handful of tiles,
+so cache stays tiny, fetches stay few, and no texture/geometry churn from
+panning the planet; the first view is a predictable, small tile set. Pitch was
+amended (fixed 30°, non-interactive) because it's still ONE authored canonical
+view — glanceability survives, and extrusions are invisible at pitch 0.
+Rotation and bounds were untouched because they carry the two guarantees:
+rotation-off = orientation, bounds = the tile/perf budget. The pitch's cost was
+measured against the gate, not assumed (LCP 2.5s / CLS 0 with pitch on).
+
+**③ OpenFreeMap dies during orientation week.** The student sees the dark
+navy-charcoal brand backdrop where tiles would be — not a broken white frame —
+with the wordmark, Update button, recenter, and the full sheet on top. And the
+sheet IS the product: list, statuses, filters, sort, detail pages all work,
+because product data flows exclusively from Supabase — zero bytes of it
+transit the tile server. This was proven, not assumed: with all requests to
+openfreemap.org blocked, 16 rows rendered, tabs and navigation worked, zero
+page errors (Phase 3 tiles-fail test). Architecturally it's progressive
+enhancement: the answer is server-painted HTML; the map is a client-only
+island (`ssr:false`, idle-mounted) whose failures cannot propagate into the
+sheet's tree. If the outage persisted, §2.1's designated fallback is MapTiler's
+free tier — a style-URL swap, not a rewrite.*
 **Phase 4 (the big one):** Walk through the full lifecycle of one update: tap → Edge Function → rate limit checks → insert → aggregation view → Realtime push → another student's screen. Why exponential decay instead of a hard time window? Why weighted voting instead of last-write-wins? Fixed-window vs token-bucket rate limiting — which did we use and what's the failure mode? Why websockets instead of polling, and what would polling cost at 200 concurrent users? What's optimistic UI and where is it safe?
 **Phase 5:** Explain stale-while-revalidate like you're teaching a freshman. What are the three Core Web Vitals and which one does the map threaten? Why PWA over native for *this* product — give the distribution argument, not just the effort argument.
 **Phase 6:** Why must the scraper be idempotent (what's an upsert)? Why is "fail loudly" a design goal — what's the horror story of a scraper failing silently? Where do secrets live and what never touches the client bundle?
