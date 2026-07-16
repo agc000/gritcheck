@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree, Space_Grotesk, Spline_Sans_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // UI type is Avenir Next (§4.1, amended 2026-07-10) — an Apple system font
@@ -56,7 +57,12 @@ export default function RootLayout({
       lang="en"
       className={`${figtree.variable} ${splineMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        {/* Vercel Analytics (dashboard side already enabled by Alan). Loads
+            its script async off the critical path — no TBT/LCP impact. */}
+        <Analytics />
+      </body>
     </html>
   );
 }
