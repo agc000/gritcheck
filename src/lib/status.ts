@@ -76,6 +76,30 @@ function freshness(lastUpdateAt: string | null, now: Date) {
   return null; // ≥3 h is never presented as current (§4.4); baseline takes over.
 }
 
+// The live-data verdict alone, or null when there is nothing current enough
+// to show: the view only reports fields inside the 3 h window, and confidence
+// Low means "treat as no data" (§4.5). Exported so the map can color status
+// glow by the same rule the rows use — two sources of "is this live" would
+// eventually disagree.
+export function liveVerdict(item: SpotListItem, now: Date): Verdict | null {
+  if (!item.isOpen) return null;
+  const live = freshness(item.lastUpdateAt, now);
+  const hasConfidence =
+    item.confidence === "high" || item.confidence === "medium";
+  if (!live || !hasConfidence) return null;
+  if (item.category === "food") {
+    if (item.crowd === "packed") {
+      return { word: "Packed", tone: "skip", ...live };
+    }
+    const mapped = item.line ? FOOD_VERDICTS[item.line] : undefined;
+    if (mapped) return { word: mapped[0], tone: mapped[1], ...live };
+  } else {
+    const mapped = item.crowd ? STUDY_VERDICTS[item.crowd] : undefined;
+    if (mapped) return { word: mapped[0], tone: mapped[1], ...live };
+  }
+  return null;
+}
+
 export function getVerdict(item: SpotListItem, now: Date): Verdict {
   if (!item.isOpen) {
     // "opens 7 AM" when there's a later opening today (mockup's closed row).
@@ -87,23 +111,8 @@ export function getVerdict(item: SpotListItem, now: Date): Verdict {
     };
   }
 
-  // Live data path: the view only reports fields inside the 3 h window, and
-  // confidence Low means "treat as no data" (§4.5).
-  const live = freshness(item.lastUpdateAt, now);
-  const hasConfidence =
-    item.confidence === "high" || item.confidence === "medium";
-  if (live && hasConfidence) {
-    if (item.category === "food") {
-      if (item.crowd === "packed") {
-        return { word: "Packed", tone: "skip", ...live };
-      }
-      const mapped = item.line ? FOOD_VERDICTS[item.line] : undefined;
-      if (mapped) return { word: mapped[0], tone: mapped[1], ...live };
-    } else {
-      const mapped = item.crowd ? STUDY_VERDICTS[item.crowd] : undefined;
-      if (mapped) return { word: mapped[0], tone: mapped[1], ...live };
-    }
-  }
+  const live = liveVerdict(item, now);
+  if (live) return live;
 
   // Baseline fallback (§3.4): honest "typical" framing, never dressed up as
   // a live reading — the mockup's "No recent data · typical: quiet" pattern.

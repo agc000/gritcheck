@@ -1,8 +1,10 @@
 import { MapCanvas } from "@/components/MapCanvas";
+import { LiveRefresh } from "@/components/LiveRefresh";
 import { Sheet } from "@/components/Sheet";
 import { SpotBrowser } from "@/components/SpotBrowser";
 import { UpdateSheet } from "@/components/UpdateSheet";
 import { getSpotList } from "@/lib/spots";
+import { liveVerdict, type Tone } from "@/lib/status";
 
 // Rendered per-request so the sheet always shows live rows.
 export const dynamic = "force-dynamic";
@@ -23,6 +25,21 @@ export default async function Home() {
       .replace(/\s*\(.+\)$/, "")
       .replace(/\s+(ground|\d+(?:st|nd|rd|th))\s+floor$/i, "")
       .trim();
+  // Building glow tone: the BEST live tone among the building's spots of a
+  // category (go beats hold beats skip). The map's job is "where should I
+  // go" — one short-line vendor inside the Commons makes the building worth
+  // walking to even if its neighbors are slammed; the per-spot warning lives
+  // in the list and detail views. Null when nothing inside has a live,
+  // confident verdict (glow off; dot falls back to open/closed).
+  type GlowTone = Exclude<Tone, "closed"> | null;
+  const bestTone = (a: GlowTone, b: Tone | null): GlowTone => {
+    const next = b === "closed" ? null : b; // liveVerdict never yields it, but the type allows it
+    if (a === null) return next;
+    if (next === null) return a;
+    const rank = { go: 0, hold: 1, skip: 2 } as const;
+    return rank[a] <= rank[next] ? a : next;
+  };
+  const now = new Date(nowMs);
   const acc = new Map<
     string,
     {
@@ -33,13 +50,19 @@ export default async function Home() {
       food: boolean;
       study: boolean;
       open: boolean;
+      foodTone: GlowTone;
+      studyTone: GlowTone;
     }
   >();
   for (const item of items) {
     const key = buildingKey(item.building);
     const a =
       acc.get(key) ??
-      { lat: 0, lng: 0, n: 0, slugs: [], food: false, study: false, open: false };
+      {
+        lat: 0, lng: 0, n: 0, slugs: [], food: false, study: false,
+        open: false, foodTone: null, studyTone: null,
+      };
+    const tone = liveVerdict(item, now)?.tone ?? null;
     acc.set(key, {
       lat: a.lat + item.lat,
       lng: a.lng + item.lng,
@@ -47,9 +70,12 @@ export default async function Home() {
       slugs: [...a.slugs, item.slug],
       food: a.food || item.category === "food",
       study: a.study || item.category === "study",
-      // Building-level status v1: open if ANY spot inside is open. Richer
-      // per-verdict glow (line/crowd colors) arrives with Phase 4 statuses.
+      // Building-level open: open if ANY spot inside is open.
       open: a.open || item.isOpen,
+      foodTone:
+        item.category === "food" ? bestTone(a.foodTone, tone) : a.foodTone,
+      studyTone:
+        item.category === "study" ? bestTone(a.studyTone, tone) : a.studyTone,
     });
   }
   const buildings = [...acc.entries()].map(([building, a]) => ({
@@ -61,6 +87,8 @@ export default async function Home() {
     food: a.food,
     study: a.study,
     open: a.open,
+    foodTone: a.foodTone,
+    studyTone: a.studyTone,
   }));
 
   return (
@@ -77,6 +105,8 @@ export default async function Home() {
       </Sheet>
       {/* Modal update flow; portals to <body>, opened by the FAB's event. */}
       {!error && <UpdateSheet items={items} />}
+      {/* Realtime: any INSERT on updates re-pulls server data (idle-gated). */}
+      <LiveRefresh />
     </main>
   );
 }

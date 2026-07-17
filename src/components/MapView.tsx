@@ -24,7 +24,28 @@ export type BuildingMarker = {
   food: boolean;
   study: boolean;
   open: boolean;
+  /** Best live tone among the building's spots per category (page.tsx). */
+  foodTone: "go" | "hold" | "skip" | null;
+  studyTone: "go" | "hold" | "skip" | null;
 };
+
+// Status colors (§4.1 tokens) — the only place they touch the map. Dot falls
+// back to open-green/closed-gray when no live tone exists; the glow layer is
+// filtered out entirely in that case.
+const TONE_COLORS = [
+  "go", "#2CB56E",
+  "hold", "#D9952E",
+  "skip", "#E25B47",
+] as const;
+const toneColor = (prop: "foodTone" | "studyTone") =>
+  [
+    "match",
+    ["coalesce", ["get", prop], "none"],
+    ...TONE_COLORS,
+    ["case", ["==", ["get", "open"], true], "#2CB56E", "#8B93A4"],
+  ] as maplibregl.ExpressionSpecification;
+const hasTone = (prop: "foodTone" | "studyTone") =>
+  ["!=", ["coalesce", ["get", prop], "none"], "none"] as const;
 
 // Campus camera. Extents are PLACEHOLDER — Alan to confirm on the campus walk
 // (§Phase 3 "Alan provides"). Bounds keep the map pinned to UMBC's core so it
@@ -149,6 +170,8 @@ export default function MapView({
           food: b.food,
           study: b.study,
           open: b.open,
+          foodTone: b.foodTone,
+          studyTone: b.studyTone,
         },
       })),
     };
@@ -231,21 +254,29 @@ export default function MapView({
     });
 
     map.addSource("spot-buildings", { type: "geojson", data });
+    // Status glow halo (§4.2): a soft wide circle under the dot, only for
+    // buildings holding a live confident verdict — "active" in the plan's
+    // sense. Color mirrors the dot's tone; applyCategory swaps the property.
+    map.addLayer({
+      id: "spot-buildings-glow",
+      type: "circle",
+      source: "spot-buildings",
+      paint: {
+        "circle-radius": 11,
+        "circle-blur": 1,
+        "circle-color": toneColor("foodTone"),
+        "circle-opacity": 0.55,
+      },
+    });
     map.addLayer({
       id: "spot-buildings-dot",
       type: "circle",
       source: "spot-buildings",
-      // Status tone v1 (§4.3 semantics): go-green when any spot inside is
-      // open, closed-gray otherwise. All gray until hours are seeded — honest
-      // by construction. Per-verdict glow lands with Phase 4 live statuses.
+      // Dot color: live tone when one exists (§4.3 semantics), else
+      // open-green / closed-gray — honest by construction.
       paint: {
         "circle-radius": 3.5,
-        "circle-color": [
-          "case",
-          ["==", ["get", "open"], true],
-          "#2CB56E",
-          "#8B93A4",
-        ],
+        "circle-color": toneColor("foodTone"),
         "circle-opacity": 0.95,
       },
     });
@@ -275,8 +306,17 @@ export default function MapView({
     // yet); it lights up the moment Part 3 data lands.
     const applyCategory = (category: Category) => {
       const visible = ["==", ["get", category], true] as maplibregl.FilterSpecification;
+      const tone = category === "food" ? ("foodTone" as const) : ("studyTone" as const);
       map.setFilter("spot-buildings-dot", visible);
       map.setFilter("spot-buildings-label", visible);
+      // Glow only where the active category has a live tone.
+      map.setFilter("spot-buildings-glow", [
+        "all",
+        visible,
+        hasTone(tone),
+      ] as unknown as maplibregl.FilterSpecification);
+      map.setPaintProperty("spot-buildings-dot", "circle-color", toneColor(tone));
+      map.setPaintProperty("spot-buildings-glow", "circle-color", toneColor(tone));
       clearSelection();
       for (const b of buildings) {
         map.setFeatureState(
