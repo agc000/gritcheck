@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FlagButton } from "@/components/FlagButton";
+import { FollowUpPrompt } from "@/components/FollowUpPrompt";
+import { SpotViewTracker } from "@/components/SpotViewTracker";
+import { InlineUpdatePrompt } from "@/components/InlineUpdatePrompt";
+import { LiveRefresh } from "@/components/LiveRefresh";
 import { StatusBadge } from "@/components/StatusBadge";
+import { UpdateSheet } from "@/components/UpdateSheet";
 import { CHIPS_BY_CATEGORY } from "@/lib/filters";
 import { baselineWord, getVerdict } from "@/lib/status";
 import { getSpotDetail } from "@/lib/spots";
@@ -9,9 +15,20 @@ import { formatMinutes } from "@/lib/time";
 import type { SpotListItem } from "@/lib/types";
 
 // SSR spot detail (§4.2): status + confidence, hours today, attribute chips,
-// consensus, worth-it %. Comments and the inline update prompt are Phase 4 —
-// they need the updates pipeline to exist.
+// consensus, worth-it %, recent comments with flag affordance, and the
+// inline "How's it right now?" update prompt.
 export const dynamic = "force-dynamic";
+
+// Comment freshness in the dry §4.4 voice; comments live for 7 days so days
+// are the coarsest unit needed.
+function commentAge(createdAt: string, now: Date): string {
+  const minutes = Math.round(
+    (now.getTime() - new Date(createdAt).getTime()) / 60_000,
+  );
+  if (minutes < 60) return `${Math.max(minutes, 0)} min ago`;
+  if (minutes < 24 * 60) return `${Math.round(minutes / 60)} h ago`;
+  return `${Math.round(minutes / (24 * 60))} d ago`;
+}
 
 export async function generateMetadata({
   params,
@@ -68,7 +85,7 @@ export default async function SpotPage({
   const detail = await getSpotDetail(slug);
   if (!detail) notFound();
 
-  const { item, nowMs } = detail;
+  const { item, comments, nowMs } = detail;
   const now = new Date(nowMs);
   const verdict = getVerdict(item, now);
   const typical = baselineWord(item.baseline, now);
@@ -179,11 +196,36 @@ export default async function SpotPage({
             Worth it
           </h2>
           <p className="mt-1.5 text-sm font-semibold">
-            {Math.round(item.worthItPct)}% said yes
+            {/* The view reports a 0–1 weighted share (§5.2). */}
+            {Math.round(item.worthItPct * 100)}% said yes
             <span className="ml-1 font-normal text-muted">(last 7 days)</span>
           </p>
         </section>
       )}
+
+      {comments.length > 0 && (
+        <section className="mt-5 border-t border-line pt-4">
+          <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-muted">
+            Recent comments
+          </h2>
+          <ul className="mt-1 divide-y divide-line">
+            {comments.map((c) => (
+              <li key={c.id} className="flex items-baseline gap-3 py-2.5">
+                {/* Escaped React text only — §5.5 bans any HTML rendering. */}
+                <p className="min-w-0 flex-1 text-sm">{c.comment}</p>
+                <span className="shrink-0 font-mono text-[11px] text-faint">
+                  {commentAge(c.created_at, now)}
+                </span>
+                <FlagButton updateId={c.id} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section className="mt-6">
+        <InlineUpdatePrompt slug={item.slug} />
+      </section>
 
       {/* §9 trademark posture: the unofficial disclaimer ships on the SSR
           pages search engines index. Full legal footer + privacy note is
@@ -195,6 +237,14 @@ export default async function SpotPage({
           community-reported and may be inaccurate.
         </p>
       </footer>
+
+      {/* Viewing a detail makes this spot the session's follow-up candidate;
+          the prompt itself can fire here or on the map page. */}
+      <SpotViewTracker id={item.id} slug={item.slug} name={item.name} />
+      <FollowUpPrompt />
+      {/* Update flow preset to this spot (single-item mount: no picker). */}
+      <UpdateSheet items={[item]} />
+      <LiveRefresh />
     </main>
   );
 }

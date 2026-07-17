@@ -88,10 +88,22 @@ export async function getSpotList(): Promise<{
 // or inactive slugs (RLS already hides inactive rows) → the route 404s.
 // cache(): generateMetadata and the page body both call this — dedupe to one
 // Supabase round-trip per request.
+export type SpotComment = {
+  id: number;
+  comment: string | null;
+  created_at: string;
+};
+
+// Recent-comments window: comments are color, not status — a week keeps them
+// honest without a graveyard of stale takes.
+const COMMENT_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+const COMMENT_LIMIT = 5;
+
 export const getSpotDetail = cache(async function getSpotDetail(
   slug: string,
 ): Promise<{
   item: SpotListItem;
+  comments: SpotComment[];
   nowMs: number;
 } | null> {
   const nowMs = Date.now();
@@ -104,17 +116,27 @@ export const getSpotDetail = cache(async function getSpotDetail(
     .maybeSingle();
   if (!spot) return null;
 
-  const [{ data: live }, { data: hours }] = await Promise.all([
-    supabase
-      .from("spot_current_status")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle(),
-    supabase
-      .from("spot_hours")
-      .select("spot_id,day_of_week,opens,closes")
-      .eq("spot_id", spot.id),
-  ]);
+  const [{ data: live }, { data: hours }, { data: comments }] =
+    await Promise.all([
+      supabase
+        .from("spot_current_status")
+        .select("*")
+        .eq("slug", slug)
+        .maybeSingle(),
+      supabase
+        .from("spot_hours")
+        .select("spot_id,day_of_week,opens,closes")
+        .eq("spot_id", spot.id),
+      // RLS already filters hidden rows (§3.5) — no client-side moderation.
+      supabase
+        .from("updates")
+        .select("id,comment,created_at")
+        .eq("spot_id", spot.id)
+        .not("comment", "is", null)
+        .gte("created_at", new Date(nowMs - COMMENT_WINDOW_MS).toISOString())
+        .order("created_at", { ascending: false })
+        .limit(COMMENT_LIMIT),
+    ]);
 
   return {
     item: {
@@ -137,6 +159,7 @@ export const getSpotDetail = cache(async function getSpotDetail(
       worthItPct: live?.worth_it_pct ?? null,
       lastUpdateAt: live?.last_update_at ?? null,
     },
+    comments: comments ?? [],
     nowMs,
   };
 });

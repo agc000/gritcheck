@@ -7,11 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.5"
-  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -156,6 +151,71 @@ export type Database = {
         }
         Relationships: []
       }
+      update_flags: {
+        Row: {
+          created_at: string
+          device_id: string
+          update_id: number
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          update_id: number
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          update_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "update_flags_update_id_fkey"
+            columns: ["update_id"]
+            isOneToOne: false
+            referencedRelation: "updates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      update_rate_limits: {
+        Row: {
+          created_at: string
+          device_id: string
+          id: number
+          ip_hash: string
+          spot_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          id?: never
+          ip_hash: string
+          spot_id: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          id?: never
+          ip_hash?: string
+          spot_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "update_rate_limits_spot_id_fkey"
+            columns: ["spot_id"]
+            isOneToOne: false
+            referencedRelation: "spot_current_status"
+            referencedColumns: ["spot_id"]
+          },
+          {
+            foreignKeyName: "update_rate_limits_spot_id_fkey"
+            columns: ["spot_id"]
+            isOneToOne: false
+            referencedRelation: "spots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       updates: {
         Row: {
           comment: string | null
@@ -236,7 +296,10 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      flag_update: {
+        Args: { p_device_id: string; p_update_id: number }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
@@ -372,3 +435,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
