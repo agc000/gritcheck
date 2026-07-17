@@ -35,6 +35,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  // Absolute base for canonical/OG URL resolution on every page.
+  metadataBase: new URL("https://gritcheck.live"),
   title: "GritCheck",
   description:
     "Live food and study spots at UMBC — know the best place to go, and whether to trust it.",
