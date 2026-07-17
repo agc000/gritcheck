@@ -71,26 +71,26 @@ await cleanup(); // in case a previous run died mid-way
 
 try {
   console.log("# accept + per-spot limits (10-minute window)");
-  let r = await post({ spot_id: SPOT_A, device_id: d1, kind: "food", line: "short", comment: "  test comment  " });
+  let r = await post({ spot_id: SPOT_A, device_id: d1, kind: "food", line: 2, comment: "  test comment  " });
   check("first valid update → 201", r.status === 201, JSON.stringify(r.body));
 
-  r = await post({ spot_id: SPOT_A, device_id: d1, kind: "food", line: "short" });
+  r = await post({ spot_id: SPOT_A, device_id: d1, kind: "food", line: 2 });
   check("same device, same spot, immediately → 429 (device 1/spot/10min)", r.status === 429);
 
-  r = await post({ spot_id: SPOT_A, device_id: d2, kind: "food", line: "normal" });
+  r = await post({ spot_id: SPOT_A, device_id: d2, kind: "food", line: 5 });
   check("2nd device on spot → 201", r.status === 201);
-  r = await post({ spot_id: SPOT_A, device_id: d3, kind: "food", line: "long" });
+  r = await post({ spot_id: SPOT_A, device_id: d3, kind: "food", line: 9 });
   check("3rd device on spot → 201 (IP at 3/spot/10min cap)", r.status === 201);
-  r = await post({ spot_id: SPOT_A, device_id: d4, kind: "food", line: "long" });
+  r = await post({ spot_id: SPOT_A, device_id: d4, kind: "food", line: 9 });
   check("4th device, same IP, same spot → 429 (IP 3/spot/10min)", r.status === 429);
 
-  r = await post({ spot_id: SPOT_B, device_id: d1, kind: "food", line: "short" });
+  r = await post({ spot_id: SPOT_B, device_id: d1, kind: "food", line: 2 });
   check("device blocked on A is fine on B → 201", r.status === 201);
 
   console.log("# validation (zod, §5.5)");
-  r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food", line: "huge" });
-  check("bad enum → 400", r.status === 400);
-  r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food", line: "short", comment: "x".repeat(81) });
+  r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food", line: 11 });
+  check("out-of-range line (11) → 400", r.status === 400);
+  r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food", line: 2, comment: "x".repeat(81) });
   check("81-char comment → 400", r.status === 400);
   r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food", crowd: "packed" });
   check("crowd on a food update → 400", r.status === 400);
@@ -98,7 +98,7 @@ try {
   check("no signal fields at all → 400", r.status === 400);
   r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "study", noise: "quiet" });
   check("study update on a food spot → 400", r.status === 400);
-  r = await post({ spot_id: uuid(), device_id: uuid(), kind: "food", line: "short" });
+  r = await post({ spot_id: uuid(), device_id: uuid(), kind: "food", line: 2 });
   check("unknown spot → 404", r.status === 404);
 
   console.log("# daily caps (synthetic 30-min-old quota rows)");

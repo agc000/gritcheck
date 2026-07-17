@@ -49,6 +49,53 @@ function nearestSpot(
   return best;
 }
 
+// Line scale (§3.1/§4.2 amendment 2026-07-17): rate 1–10 instead of picking
+// a word. Color bands mirror the §4.3 verdict mapping — 1–3 go-green, 4–6
+// hold-amber, 7–10 skip-red — status colors used AS status, which §4.1
+// permits. Two rows of five keeps every target ≥44px on a 390px viewport.
+const LINE_BAND = (n: number) =>
+  n <= 3 ? ("go" as const) : n <= 6 ? ("hold" as const) : ("skip" as const);
+const BAND_TEXT = { go: "text-go", hold: "text-hold", skip: "text-skip" };
+const BAND_BG = { go: "bg-go", hold: "bg-hold", skip: "bg-skip" };
+
+function LineScaleRow({
+  value,
+  onChange,
+}: {
+  value: number | null;
+  onChange: (next: number) => void;
+}) {
+  return (
+    <div>
+      <p className="mb-1.5 text-[12.5px] font-semibold text-muted">Line</p>
+      <div className="grid grid-cols-5 gap-2" role="group" aria-label="Line, 1 to 10">
+        {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => {
+          const band = LINE_BAND(n);
+          return (
+            <button
+              key={n}
+              type="button"
+              aria-pressed={value === n}
+              onClick={() => onChange(n)}
+              className={`h-12 rounded-md border text-[15px] font-bold transition-colors duration-150 motion-reduce:transition-none ${
+                value === n
+                  ? `border-transparent text-black ${BAND_BG[band]}`
+                  : `border-line bg-soft ${BAND_TEXT[band]}`
+              }`}
+            >
+              {n}
+            </button>
+          );
+        })}
+      </div>
+      <div className="mt-1 flex justify-between text-[11px] text-faint">
+        <span>1 · walk right up</span>
+        <span>10 · out the door</span>
+      </div>
+    </div>
+  );
+}
+
 // One-tap-per-field button row. Selected state borrows the sanctioned
 // active-filter gold (FilterChips idiom: black fill, gold text).
 function FieldRow<T extends string>({
@@ -94,7 +141,7 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
   // "You're near X" is only honest when location chose X.
   const [located, setLocated] = useState(false);
 
-  const [line, setLine] = useState<"short" | "normal" | "long" | null>(null);
+  const [line, setLine] = useState<number | null>(null);
   const [worthIt, setWorthIt] = useState<boolean | null>(null);
   const [crowd, setCrowd] = useState<"empty" | "normal" | "packed" | null>(null);
   const [noise, setNoise] = useState<"quiet" | "normal" | "loud" | null>(null);
@@ -316,13 +363,7 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
 
               {spot.category === "food" ? (
                 <>
-                  <FieldRow
-                    label="Line"
-                    options={[
-                      { value: "short", word: "Short" },
-                      { value: "normal", word: "Normal" },
-                      { value: "long", word: "Long" },
-                    ]}
+                  <LineScaleRow
                     value={line}
                     onChange={(v) => setLine(line === v ? null : v)}
                   />

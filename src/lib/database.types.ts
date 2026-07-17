@@ -226,7 +226,7 @@ export type Database = {
           hidden: boolean
           id: number
           kind: string
-          line: string | null
+          line: number | null
           noise: string | null
           spot_id: string
           worth_it: boolean | null
@@ -240,7 +240,7 @@ export type Database = {
           hidden?: boolean
           id?: never
           kind: string
-          line?: string | null
+          line?: number | null
           noise?: string | null
           spot_id: string
           worth_it?: boolean | null
@@ -254,7 +254,7 @@ export type Database = {
           hidden?: boolean
           id?: never
           kind?: string
-          line?: string | null
+          line?: number | null
           noise?: string | null
           spot_id?: string
           worth_it?: boolean | null

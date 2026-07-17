@@ -63,7 +63,7 @@ select is(
 -- now() advances microseconds by the time the view evaluates.
 -- 15 min → exp(-1/3) ≈ 0.7165
 insert into updates (spot_id, device_id, kind, line, created_at) values
-  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 'short',
+  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 2,
    now() - interval '15 minutes');
 select ok(
   abs((select confidence_weight from spot_current_status where slug = 'test-food')
@@ -73,7 +73,7 @@ select ok(
 
 -- 45 min → cumulative w = exp(-1/3) + exp(-1) ≈ 0.7165 + 0.3679
 insert into updates (spot_id, device_id, kind, line, created_at) values
-  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 'short',
+  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 2,
    now() - interval '45 minutes');
 select ok(
   abs((select confidence_weight from spot_current_status where slug = 'test-food')
@@ -83,7 +83,7 @@ select ok(
 
 -- 90 min → adds exp(-2) ≈ 0.1353
 insert into updates (spot_id, device_id, kind, line, created_at) values
-  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 'short',
+  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 2,
    now() - interval '90 minutes');
 select ok(
   abs((select confidence_weight from spot_current_status where slug = 'test-food')
@@ -95,7 +95,7 @@ select ok(
 -- whole transaction, so exactly-180-min would sit ON the >= cutoff and count
 -- (weight exp(-4)); 181 min is strictly older and must add nothing.
 insert into updates (spot_id, device_id, kind, line, created_at) values
-  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 'short',
+  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 2,
    now() - interval '181 minutes');
 select ok(
   abs((select confidence_weight from spot_current_status where slug = 'test-food')
@@ -118,7 +118,7 @@ select ok(
 -- Standing food votes are three 'short' (w ~ 0.72 + 0.37 + 0.14 = 1.22).
 -- One fresh 'long' (w ~ 1.0) does NOT flip the verdict...
 insert into updates (spot_id, device_id, kind, line, created_at) values
-  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 'long',
+  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 8,
    now() - interval '1 minute');
 select is(
   (select line from spot_current_status where slug = 'test-food'),
@@ -127,7 +127,7 @@ select is(
 );
 -- ...but a second fresh 'long' does (2.0 > 1.22) — consensus can still move.
 insert into updates (spot_id, device_id, kind, line, created_at) values
-  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 'long',
+  ('00000000-0000-4000-8000-000000000001', gen_random_uuid(), 'food', 8,
    now() - interval '1 minute');
 select is(
   (select line from spot_current_status where slug = 'test-food'),
@@ -154,7 +154,7 @@ select is(
 
 -- ── 7. frozen kill switch (§5.5): live data ignored, baseline-only ─────────
 insert into updates (spot_id, device_id, kind, line, created_at) values
-  ('00000000-0000-4000-8000-000000000003', gen_random_uuid(), 'food', 'long',
+  ('00000000-0000-4000-8000-000000000003', gen_random_uuid(), 'food', 8,
    now() - interval '1 minute');
 select is(
   (select line from spot_current_status where slug = 'test-frozen'),
