@@ -16,3 +16,12 @@ export type CategoryEventDetail = { category: Category };
 
 // Recenter control (Sheet chrome) → MapView eases the camera home.
 export const RECENTER_EVENT = "gritcheck:recenter";
+
+// Update FAB (Sheet chrome) → UpdateSheet opens. Same cross-tree-event
+// reasoning: the FAB renders twice (SSR twin + live drawer) and the flow
+// lives at page level, so an event beats threading props through Sheet.
+// detail.slug pre-selects a spot (the detail page's inline prompt); without
+// it the flow geolocates.
+export const OPEN_UPDATE_EVENT = "gritcheck:open-update";
+
+export type OpenUpdateEventDetail = { slug?: string };

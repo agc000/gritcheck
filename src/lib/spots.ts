@@ -60,6 +60,7 @@ export async function getSpotList(): Promise<{
   const items: SpotListItem[] = (spots ?? []).map((spot) => {
     const live = statusBySlug.get(spot.slug);
     return {
+      id: spot.id,
       slug: spot.slug,
       name: spot.name,
       category: spot.category as Category,
@@ -117,6 +118,7 @@ export const getSpotDetail = cache(async function getSpotDetail(
 
   return {
     item: {
+      id: spot.id,
       slug: spot.slug,
       name: spot.name,
       category: spot.category as Category,

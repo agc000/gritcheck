@@ -1,6 +1,7 @@
 import { MapCanvas } from "@/components/MapCanvas";
 import { Sheet } from "@/components/Sheet";
 import { SpotBrowser } from "@/components/SpotBrowser";
+import { UpdateSheet } from "@/components/UpdateSheet";
 import { getSpotList } from "@/lib/spots";
 
 // Rendered per-request so the sheet always shows live rows.
@@ -74,6 +75,8 @@ export default async function Home() {
           <SpotBrowser items={items} nowMs={nowMs} />
         )}
       </Sheet>
+      {/* Modal update flow; portals to <body>, opened by the FAB's event. */}
+      {!error && <UpdateSheet items={items} />}
     </main>
   );
 }

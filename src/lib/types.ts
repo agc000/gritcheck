@@ -11,6 +11,8 @@ export type Category = "food" | "study";
 // fields the view computes. Assembled server-side in page.tsx, passed as
 // serializable props to the client browser (16–40 rows — trivial payload).
 export type SpotListItem = {
+  /** DB uuid — the submit-update payload key (slugs are for URLs). */
+  id: string;
   slug: string;
   name: string;
   category: Category;
