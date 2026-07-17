@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FilterChips } from "@/components/FilterChips";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SortMenu } from "@/components/SortMenu";
 import { SpotRow } from "@/components/SpotRow";
 import { CHIPS_BY_CATEGORY, matchesChip } from "@/lib/filters";
+import { recordFollowUpCandidate } from "@/lib/followup";
 import { CATEGORY_EVENT, type CategoryEventDetail } from "@/lib/map-events";
 import { SORTS_BY_CATEGORY, sortSpots } from "@/lib/sort";
 import type { Category, SpotListItem } from "@/lib/types";
@@ -70,6 +71,17 @@ export function SpotBrowser({
   // can't go is worse than recommending nothing.
   const bestBet = visible[0]?.isOpen ? visible[0] : null;
   const rest = bestBet ? visible.slice(1) : visible;
+
+  // Seeing the Best bet counts as "viewed" for the §4.2 follow-up prompt —
+  // it's the recommendation the user acted on (or didn't).
+  const bestId = bestBet?.id;
+  const bestSlug = bestBet?.slug;
+  const bestName = bestBet?.name;
+  useEffect(() => {
+    if (bestId && bestSlug && bestName) {
+      recordFollowUpCandidate({ id: bestId, slug: bestSlug, name: bestName });
+    }
+  }, [bestId, bestSlug, bestName]);
 
   return (
     <div>

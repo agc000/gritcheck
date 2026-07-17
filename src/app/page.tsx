@@ -1,3 +1,4 @@
+import { FollowUpPrompt } from "@/components/FollowUpPrompt";
 import { MapCanvas } from "@/components/MapCanvas";
 import { LiveRefresh } from "@/components/LiveRefresh";
 import { Sheet } from "@/components/Sheet";
@@ -107,6 +108,8 @@ export default async function Home() {
       {!error && <UpdateSheet items={items} />}
       {/* Realtime: any INSERT on updates re-pulls server data (idle-gated). */}
       <LiveRefresh />
+      {/* One-per-session "Did X pan out?" bar (§4.2). */}
+      <FollowUpPrompt />
     </main>
   );
 }

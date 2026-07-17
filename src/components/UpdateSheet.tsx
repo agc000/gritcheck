@@ -6,6 +6,7 @@ import { FunctionsHttpError } from "@supabase/supabase-js";
 import { Drawer } from "vaul";
 
 import { getDeviceId } from "@/lib/device";
+import { logEvent } from "@/lib/events";
 import {
   OPEN_UPDATE_EVENT,
   type OpenUpdateEventDetail,
@@ -201,8 +202,8 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
       return;
     }
     // Subtle confirmation, then dismiss (§4.2 step 3) and pull fresh
-    // verdicts into the browse list. Realtime replaces the refresh for
-    // OTHER clients later this phase.
+    // verdicts into the browse list; Realtime covers other clients.
+    logEvent("submit_update", { slug: spot.slug, kind: spot.category });
     setSent(true);
     setTimeout(() => {
       setOpen(false);
@@ -300,13 +301,17 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                     ? `You're near ${spot.name} — how's it looking?`
                     : `${spot.name} — how's it looking?`}
                 </Drawer.Title>
-                <button
-                  type="button"
-                  onClick={() => setStep("picking")}
-                  className="h-11 shrink-0 text-[12.5px] font-semibold text-muted"
-                >
-                  Change spot
-                </button>
+                {/* Detail pages mount the flow with a single preset spot —
+                    no picker to escape to. */}
+                {items.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setStep("picking")}
+                    className="h-11 shrink-0 text-[12.5px] font-semibold text-muted"
+                  >
+                    Change spot
+                  </button>
+                )}
               </div>
 
               {spot.category === "food" ? (
