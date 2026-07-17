@@ -92,11 +92,11 @@ try {
   check("out-of-range line (11) → 400", r.status === 400);
   r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food", line: 2, comment: "x".repeat(81) });
   check("81-char comment → 400", r.status === 400);
-  r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food", crowd: "packed" });
+  r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food", crowd: 8 });
   check("crowd on a food update → 400", r.status === 400);
   r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "food" });
   check("no signal fields at all → 400", r.status === 400);
-  r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "study", noise: "quiet" });
+  r = await post({ spot_id: SPOT_A, device_id: uuid(), kind: "study", noise: 2 });
   check("study update on a food spot → 400", r.status === 400);
   r = await post({ spot_id: uuid(), device_id: uuid(), kind: "food", line: 2 });
   check("unknown spot → 404", r.status === 404);
@@ -113,7 +113,7 @@ try {
     const { error } = await db.from("update_rate_limits").insert(rows);
     if (error) throw new Error(`synthetic device rows: ${error.message}`);
   }
-  r = await post({ spot_id: SPOT_C, device_id: d5, kind: "study", crowd: "normal" });
+  r = await post({ spot_id: SPOT_C, device_id: d5, kind: "study", crowd: 5 });
   check("13th update in a day for a device → 429 (12/day)", r.status === 429);
 
   // IP cap: learn the real hash from an accepted row, top it up to 30.
@@ -135,7 +135,7 @@ try {
     const { error } = await db.from("update_rate_limits").insert(rows);
     if (error) throw new Error(`synthetic ip rows: ${error.message}`);
   }
-  r = await post({ spot_id: SPOT_C, device_id: d6, kind: "study", crowd: "normal" });
+  r = await post({ spot_id: SPOT_C, device_id: d6, kind: "study", crowd: 5 });
   check("31st update in a day from an IP → 429 (30/day)", r.status === 429);
 
   console.log("# persisted rows");

@@ -220,42 +220,42 @@ export type Database = {
         Row: {
           comment: string | null
           created_at: string
-          crowd: string | null
+          crowd: number | null
           device_id: string
           flags: number
           hidden: boolean
           id: number
           kind: string
           line: number | null
-          noise: string | null
+          noise: number | null
           spot_id: string
           worth_it: boolean | null
         }
         Insert: {
           comment?: string | null
           created_at?: string
-          crowd?: string | null
+          crowd?: number | null
           device_id: string
           flags?: number
           hidden?: boolean
           id?: never
           kind: string
           line?: number | null
-          noise?: string | null
+          noise?: number | null
           spot_id: string
           worth_it?: boolean | null
         }
         Update: {
           comment?: string | null
           created_at?: string
-          crowd?: string | null
+          crowd?: number | null
           device_id?: string
           flags?: number
           hidden?: boolean
           id?: never
           kind?: string
           line?: number | null
-          noise?: string | null
+          noise?: number | null
           spot_id?: string
           worth_it?: boolean | null
         }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import { Drawer } from "vaul";
 
+import { CheckPin } from "@/components/BrandMark";
 import { getDeviceId } from "@/lib/device";
 import { logEvent } from "@/lib/events";
 import {
@@ -15,10 +16,10 @@ import { supabase } from "@/lib/supabase";
 import type { SpotListItem } from "@/lib/types";
 
 // The §4.2 update flow: ≤3 taps. (1) geolocation pre-selects the nearest
-// open spot — with a change-spot escape hatch; (2) one tap per field, huge
-// targets; (3) send, subtle confirmation, dismiss. Location is requested at
-// first benefit — the moment the user taps Update — never on load (§13.2),
-// and is used in-memory only.
+// open spot — with a change-spot escape hatch; (2) one gesture per field,
+// huge targets; (3) send, subtle confirmation, dismiss. Location is
+// requested at first benefit — the moment the user taps Update — never on
+// load (§13.2), and is used in-memory only.
 //
 // This is its OWN vaul drawer, deliberately configured opposite to the
 // persistent browse Sheet: modal (overlay, focus trap) and dismissible
@@ -49,28 +50,35 @@ function nearestSpot(
   return best;
 }
 
-// Line scale (§3.1/§4.3 amendment 2026-07-17): drag a slider along a
-// green→red gradient to a 1–10 score. The readout number wears the §4.3
-// band color (1–3 go, 4–6 hold, 7–10 skip). Starts untouched (neutral
-// thumb, "—" readout) so Send stays disabled until the user actually rates.
-const LINE_BAND = (n: number) =>
+// 1–10 scales (§3.1/§4.3 amendments 2026-07-17): drag a slider along the
+// green→red gradient. All three measured fields (line, crowd, noise) use
+// the same control — consistency was the explicit ask. The readout number
+// wears the §4.3 band color (1–3 go, 4–6 hold, 7–10 skip). Starts untouched
+// (neutral thumb, "—") so Send stays disabled until the user actually rates.
+const SCALE_BAND = (n: number) =>
   n <= 3 ? ("go" as const) : n <= 6 ? ("hold" as const) : ("skip" as const);
 const BAND_TEXT = { go: "text-go", hold: "text-hold", skip: "text-skip" };
 
-function LineScaleRow({
+function ScaleRow({
+  label,
+  lowHint,
+  highHint,
   value,
   onChange,
 }: {
+  label: string;
+  lowHint: string;
+  highHint: string;
   value: number | null;
   onChange: (next: number) => void;
 }) {
-  const band = value === null ? null : LINE_BAND(value);
+  const band = value === null ? null : SCALE_BAND(value);
   return (
     // data-vaul-no-drag: a horizontal slider drag with slight vertical drift
     // must never turn into a sheet drag (vaul scar tissue).
     <div data-vaul-no-drag>
       <div className="flex items-baseline justify-between">
-        <p className="mb-1.5 text-[12.5px] font-semibold text-muted">Line</p>
+        <p className="mb-1.5 text-[12.5px] font-semibold text-muted">{label}</p>
         <span
           aria-hidden
           className={`font-mono text-[17px] font-bold ${band ? BAND_TEXT[band] : "text-faint"}`}
@@ -84,7 +92,7 @@ function LineScaleRow({
         max={10}
         step={1}
         value={value ?? 5}
-        aria-label="Line, 1 (walk right up) to 10 (out the door)"
+        aria-label={`${label}, 1 (${lowHint}) to 10 (${highHint})`}
         onChange={(e) => onChange(Number(e.target.value))}
         // vaul's Content pointer handlers capture the stream and eat the
         // native drag (observed: value frozen, drawer dismissing mid-slide).
@@ -99,15 +107,15 @@ function LineScaleRow({
         className={`line-slider w-full ${value === null ? "line-slider-unset" : ""}`}
       />
       <div className="mt-1 flex justify-between text-[11px] text-faint">
-        <span>1 · walk right up</span>
-        <span>10 · out the door</span>
+        <span>1 · {lowHint}</span>
+        <span>10 · {highHint}</span>
       </div>
     </div>
   );
 }
 
-// One-tap-per-field button row. Selected state borrows the sanctioned
-// active-filter gold (FilterChips idiom: black fill, gold text).
+// One-tap-per-field button row (worth-it stays a genuine binary). Selected
+// state borrows the sanctioned active-filter gold (FilterChips idiom).
 function FieldRow<T extends string>({
   label,
   options,
@@ -150,11 +158,16 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
   const [spot, setSpot] = useState<SpotListItem | null>(null);
   // "You're near X" is only honest when location chose X.
   const [located, setLocated] = useState(false);
+  // Non-null while the picker is scoped to one building's zones: GPS can
+  // place you AT a building but never on a floor — pretending otherwise is
+  // what made "I'm in the Atrium" preselect a different AOK zone (Alan's
+  // report). Scoped picking asks instead of guessing.
+  const [pickScope, setPickScope] = useState<string | null>(null);
 
   const [line, setLine] = useState<number | null>(null);
   const [worthIt, setWorthIt] = useState<boolean | null>(null);
-  const [crowd, setCrowd] = useState<"empty" | "normal" | "packed" | null>(null);
-  const [noise, setNoise] = useState<"quiet" | "normal" | "loud" | null>(null);
+  const [crowd, setCrowd] = useState<number | null>(null);
+  const [noise, setNoise] = useState<number | null>(null);
   const [comment, setComment] = useState("");
 
   const [sending, setSending] = useState(false);
@@ -181,6 +194,7 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
       setSent(false);
       setError(null);
       setLocated(false);
+      setPickScope(null);
       setOpen(true);
 
       const preset = detail?.slug
@@ -199,20 +213,30 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
       setStep("locating");
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          // Pre-select the nearest OPEN spot — reporting a line at a closed
+          // Pre-select against OPEN spots — reporting a line at a closed
           // one is nonsense; the picker still offers everything.
-          const open = itemsRef.current.filter((i) => i.isOpen);
+          const openItems = itemsRef.current.filter((i) => i.isOpen);
+          const pool = openItems.length ? openItems : itemsRef.current;
           const near = nearestSpot(
-            open.length ? open : itemsRef.current,
+            pool,
             pos.coords.latitude,
             pos.coords.longitude,
           );
-          if (near) {
+          if (!near) {
+            setStep("picking");
+            return;
+          }
+          // Same building, several zones (AOK's five floors): GPS cannot
+          // pick the floor, so ask — scoped to that building.
+          const siblings = pool.filter((i) => i.building === near.building);
+          if (siblings.length > 1) {
+            setLocated(true);
+            setPickScope(near.building);
+            setStep("picking");
+          } else {
             setSpot(near);
             setLocated(true);
             setStep("form");
-          } else {
-            setStep("picking");
           }
         },
         // Denied or unavailable → picker, no nagging (§13.2).
@@ -269,10 +293,29 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
   };
 
   // Open spots first; closed still selectable — hours data has known gaps
-  // and hiding rows would strand honest reporters.
-  const pickList = [...items].sort(
-    (a, b) => Number(b.isOpen) - Number(a.isOpen) || a.name.localeCompare(b.name),
-  );
+  // and hiding rows would strand honest reporters. A building scope narrows
+  // the list to that building's zones.
+  const pickList = [...items]
+    .filter((i) => !pickScope || i.building === pickScope)
+    .sort(
+      (a, b) =>
+        Number(b.isOpen) - Number(a.isOpen) || a.name.localeCompare(b.name),
+    );
+
+  const pickSpot = (item: SpotListItem) => {
+    // A different spot voids tapped signals (they were about the old spot)
+    // and any stale server error; typed comments survive — retyping costs
+    // more than re-tapping.
+    if (item.slug !== spot?.slug) {
+      setLine(null);
+      setWorthIt(null);
+      setCrowd(null);
+      setNoise(null);
+      setError(null);
+    }
+    setSpot(item);
+    setStep("form");
+  };
 
   return (
     <Drawer.Root open={open} onOpenChange={setOpen}>
@@ -283,22 +326,30 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
           className="fixed inset-x-0 bottom-0 z-30 flex max-h-[85%] flex-col rounded-t-sheet bg-sheet pb-[max(1rem,env(safe-area-inset-bottom))] text-ink outline-none"
         >
           <div className="mx-auto mt-2.5 mb-1.5 h-1 w-9 shrink-0 rounded-full bg-line" />
+          {/* The Check-Pin heads every update surface (Alan, 2026-07-17):
+              the mark should mean "report what you see". Gold on navy per
+              the §4.1 logo system. */}
+          <CheckPin className="mx-auto mb-1 h-6 w-6 shrink-0" />
 
           {sent ? (
-            <div className="px-5 py-10 text-center">
+            <div className="px-5 py-9 text-center">
               <p className="text-[15px] font-bold">Sent.</p>
               <p className="mt-1 text-[12.5px] text-muted">
                 Verdicts update as reports come in.
               </p>
             </div>
           ) : step === "locating" ? (
-            <div className="px-5 py-10 text-center">
+            <div className="px-5 py-9 text-center">
               <Drawer.Title className="text-[15px] font-bold">
                 Finding the nearest spot…
               </Drawer.Title>
               <button
                 type="button"
-                onClick={() => setStep("picking")}
+                onClick={() => {
+                  setPickScope(null);
+                  setLocated(false);
+                  setStep("picking");
+                }}
                 className="mt-3 h-11 rounded-md px-4 text-[12.5px] font-semibold text-muted"
               >
                 Pick it myself
@@ -307,29 +358,16 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
           ) : step === "picking" ? (
             <>
               <Drawer.Title className="px-5 pt-1 pb-2 text-[15px] font-bold">
-                Which spot?
+                {pickScope
+                  ? `You're at ${pickScope} — which one?`
+                  : "Which spot?"}
               </Drawer.Title>
               <ul className="min-h-0 flex-1 divide-y divide-line overflow-y-auto overscroll-none px-1">
                 {pickList.map((item) => (
                   <li key={item.slug}>
                     <button
                       type="button"
-                      onClick={() => {
-                        // A different spot voids tapped signals (they were
-                        // about the old spot) and any stale server error;
-                        // typed comments survive — retyping costs more than
-                        // re-tapping.
-                        if (item.slug !== spot?.slug) {
-                          setLine(null);
-                          setWorthIt(null);
-                          setCrowd(null);
-                          setNoise(null);
-                          setError(null);
-                        }
-                        setSpot(item);
-                        setLocated(false);
-                        setStep("form");
-                      }}
+                      onClick={() => pickSpot(item)}
                       className="flex w-full items-baseline justify-between gap-3 px-4 py-3 text-left"
                     >
                       <span className="min-w-0">
@@ -349,6 +387,18 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                   </li>
                 ))}
               </ul>
+              {pickScope && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPickScope(null);
+                    setLocated(false);
+                  }}
+                  className="mx-5 mt-1 h-11 shrink-0 text-[12.5px] font-semibold text-muted"
+                >
+                  Somewhere else
+                </button>
+              )}
             </>
           ) : spot ? (
             <div className="flex flex-col gap-4 px-5 pt-1">
@@ -363,7 +413,11 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                 {items.length > 1 && (
                   <button
                     type="button"
-                    onClick={() => setStep("picking")}
+                    onClick={() => {
+                      setPickScope(null);
+                      setLocated(false);
+                      setStep("picking");
+                    }}
                     className="h-11 shrink-0 text-[12.5px] font-semibold text-muted"
                   >
                     Change spot
@@ -373,7 +427,13 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
 
               {spot.category === "food" ? (
                 <>
-                  <LineScaleRow value={line} onChange={setLine} />
+                  <ScaleRow
+                    label="Line"
+                    lowHint="walk right up"
+                    highHint="out the door"
+                    value={line}
+                    onChange={setLine}
+                  />
                   <FieldRow
                     label="Worth the trip?"
                     options={[
@@ -390,25 +450,19 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                 </>
               ) : (
                 <>
-                  <FieldRow
+                  <ScaleRow
                     label="Crowd"
-                    options={[
-                      { value: "empty", word: "Empty" },
-                      { value: "normal", word: "Normal" },
-                      { value: "packed", word: "Packed" },
-                    ]}
+                    lowHint="empty"
+                    highHint="packed"
                     value={crowd}
-                    onChange={(v) => setCrowd(crowd === v ? null : v)}
+                    onChange={setCrowd}
                   />
-                  <FieldRow
+                  <ScaleRow
                     label="Noise"
-                    options={[
-                      { value: "quiet", word: "Quiet" },
-                      { value: "normal", word: "Normal" },
-                      { value: "loud", word: "Loud" },
-                    ]}
+                    lowHint="silent"
+                    highHint="loud"
                     value={noise}
-                    onChange={(v) => setNoise(noise === v ? null : v)}
+                    onChange={setNoise}
                   />
                 </>
               )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckPin } from "@/components/BrandMark";
 import {
   OPEN_UPDATE_EVENT,
   type OpenUpdateEventDetail,
@@ -19,8 +20,9 @@ export function InlineUpdatePrompt({ slug }: { slug: string }) {
           }),
         )
       }
-      className="h-12 w-full rounded-md bg-gold text-[15px] font-bold text-black transition-transform duration-150 ease-out active:scale-98 motion-reduce:transition-none"
+      className="flex h-12 w-full items-center justify-center gap-2 rounded-md bg-gold text-[15px] font-bold text-black transition-transform duration-150 ease-out active:scale-98 motion-reduce:transition-none"
     >
+      <CheckPin className="h-4.5 w-4.5" color="currentColor" />
       How&rsquo;s it right now?
     </button>
   );

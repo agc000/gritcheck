@@ -25,7 +25,7 @@ where slug like 'test-%';
 
 -- ── 1. THE guardrail: 4-hour-old report is not current ──────────────────────
 insert into updates (spot_id, device_id, kind, noise, created_at) values
-  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 'quiet',
+  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 2,
    now() - interval '4 hours');
 
 select is(
@@ -50,7 +50,7 @@ select ok(
 
 -- ── 2. Window boundary: 2h59m in, 3h01m out ────────────────────────────────
 insert into updates (spot_id, device_id, kind, crowd, created_at) values
-  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 'packed',
+  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 8,
    now() - interval '2 hours 59 minutes');
 select is(
   (select crowd from spot_current_status where slug = 'test-study'),
@@ -106,7 +106,7 @@ select ok(
 -- ── 4. τ study (τ = 90): 90-min-old update weighs exp(-1) ──────────────────
 -- test-study currently holds the 2h59m 'packed' row: w = exp(-179/90).
 insert into updates (spot_id, device_id, kind, crowd, created_at) values
-  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 'packed',
+  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 8,
    now() - interval '90 minutes');
 select ok(
   abs((select confidence_weight from spot_current_status where slug = 'test-study')
@@ -144,7 +144,7 @@ select is(
 -- test-study is at W ~ exp(-179/90) + exp(-1) ~ 0.50 (low); one more report
 -- at 30 min (w = exp(-1/3) ~ 0.72) lifts it into the medium band.
 insert into updates (spot_id, device_id, kind, crowd, created_at) values
-  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 'packed',
+  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 8,
    now() - interval '30 minutes');
 select is(
   (select confidence from spot_current_status where slug = 'test-study'),
@@ -169,7 +169,7 @@ select is(
 
 -- ── 8. hidden updates are invisible to aggregation ─────────────────────────
 insert into updates (spot_id, device_id, kind, crowd, hidden, created_at) values
-  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 'empty', true,
+  ('00000000-0000-4000-8000-000000000002', gen_random_uuid(), 'study', 2, true,
    now() - interval '1 minute');
 select is(
   (select crowd from spot_current_status where slug = 'test-study'),

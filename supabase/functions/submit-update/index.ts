@@ -40,11 +40,12 @@ const Payload = z
     spot_id: z.string().uuid(),
     device_id: z.string().uuid(),
     kind: z.enum(["food", "study", "followup"]),
-    // 1 = walk right up, 10 = out the door (§3.1 amendment 2026-07-17); the
-    // view bands it to short/normal/long for display.
+    // 1–10 scales (§3.1 amendments 2026-07-17); the view bands them to the
+    // §4.3 words for display. line: 1 walk right up → 10 out the door.
+    // crowd: 1 empty → 10 packed. noise: 1 silent → 10 loud.
     line: z.number().int().min(1).max(10).optional(),
-    crowd: z.enum(["empty", "normal", "packed"]).optional(),
-    noise: z.enum(["quiet", "normal", "loud"]).optional(),
+    crowd: z.number().int().min(1).max(10).optional(),
+    noise: z.number().int().min(1).max(10).optional(),
     worth_it: z.boolean().optional(),
     comment: z.string().trim().min(1).max(80).optional(),
   })

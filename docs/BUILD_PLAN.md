@@ -266,6 +266,17 @@ extreme drag the number, the vote keeps a lone lie outvoted (§5.5). This
 also settles the previously flagged mockup deviation: Normal line renders
 hold-amber.*
 
+*Extended same day (Alan, consistency pass): **crowd** (1 empty → 10 packed)
+and **noise** (1 silent → 10 loud) join line on the identical slider +
+banding system (migration 20260717000500) — one input language across every
+field. Two flow changes ride along: (1) geolocation pre-select is now
+**building-scoped** — GPS can place you at a building but never on a floor,
+so when the nearest building holds several zones (AOK's five), the sheet
+asks "You're at AOK Library — which one?" instead of guessing a floor; (2)
+the **Check-Pin mark heads every update surface** (FAB, update sheet,
+detail inline prompt, follow-up bar) — the mark should mean "report what
+you see".*
+
 ### 4.4 Freshness display
 < 60 min: "8 min ago" (mono, small). 1–3 h: "2 h ago" in `--hold` tone. Older/none: show baseline — "typical: quiet". **Never present stale data as current.**
 
