@@ -9,6 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "node scraper/seed/validate.ts",
+    "test:decay": "supabase test db",
+    "test:limits": "node scripts/test-submit-update.mjs",
     "seed": "node --env-file=.env.local scraper/seed/load.ts"
   },
   "dependencies": {
