@@ -49,14 +49,13 @@ function nearestSpot(
   return best;
 }
 
-// Line scale (§3.1/§4.2 amendment 2026-07-17): rate 1–10 instead of picking
-// a word. Color bands mirror the §4.3 verdict mapping — 1–3 go-green, 4–6
-// hold-amber, 7–10 skip-red — status colors used AS status, which §4.1
-// permits. Two rows of five keeps every target ≥44px on a 390px viewport.
+// Line scale (§3.1/§4.3 amendment 2026-07-17): drag a slider along a
+// green→red gradient to a 1–10 score. The readout number wears the §4.3
+// band color (1–3 go, 4–6 hold, 7–10 skip). Starts untouched (neutral
+// thumb, "—" readout) so Send stays disabled until the user actually rates.
 const LINE_BAND = (n: number) =>
   n <= 3 ? ("go" as const) : n <= 6 ? ("hold" as const) : ("skip" as const);
 const BAND_TEXT = { go: "text-go", hold: "text-hold", skip: "text-skip" };
-const BAND_BG = { go: "bg-go", hold: "bg-hold", skip: "bg-skip" };
 
 function LineScaleRow({
   value,
@@ -65,29 +64,40 @@ function LineScaleRow({
   value: number | null;
   onChange: (next: number) => void;
 }) {
+  const band = value === null ? null : LINE_BAND(value);
   return (
-    <div>
-      <p className="mb-1.5 text-[12.5px] font-semibold text-muted">Line</p>
-      <div className="grid grid-cols-5 gap-2" role="group" aria-label="Line, 1 to 10">
-        {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => {
-          const band = LINE_BAND(n);
-          return (
-            <button
-              key={n}
-              type="button"
-              aria-pressed={value === n}
-              onClick={() => onChange(n)}
-              className={`h-12 rounded-md border text-[15px] font-bold transition-colors duration-150 motion-reduce:transition-none ${
-                value === n
-                  ? `border-transparent text-black ${BAND_BG[band]}`
-                  : `border-line bg-soft ${BAND_TEXT[band]}`
-              }`}
-            >
-              {n}
-            </button>
-          );
-        })}
+    // data-vaul-no-drag: a horizontal slider drag with slight vertical drift
+    // must never turn into a sheet drag (vaul scar tissue).
+    <div data-vaul-no-drag>
+      <div className="flex items-baseline justify-between">
+        <p className="mb-1.5 text-[12.5px] font-semibold text-muted">Line</p>
+        <span
+          aria-hidden
+          className={`font-mono text-[17px] font-bold ${band ? BAND_TEXT[band] : "text-faint"}`}
+        >
+          {value ?? "—"}
+        </span>
       </div>
+      <input
+        type="range"
+        min={1}
+        max={10}
+        step={1}
+        value={value ?? 5}
+        aria-label="Line, 1 (walk right up) to 10 (out the door)"
+        onChange={(e) => onChange(Number(e.target.value))}
+        // vaul's Content pointer handlers capture the stream and eat the
+        // native drag (observed: value frozen, drawer dismissing mid-slide).
+        // Stopping propagation here keeps the gesture the input's own;
+        // data-vaul-no-drag alone was not enough.
+        onPointerDown={(e) => e.stopPropagation()}
+        // A tap that lands exactly on the resting value fires no change
+        // event — commit the untouched → rated transition on release too.
+        onPointerUp={(e) => {
+          if (value === null) onChange(Number(e.currentTarget.value));
+        }}
+        className={`line-slider w-full ${value === null ? "line-slider-unset" : ""}`}
+      />
       <div className="mt-1 flex justify-between text-[11px] text-faint">
         <span>1 · walk right up</span>
         <span>10 · out the door</span>
@@ -363,10 +373,7 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
 
               {spot.category === "food" ? (
                 <>
-                  <LineScaleRow
-                    value={line}
-                    onChange={(v) => setLine(line === v ? null : v)}
-                  />
+                  <LineScaleRow value={line} onChange={setLine} />
                   <FieldRow
                     label="Worth the trip?"
                     options={[

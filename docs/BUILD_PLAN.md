@@ -254,13 +254,17 @@ Gold is a **signal**, not decoration: Update button, active filter state, Best b
 Food: `Short line / Normal line / Long line / Packed / Closed`. Study: `Quiet / Seats open / Filling up / Packed / No recent data / Closed`. Verdict word + color; details live in the detail view.
 
 *Amended 2026-07-17 (Alan, line scale): the update flow collects `line` as a
-**1–10 score** (1 = walk right up, 10 = out the door), color-coded on entry
-(1–3 go-green · 4–6 hold-amber · 7–10 skip-red). Stored raw as `smallint`
-(§3.1 migration 20260717000400). Display stays these §4.3 words via the same
-banding — rows never show raw numbers. Aggregation stays §5.2's weighted
-band-vote, deliberately NOT a weighted mean: a mean lets one false extreme
-drag the number, the vote keeps a lone lie outvoted (§5.5). This also settles
-the previously flagged mockup deviation: Normal line renders hold-amber.*
+**1–10 score** (1 = walk right up, 10 = out the door) via a **slider on a
+green→amber→red gradient track** — the ONE sanctioned gradient in the app,
+carved out of §4.1's flat-fill rule because it encodes the scale itself
+(semantics, not decoration; the ban targets decorative gradients). Readout
+number wears the band color: 1–3 go · 4–6 hold · 7–10 skip. Stored raw as
+`smallint` (§3.1 migration 20260717000400). Display stays these §4.3 words
+via the same banding — rows never show raw numbers. Aggregation stays §5.2's
+weighted band-vote, deliberately NOT a weighted mean: a mean lets one false
+extreme drag the number, the vote keeps a lone lie outvoted (§5.5). This
+also settles the previously flagged mockup deviation: Normal line renders
+hold-amber.*
 
 ### 4.4 Freshness display
 < 60 min: "8 min ago" (mono, small). 1–3 h: "2 h ago" in `--hold` tone. Older/none: show baseline — "typical: quiet". **Never present stale data as current.**
