@@ -93,6 +93,13 @@ function ScaleRow({
         step={1}
         value={value ?? 5}
         aria-label={`${label}, 1 (${lowHint}) to 10 (${highHint})`}
+        // VoiceOver reads meaning, not just a number: "8, toward out the
+        // door" instead of "8".
+        aria-valuetext={
+          value === null
+            ? "not set"
+            : `${value}, ${value <= 3 ? `toward ${lowHint}` : value <= 6 ? "in between" : `toward ${highHint}`}`
+        }
         onChange={(e) => onChange(Number(e.target.value))}
         // vaul's Content pointer handlers capture the stream and eat the
         // native drag (observed: value frozen, drawer dismissing mid-slide).
