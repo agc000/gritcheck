@@ -30,9 +30,10 @@ export function FlagButton({ updateId }: { updateId: number }) {
             }
           });
       }}
-      // Padded to a ≥44px tap target; visual stays an 11px whisper — flagging
-      // is a rare corrective action, not a call to action.
-      className="-my-3 px-2 py-3 text-[11px] font-semibold text-faint disabled:text-muted"
+      // Padded to a ≥44px tap target (§4.8); negative margin cancels the
+      // padding so layout is unaffected. Visual stays an 11px whisper —
+      // flagging is a rare corrective action, not a call to action.
+      className="-my-3.5 px-2 py-3.5 text-[11px] font-semibold text-faint disabled:text-muted"
     >
       {flagged ? "Flagged" : "Flag"}
     </button>
