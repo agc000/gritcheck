@@ -30,10 +30,11 @@ export function FlagButton({ updateId }: { updateId: number }) {
             }
           });
       }}
-      // Padded to a ≥44px tap target (§4.8); negative margin cancels the
-      // padding so layout is unaffected. Visual stays an 11px whisper —
+      // Padded to a ≥44px tap target (§4.8): py-4 (32px) + ~13px of 11px text
+      // ≈ 45px; the matching negative margin cancels the padding so the
+      // comment row's height is unaffected. Visual stays an 11px whisper —
       // flagging is a rare corrective action, not a call to action.
-      className="-my-3.5 px-2 py-3.5 text-[11px] font-semibold text-faint disabled:text-muted"
+      className="-my-4 px-2 py-4 text-[11px] font-semibold text-faint disabled:text-muted"
     >
       {flagged ? "Flagged" : "Flag"}
     </button>

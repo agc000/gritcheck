@@ -481,7 +481,10 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                 maxLength={80}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Add a note (optional)"
-                className="h-11 rounded-md border border-line bg-soft px-3 text-[14px] text-ink placeholder:text-faint focus:outline-none"
+                // placeholder is --muted, not --faint: faint on the soft input
+                // fill is 4.36:1, under the §4.8 4.5 floor; muted is 6.07:1
+                // and still clearly recessive against entered --ink text.
+                className="h-11 rounded-md border border-line bg-soft px-3 text-[14px] text-ink placeholder:text-muted focus:outline-none"
               />
 
               {error && <p className="text-[12.5px] text-skip">{error}</p>}
