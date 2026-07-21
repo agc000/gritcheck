@@ -490,6 +490,100 @@ island (`ssr:false`, idle-mounted) whose failures cannot propagate into the
 sheet's tree. If the outage persisted, §2.1's designated fallback is MapTiler's
 free tier — a style-URL swap, not a rewrite.*
 **Phase 4 (the big one):** Walk through the full lifecycle of one update: tap → Edge Function → rate limit checks → insert → aggregation view → Realtime push → another student's screen. Why exponential decay instead of a hard time window? Why weighted voting instead of last-write-wins? Fixed-window vs token-bucket rate limiting — which did we use and what's the failure mode? Why websockets instead of polling, and what would polling cost at 200 concurrent users? What's optimistic UI and where is it safe?
+
+*Phase 4 ANSWERED (ritual amended 2026-07-15: Q+A recorded together, no grading loop):*
+
+**① One update's full lifecycle.** A student taps the gold Update FAB; it
+dispatches a window event (`OPEN_UPDATE_EVENT`) that the page-level UpdateSheet
+listens for — the FAB renders in two places (SSR twin + live drawer) so an
+event beats threading props. Geolocation runs *at that tap, not on load*
+(§13.2): it pre-selects the nearest open spot, but if that building holds
+several zones (AOK's five floors) it asks "which one?" rather than guess a
+floor GPS can't resolve. The student drags the 1–10 line slider; on Send the
+client attaches a device UUID from localStorage and calls
+`supabase.functions.invoke("submit-update")` with the anon JWT. That hits the
+Deno Edge Function — the *only* write path into `updates`, because RLS gives
+anon no insert policy (§3.5) and the function runs as service_role. The
+function: checks CORS origin, zod-validates (shape, 1–10 range, 80-char
+comment cap, field/kind coherence), hashes the caller IP with a secret salt
+(the raw IP never lands), confirms the spot exists, then runs the §5.5 gate —
+four `count` queries against `update_rate_limits` (device/spot/10 min,
+device/day, IP/spot/10 min, IP/day). Pass → insert the row, then charge one
+quota row (only on success, so moderation never refunds quota). It returns 201.
+The client logs a `submit_update` event, shows "Sent.", and refreshes its *own*
+view. Meanwhile Postgres streams that INSERT through the `supabase_realtime`
+publication (the migration added `updates` to it); every other open client holds
+one websocket subscribed to `postgres_changes` on that table. The push fires a
+debounced `router.refresh()`, the server re-reads the `spot_current_status`
+view — which recomputes the decay-weighted verdict — and the new "Long line"
+paints. Measured end to end: ~1.5 s, tap to other phone.
+
+**② Exponential decay, not a hard window.** A pure time window is a cliff: a
+report is fully trusted at 2:59 and worthless at 3:01, and *inside* the window
+a 5-minute-old report and a 2h-55m-old one count equally — absurd when lunch
+lines turn over every few minutes. Decay, `w = exp(-Δt/τ)`, makes trust fade
+*continuously*: the freshest report dominates, older ones fade smoothly toward
+irrelevance with no discontinuity — which is how real confidence actually
+degrades. τ encodes domain knowledge as a constant, not a magic number: food
+τ=45 min (lines move fast), study τ=90 min (rooms change slowly). We *also*
+keep the 3 h hard cutoff, but it's a compute/relevance floor — drop rows whose
+weight is already noise (at τ=45, 3 h old is exp(-4)≈0.018) — not the trust
+model. The §5.4 guardrail (an 11 AM "quiet" never reads as current at 3 PM) is
+belt-and-suspenders: decay alone makes it ~nothing, the cutoff removes it
+entirely. Both are asserted in the pgTAP suite at 15/45/90/181 min.
+
+**③ Weighted voting, not last-write-wins.** LWW makes the newest report the
+truth — so one troll, or one honestly-mistaken tap of "packed," overwrites
+twenty "short line" reports. Weighted voting instead sums decay weights per
+value and takes the max: truth is the *consensus*, weighted by freshness. This
+is the spine of the §5.5 poisoning defense — a lone lie is outvoted by any
+honest majority, labeled "Low confidence · 1 report," never shown as fact, and
+decays toward baseline within ~1 h. The pgTAP suite proves both directions:
+one fresh "long" (w≈1.0) does *not* flip a standing "short" consensus (w≈1.22),
+but two fresh reports (w≈2.0) *do* — consensus still moves when reality
+changes, it just can't be forged cheaply. Same reason the 1–10 sliders
+band-vote rather than average: a mean lets one extreme drag the number, a vote
+can't.
+
+**④ Fixed-window rate limiting.** We used fixed window — count rows in
+`update_rate_limits` for a key over the trailing 10 min / 24 h. Its known
+failure mode is the boundary burst: send at 0:09 and again at 0:11 and each
+10-minute window sees only one, so a user can briefly straddle ~2× the nominal
+rate. We accept it deliberately — for a lunch-line app the worst case is one
+extra report, already self-correcting through weighted voting, and fixed-window
+is a stateless `count` with nothing to maintain. Token bucket (refill R
+tokens/sec, spend one per request) smooths bursts and models rate+burst
+cleanly, but needs mutable per-key state — current tokens and last-refill
+timestamp, updated atomically — which is more machinery than this earns. Two
+independent keys: device (1/spot/10 min, 12/day) and IP (3/spot/10 min,
+30/day). Device is the tight one but trivially reset by clearing localStorage;
+the IP limit — hashed, never stored raw — is the real backstop, because
+rotating phone IPs is expensive.
+
+**⑤ Websockets, not polling.** Realtime pushes only when data actually
+changes: one idle persistent connection per client, silent until an INSERT.
+Polling means every client asks "anything new?" on a timer regardless. At 200
+concurrent users polling every 5 s that's 40 req/s ≈ 3.4 M requests/day, nearly
+all answering "nothing changed" — burning Supabase quota and DB CPU to mostly
+learn nothing, at up to 5 s staleness. Websockets carry traffic only on real
+updates and land sub-2 s. The free-tier ceiling of 200 concurrent connections
+is exactly our budget line — a good problem, fixed by a Pro upgrade, not a
+rewrite (§8). And the connection is idle-gated (`requestIdleCallback`) so it
+never contends with hydration on the critical path — the Phase 3 perf
+discipline carries straight in.
+
+**⑥ Optimistic UI, and where it's safe.** Optimistic UI updates the screen as
+if the mutation already succeeded, then reconciles if the server disagrees.
+It's safe only where the action is low-stakes, effectively idempotent, and a
+briefly-wrong state costs nothing. We were deliberately *un*-optimistic on the
+update itself: "Sent." shows only after the 201, because a 429 must surface
+honestly ("Already reported…") and a false "sent" would corrode the exact trust
+the product sells. The genuinely optimistic surfaces are the flag button (mark
+"Flagged" instantly, fire the RPC without awaiting) and the follow-up answer
+(fire-and-forget) — safe because flagging is idempotent per device via the
+`(update_id, device_id)` primary key, so a dropped request is a harmless no-op.
+The principle: be optimistic exactly where the server can't meaningfully say
+"no" in a way the user needs to see — and honest everywhere else.*
 **Phase 5:** Explain stale-while-revalidate like you're teaching a freshman. What are the three Core Web Vitals and which one does the map threaten? Why PWA over native for *this* product — give the distribution argument, not just the effort argument.
 **Phase 6:** Why must the scraper be idempotent (what's an upsert)? Why is "fail loudly" a design goal — what's the horror story of a scraper failing silently? Where do secrets live and what never touches the client bundle?
 **Phase 7 / meta (rehearse these aloud — they're the interview):** "Walk me through what happens when a user opens the app" (full request lifecycle, cold vs warm cache). "How do you stop one person from poisoning the data?" (§5.5, tell it as a story). "How would this scale to 100 campuses?" (what breaks first: Realtime connections, then tile hosting, then moderation — and what's deliberately single-campus). "What would you build differently with 10 engineers?" (honest answer: almost nothing at this scale — that's the point).
