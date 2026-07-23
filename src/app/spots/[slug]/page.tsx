@@ -6,13 +6,11 @@ import { FollowUpPrompt } from "@/components/FollowUpPrompt";
 import { SpotViewTracker } from "@/components/SpotViewTracker";
 import { InlineUpdatePrompt } from "@/components/InlineUpdatePrompt";
 import { LiveRefresh } from "@/components/LiveRefresh";
-import { StatusBadge } from "@/components/StatusBadge";
+import { SpotStatusCard } from "@/components/SpotStatusCard";
 import { UpdateSheet } from "@/components/UpdateSheet";
 import { CHIPS_BY_CATEGORY } from "@/lib/filters";
-import { baselineWord, getVerdict } from "@/lib/status";
 import { getSpotDetail } from "@/lib/spots";
 import { formatMinutes } from "@/lib/time";
-import type { SpotListItem } from "@/lib/types";
 
 // SSR spot detail (§4.2): status + confidence, hours today, attribute chips,
 // consensus, worth-it %, recent comments with flag affordance, and the
@@ -44,38 +42,6 @@ export async function generateMetadata({
   };
 }
 
-// §4.5: three bars driven by the aggregation weight, always with the reason.
-function ConfidenceBars({ item, now }: { item: SpotListItem; now: Date }) {
-  const level =
-    item.confidence === "high" ? 3 : item.confidence === "medium" ? 2 : 1;
-  const typical = baselineWord(item.baseline, now);
-  const reason =
-    level === 3
-      ? "several reports this hour"
-      : level === 2
-        ? "a recent report or two"
-        : typical
-          ? "no recent reports — based on typical pattern"
-          : "no recent reports";
-
-  return (
-    <div>
-      <div className="flex items-center gap-1">
-        {[1, 2, 3].map((bar) => (
-          <span
-            key={bar}
-            className={`h-1 w-6 rounded-full ${bar <= level ? "bg-ink" : "bg-line"}`}
-          />
-        ))}
-        <span className="ml-2 text-xs font-semibold capitalize">
-          {item.confidence ?? "low"} confidence
-        </span>
-      </div>
-      <p className="mt-1 text-xs text-muted">{reason}</p>
-    </div>
-  );
-}
-
 export default async function SpotPage({
   params,
 }: {
@@ -87,8 +53,6 @@ export default async function SpotPage({
 
   const { item, comments, nowMs } = detail;
   const now = new Date(nowMs);
-  const verdict = getVerdict(item, now);
-  const typical = baselineWord(item.baseline, now);
 
   const hoursToday = item.hours
     .filter((h) => h.dayOffset === 0)
@@ -127,30 +91,9 @@ export default async function SpotPage({
         <p className="mt-1 text-sm text-muted">{item.building}</p>
       </header>
 
-      <section className="mt-5 rounded-card bg-soft p-4">
-        <div className="flex items-baseline justify-between">
-          <StatusBadge word={verdict.word} tone={verdict.tone} />
-          {verdict.fresh && (
-            <span
-              className={`font-mono text-xs ${
-                verdict.freshTone === "hold" ? "text-hold" : "text-muted"
-              }`}
-            >
-              {verdict.fresh.startsWith("opens") || verdict.fresh.startsWith("typical")
-                ? verdict.fresh
-                : `as of ${verdict.fresh}`}
-            </span>
-          )}
-        </div>
-        <div className="mt-3">
-          <ConfidenceBars item={item} now={now} />
-        </div>
-        {typical && (
-          <p className="mt-2 text-xs text-muted">
-            Typical right now: <span className="font-semibold">{typical}</span>
-          </p>
-        )}
-      </section>
+      {/* Client-side so freshness/cutoffs track the live clock (§4.4) —
+          server-painted identically on first paint via the nowMs snapshot. */}
+      <SpotStatusCard item={item} nowMs={nowMs} />
 
       <section className="mt-5 border-t border-line pt-4">
         <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-muted">

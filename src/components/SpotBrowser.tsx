@@ -5,6 +5,7 @@ import { FilterChips } from "@/components/FilterChips";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SortMenu } from "@/components/SortMenu";
 import { SpotRow } from "@/components/SpotRow";
+import { useNowMs } from "@/lib/clock";
 import { CHIPS_BY_CATEGORY, matchesChip } from "@/lib/filters";
 import { recordFollowUpCandidate } from "@/lib/followup";
 import { CATEGORY_EVENT, type CategoryEventDetail } from "@/lib/map-events";
@@ -37,7 +38,9 @@ export function SpotBrowser({
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null,
   );
-  const now = new Date(nowMs);
+  // Server time for hydration, then the live minute-tick clock (§4.4): rows
+  // re-verdict as data ages instead of freezing at render time.
+  const now = new Date(useNowMs(nowMs));
 
   const chips = CHIPS_BY_CATEGORY[category];
   const activeChip = chips.find((c) => c.id === chipByCategory[category]) ?? null;
