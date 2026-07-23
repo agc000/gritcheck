@@ -78,7 +78,7 @@ function ScaleRow({
     // must never turn into a sheet drag (vaul scar tissue).
     <div data-vaul-no-drag>
       <div className="flex items-baseline justify-between">
-        <p className="mb-1.5 text-[12.5px] font-semibold text-muted">{label}</p>
+        <p className="mb-1.5 text-[12.5px] font-bold text-ink">{label}</p>
         <span
           aria-hidden
           className={`font-mono text-[17px] font-bold ${band ? BAND_TEXT[band] : "text-faint"}`}
@@ -93,8 +93,8 @@ function ScaleRow({
         step={1}
         value={value ?? 5}
         aria-label={`${label}, 1 (${lowHint}) to 10 (${highHint})`}
-        // VoiceOver reads meaning, not just a number: "8, toward out the
-        // door" instead of "8".
+        // VoiceOver reads meaning, not just a number: "8, toward Full"
+        // instead of "8".
         aria-valuetext={
           value === null
             ? "not set"
@@ -113,7 +113,11 @@ function ScaleRow({
         }}
         className={`line-slider w-full ${value === null ? "line-slider-unset" : ""}`}
       />
-      <div className="mt-1 flex justify-between text-[11px] text-faint">
+      {/* Anchor words upgraded from 11px --faint (Alan, 2026-07-23): they
+          carry the scale's meaning, so they must be legible at a glance —
+          bigger, brighter (--muted), and semibold. Still subordinate to the
+          band-colored readout number above. */}
+      <div className="mt-1 flex justify-between text-[12px] font-semibold text-muted">
         <span>1 · {lowHint}</span>
         <span>10 · {highHint}</span>
       </div>
@@ -136,7 +140,7 @@ function FieldRow<T extends string>({
 }) {
   return (
     <div>
-      <p className="mb-1.5 text-[12.5px] font-semibold text-muted">{label}</p>
+      <p className="mb-1.5 text-[12.5px] font-bold text-ink">{label}</p>
       <div className="flex gap-2" role="group" aria-label={label}>
         {options.map((opt) => (
           <button
@@ -436,13 +440,13 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                 <>
                   <ScaleRow
                     label="Line"
-                    lowHint="walk right up"
-                    highHint="out the door"
+                    lowHint="Empty"
+                    highHint="Full"
                     value={line}
                     onChange={setLine}
                   />
                   <FieldRow
-                    label="Worth the trip?"
+                    label="Worth the time?"
                     options={[
                       { value: "yes", word: "Yes" },
                       { value: "no", word: "No" },
@@ -459,15 +463,15 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                 <>
                   <ScaleRow
                     label="Crowd"
-                    lowHint="empty"
-                    highHint="packed"
+                    lowHint="Empty"
+                    highHint="Packed"
                     value={crowd}
                     onChange={setCrowd}
                   />
                   <ScaleRow
                     label="Noise"
-                    lowHint="silent"
-                    highHint="loud"
+                    lowHint="Silent"
+                    highHint="Loud"
                     value={noise}
                     onChange={setNoise}
                   />
