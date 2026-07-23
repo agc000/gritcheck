@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSerwist } from "@serwist/turbopack";
 
 // Security headers (§0.10 / §5.5 posture; hardened 2026-07-11 at Alan's
 // request — "the University itself may look at this"):
@@ -28,4 +29,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Only marks esbuild as a server-external package so the Serwist route
+// (src/app/serwist/[path]/route.ts) can compile the service worker at build.
+export default withSerwist(nextConfig);
