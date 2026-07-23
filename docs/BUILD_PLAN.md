@@ -376,6 +376,28 @@ Tasks: Edge Function `submit-update` with §5.5 limits + tests; Update sheet flo
 Tasks: Serwist service worker (cache shell + last-known data; offline shows cached statuses with honest staleness labels); manifest + icons (Grits mark) + splash; install prompt UX ("Add GritCheck to your home screen" moment after second visit); SSR/ISR spot pages with metadata ("True Grit's hours & live line — GritCheck"); OG images; sitemap; performance pass to hit the 5-second loop on 4G (target: interactive < 2.5 s repeat visit).
 **Exit:** Lighthouse PWA installable + perf ≥90; add-to-home-screen works on iOS Safari; Google can index spot pages.
 
+*Amended 2026-07-23 (Alan, Phase 5 kickoff) — three gate clarifications:*
+1. **Perf ≥90 stands; Phase 5 adopts the Phase 3 TBT debt as real work.**
+   Decided by measurement, not hope: local Lighthouse (mobile emulation,
+   prod build) scores **60 with the map idle-mounted** (TBT 2,780 ms) and
+   **94–95 with the map mount disabled** (TBT 10–30 ms, two runs). The
+   ceiling is comfortably ≥90 and hydration is innocent — MapLibre eval is
+   effectively the entire gap. Remedy (perf-pass task): gate the map mount
+   on first interaction with a generous timer fallback, plus the longer
+   Safari fallback from the Phase 3 debt note. Feel-check on Alan's iPhone
+   is part of the gate — we do not trade the map-first "premium" bar for
+   an auditor's number.
+2. **"Lighthouse PWA installable" is restated:** Lighthouse removed the PWA
+   category in v12 (2024). The check is now: Chrome DevTools installability
+   criteria pass + add-to-home-screen verified manually on iOS Safari
+   (which was already the exit's hard case).
+3. **SSR, not ISR.** Spot pages stay `force-dynamic`: the page's point is a
+   live verdict, and ISR-cached statuses would violate §4.4 ("never present
+   stale data as current"). Google indexes dynamic SSR pages fine; repeat-
+   visit speed comes from the service worker, not from caching the verdict.
+   Phase 4 already shipped robots.txt, the dynamic sitemap, metadataBase,
+   and favicons — this phase's SEO work is per-spot metadata + OG images.
+
 ### Phase 6 — Scraper in production + hardening
 Tasks: finalize scraper from Phase 0 spike — dining runs **Playwright/headless Chromium in GH Actions** and intercepts the dineoncampus JSON API (`apiv4.dineoncampus.com`; Cloudflare TLS fingerprinting 403s plain fetches, a real browser passes clean), library uses **LibCal's open JSON API** (`api3.libcal.com/api_hours_grid.php?iid=991`, plain fetch); **re-capture both fixtures in late August** — the Phase 0 snapshots are summer session with most venues closed all week; GH Actions cron (2×/day, plus manual dispatch); upsert with `source='scraped'`, keep `manual` overrides winning; failure alerting (Action failure → GitHub notification is enough); scraper unit tests on fixtures; error boundary + minimal logging in app; legal footer ("unofficial, built by a UMBC student"), simple privacy note (anonymous device ID, no accounts, no PII).
 **Exit:** hours update end-to-end from UMBC's site with no human touch; a deliberately broken fixture fails loudly, not silently.
