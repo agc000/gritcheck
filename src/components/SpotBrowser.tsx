@@ -5,10 +5,16 @@ import { FilterChips } from "@/components/FilterChips";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SortMenu } from "@/components/SortMenu";
 import { SpotRow } from "@/components/SpotRow";
+import { buildingKey } from "@/lib/buildings";
 import { useNowMs } from "@/lib/clock";
 import { CHIPS_BY_CATEGORY, matchesChip } from "@/lib/filters";
 import { recordFollowUpCandidate } from "@/lib/followup";
-import { CATEGORY_EVENT, type CategoryEventDetail } from "@/lib/map-events";
+import {
+  CATEGORY_EVENT,
+  SELECT_BUILDING_EVENT,
+  type CategoryEventDetail,
+  type SelectBuildingEventDetail,
+} from "@/lib/map-events";
 import { SORTS_BY_CATEGORY, sortSpots } from "@/lib/sort";
 import type { Category, SpotListItem } from "@/lib/types";
 
@@ -38,6 +44,17 @@ export function SpotBrowser({
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null,
   );
+  // Map building tap scopes the list to that building ("what's in here?").
+  // Mirrors the map's gold selection; cleared by empty-map tap (MapView
+  // dispatches null), the bar's Show-all button, or a tab switch.
+  const [building, setBuilding] = useState<string | null>(null);
+  useEffect(() => {
+    const onSelect = (e: Event) => {
+      setBuilding((e as CustomEvent<SelectBuildingEventDetail>).detail.building);
+    };
+    window.addEventListener(SELECT_BUILDING_EVENT, onSelect);
+    return () => window.removeEventListener(SELECT_BUILDING_EVENT, onSelect);
+  }, []);
   // Server time for hydration, then the live minute-tick clock (§4.4): rows
   // re-verdict as data ages instead of freezing at render time.
   const now = new Date(useNowMs(nowMs));
@@ -63,7 +80,9 @@ export function SpotBrowser({
   const visible = sortSpots(
     items.filter(
       (item) =>
-        item.category === category && matchesChip(activeChip, item.attributes),
+        item.category === category &&
+        matchesChip(activeChip, item.attributes) &&
+        (building === null || buildingKey(item.building) === building),
     ),
     activeSort,
     { now, location },
@@ -93,6 +112,10 @@ export function SpotBrowser({
           value={category}
           onChange={(next) => {
             setCategory(next);
+            // Tab switch drops the building scope — the map drops its gold
+            // selection on the same signal (applyCategory), so the two stay
+            // mirrored even when the map isn't mounted yet.
+            setBuilding(null);
             // Map highlights follow the active tab (MapView listens).
             window.dispatchEvent(
               new CustomEvent<CategoryEventDetail>(CATEGORY_EVENT, {
@@ -118,20 +141,43 @@ export function SpotBrowser({
         </div>
       </div>
 
+      {building && (
+        // The sheet's mirror of the map's gold building selection — gold-soft
+        // like the Best bet card (the sanctioned selection wash, §4.1).
+        <div className="mx-2.5 mb-1.5 flex items-center justify-between gap-3 rounded-card bg-gold-soft px-3.5 py-2">
+          <p className="min-w-0 truncate text-[13px] font-semibold">
+            In {building}
+          </p>
+          <button
+            type="button"
+            onClick={() => setBuilding(null)}
+            // Padded to the §4.8 44px tap floor; negative margin keeps the
+            // bar compact (nav-link idiom).
+            className="-my-2 shrink-0 py-3 text-[12.5px] font-semibold text-muted"
+          >
+            Show all
+          </button>
+        </div>
+      )}
+
       {visible.length === 0 ? (
         // §4.7 voice: dry and factual. Grits artwork joins in Phase 7 polish.
         <div className="px-5 py-12 text-center">
           <p className="text-sm font-semibold">
-            {activeChip
-              ? `Nothing matches “${activeChip.label}”.`
-              : category === "study"
-                ? "No study spots yet."
-                : "No food spots yet."}
+            {building
+              ? `Nothing in ${building}${activeChip ? ` matches “${activeChip.label}”` : category === "study" ? " to study in yet" : " to eat at yet"}.`
+              : activeChip
+                ? `Nothing matches “${activeChip.label}”.`
+                : category === "study"
+                  ? "No study spots yet."
+                  : "No food spots yet."}
           </p>
           <p className="mt-1 text-xs text-muted">
-            {activeChip
-              ? "Try a different filter."
-              : "Zones are being mapped now."}
+            {building
+              ? "Show all looks across campus."
+              : activeChip
+                ? "Try a different filter."
+                : "Zones are being mapped now."}
           </p>
         </div>
       ) : (

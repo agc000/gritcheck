@@ -14,6 +14,13 @@ export const CATEGORY_EVENT = "gritcheck:category";
 
 export type CategoryEventDetail = { category: Category };
 
+// Building tap (MapView) → the sheet list scopes to that building's spots;
+// null clears (empty-map tap). detail.building is the buildingKey — the same
+// normalized name the geojson features and marker grouping use.
+export const SELECT_BUILDING_EVENT = "gritcheck:select-building";
+
+export type SelectBuildingEventDetail = { building: string | null };
+
 // Recenter control (Sheet chrome) → MapView eases the camera home.
 export const RECENTER_EVENT = "gritcheck:recenter";
 

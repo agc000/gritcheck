@@ -11,7 +11,9 @@ import {
   CATEGORY_EVENT,
   EXPAND_SHEET_EVENT,
   RECENTER_EVENT,
+  SELECT_BUILDING_EVENT,
   type CategoryEventDetail,
+  type SelectBuildingEventDetail,
 } from "@/lib/map-events";
 import type { Category } from "@/lib/types";
 
@@ -240,17 +242,31 @@ export default function MapView({
       if (marker.slugs.length === 1) {
         router.push(`/spots/${marker.slugs[0]}`);
       } else {
+        // Scope the list to this building (SpotBrowser listens), then raise
+        // the sheet so the scoped options are actually visible.
+        window.dispatchEvent(
+          new CustomEvent<SelectBuildingEventDetail>(SELECT_BUILDING_EVENT, {
+            detail: { building: key },
+          }),
+        );
         window.dispatchEvent(new CustomEvent(EXPAND_SHEET_EVENT));
       }
     });
 
-    // Tap on empty map: drop any gold selection (the sheet collapse for the
-    // same tap is handled by Sheet's own listener).
+    // Tap on empty map: drop any gold selection AND the list scope that
+    // mirrors it (the sheet collapse for the same tap is Sheet's listener).
     map.on("click", (e) => {
       const hits = map.queryRenderedFeatures(e.point, {
         layers: ["campus-buildings-fill"],
       });
-      if (hits.length === 0) clearSelection();
+      if (hits.length === 0) {
+        clearSelection();
+        window.dispatchEvent(
+          new CustomEvent<SelectBuildingEventDetail>(SELECT_BUILDING_EVENT, {
+            detail: { building: null },
+          }),
+        );
+      }
     });
 
     map.addSource("spot-buildings", { type: "geojson", data });

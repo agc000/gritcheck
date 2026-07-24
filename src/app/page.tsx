@@ -4,6 +4,7 @@ import { LiveRefresh } from "@/components/LiveRefresh";
 import { Sheet } from "@/components/Sheet";
 import { SpotBrowser } from "@/components/SpotBrowser";
 import { UpdateSheet } from "@/components/UpdateSheet";
+import { buildingKey } from "@/lib/buildings";
 import { getSpotList } from "@/lib/spots";
 import { liveVerdict, type Tone } from "@/lib/status";
 
@@ -15,17 +16,8 @@ export default async function Home() {
 
   // One map label per *building*, not per spot — the Commons alone holds ~10
   // vendors on one roof (§4.2: buildings are the tap targets). Anchor at the
-  // mean of the building's spot coords.
-  // The `building` column is descriptive ("Commons ground floor", "True
-  // Grit's (residential side)"), not a key — strip floor/parenthetical
-  // qualifiers so one building gets one label. TODO(seed): a canonical
-  // building key in spots.json is the honest fix; flag for Alan's next
-  // data pass.
-  const buildingKey = (b: string) =>
-    b
-      .replace(/\s*\(.+\)$/, "")
-      .replace(/\s+(ground|\d+(?:st|nd|rd|th))\s+floor$/i, "")
-      .trim();
+  // mean of the building's spot coords. Naming normalized by buildingKey
+  // (src/lib/buildings.ts — shared with the sheet's building filter).
   // Building glow tone: the BEST live tone among the building's spots of a
   // category (go beats hold beats skip). The map's job is "where should I
   // go" — one short-line vendor inside the Commons makes the building worth
