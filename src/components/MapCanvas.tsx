@@ -18,29 +18,68 @@ const MapView = dynamic(() => import("./MapView"), {
 // Phase 5 TBT adoption (gate decision 2026-07-23): idle-gating wasn't enough —
 // idle arrives ~1s after hydration, so maplibre's parse/eval (~2.4s throttled)
 // still landed inside the Lighthouse trace and any slow phone's settle window.
-// The map now mounts on the user's FIRST GESTURE (they're engaging; the eval
-// cost lands after the 5-second answer is already on screen) or after a quiet
-// fallback so a passive viewer still gets the map. Both constants are
-// feel-check material, not law — tune on a real phone, log changes here.
+// The map mounts off the user's FIRST GESTURE — but only after that gesture
+// ENDS, in an idle slot (v2, Alan's drag-jank report 2026-07-24: mounting on
+// pointerdown ran maplibre's eval synchronously inside the first sheet drag
+// and dropped its frames). A quiet fallback still serves the passive viewer.
+// Constants are feel-check material, not law — tune on a phone, log here.
 const MOUNT_FALLBACK_MS = 10_000;
-const INTERACTION_EVENTS = ["pointerdown", "keydown", "wheel"] as const;
+// If the browser never reports idle (busy tiles/hydration), mount anyway.
+const POST_GESTURE_IDLE_TIMEOUT_MS = 2_000;
 
 export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
   const [mapReady, setMapReady] = useState(false);
   useEffect(() => {
     let armed = false;
-    const arm = () => {
-      if (armed) return;
-      armed = true;
+    let done = false;
+    let idleId: number | null = null;
+    let idleFallback: ReturnType<typeof setTimeout> | null = null;
+
+    const mount = () => {
+      if (done) return;
+      done = true;
       cleanup();
       setMapReady(true);
     };
-    const t = setTimeout(arm, MOUNT_FALLBACK_MS);
+    // Post-gesture: take the next idle slot rather than mounting inside a
+    // possible follow-up gesture (rIC can fire between drag frames, so a
+    // plain rIC-on-pointerdown re-creates the same jank).
+    const scheduleMount = () => {
+      if ("requestIdleCallback" in window) {
+        idleId = requestIdleCallback(mount, {
+          timeout: POST_GESTURE_IDLE_TIMEOUT_MS,
+        });
+      } else {
+        idleFallback = setTimeout(mount, 300); // Safari: brief settle beat
+      }
+    };
+    const arm = (e: Event) => {
+      if (armed || done) return;
+      armed = true;
+      if (e.type === "pointerdown") {
+        // Wait the gesture out; cancel covers scroll-captured pointers.
+        window.addEventListener("pointerup", scheduleMount, { once: true });
+        window.addEventListener("pointercancel", scheduleMount, { once: true });
+      } else {
+        // wheel/keydown are discrete — no sustained gesture to wait for.
+        scheduleMount();
+      }
+    };
+
+    const t = setTimeout(scheduleMount, MOUNT_FALLBACK_MS);
     const cleanup = () => {
       clearTimeout(t);
-      for (const e of INTERACTION_EVENTS) window.removeEventListener(e, arm);
+      if (idleFallback !== null) clearTimeout(idleFallback);
+      if (idleId !== null && "cancelIdleCallback" in window) {
+        cancelIdleCallback(idleId);
+      }
+      for (const e of ["pointerdown", "keydown", "wheel"]) {
+        window.removeEventListener(e, arm);
+      }
+      window.removeEventListener("pointerup", scheduleMount);
+      window.removeEventListener("pointercancel", scheduleMount);
     };
-    for (const e of INTERACTION_EVENTS) {
+    for (const e of ["pointerdown", "keydown", "wheel"]) {
       // passive: the listener must never add latency to the gesture itself.
       window.addEventListener(e, arm, { passive: true });
     }
