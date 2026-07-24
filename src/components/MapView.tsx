@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -71,7 +70,6 @@ export default function MapView({
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [styleLoaded, setStyleLoaded] = useState(false);
   const selectedKeyRef = useRef<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -239,18 +237,17 @@ export default function MapView({
       selectedKeyRef.current = key;
       const marker = buildings.find((b) => b.building === key);
       if (!marker) return;
-      if (marker.slugs.length === 1) {
-        router.push(`/spots/${marker.slugs[0]}`);
-      } else {
-        // Scope the list to this building (SpotBrowser listens), then raise
-        // the sheet so the scoped options are actually visible.
-        window.dispatchEvent(
-          new CustomEvent<SelectBuildingEventDetail>(SELECT_BUILDING_EVENT, {
-            detail: { building: key },
-          }),
-        );
-        window.dispatchEvent(new CustomEvent(EXPAND_SHEET_EVENT));
-      }
+      // EVERY building behaves the same (Alan, 2026-07-24): scope the list to
+      // it and raise the sheet. Single-spot buildings (True Grit's, Admin)
+      // used to jump straight to the detail page, which made a tap mean two
+      // different things depending on data the user can't see — and yanked
+      // them off the map for what should be a glance.
+      window.dispatchEvent(
+        new CustomEvent<SelectBuildingEventDetail>(SELECT_BUILDING_EVENT, {
+          detail: { building: key },
+        }),
+      );
+      window.dispatchEvent(new CustomEvent(EXPAND_SHEET_EVENT));
     });
 
     // Tap on empty map: drop any gold selection AND the list scope that
@@ -315,20 +312,40 @@ export default function MapView({
       },
     });
 
-    // Category sync (Alan, 2026-07-11): the map highlights only buildings
-    // holding spots of the active sheet tab — Food buildings on Food, Study
-    // on Study. Inactive buildings drop to the dim context color and lose
-    // dot/label. Study currently dims everything (no study coords seeded
-    // yet); it lights up the moment Part 3 data lands.
+    // Category sync (Alan, 2026-07-11; amended 2026-07-24 after his report
+    // that name tags vanish on the Study tab).
+    //
+    // Name tags are now ALWAYS shown, on both tabs. Hiding them made the map
+    // lose its wayfinding: a building's name is context ("where am I?"), not
+    // a claim about our data, and deleting half the labels on a tab switch
+    // reads as breakage. What the tab changes is EMPHASIS, not existence —
+    // labels for buildings without spots of the active category dim rather
+    // than disappear (both tones ≥5:1 against the label halo, §4.8).
+    //
+    // Dot and glow stay category-gated, because those ARE data claims: a dot
+    // says "we have spots of this kind here" and the glow says "we have a
+    // live confident verdict". Showing a dot on a building with no seeded
+    // study zones would assert knowledge we don't have (§4.4).
+    //
+    // Footprint highlight splits by category on purpose: food is
+    // vendor-located (only some buildings have it), while study space is
+    // effectively everywhere on campus — so Study highlights every building
+    // as in-play. That's a real asymmetry, not an inconsistency.
     const applyCategory = (category: Category) => {
-      const visible = ["==", ["get", category], true] as maplibregl.FilterSpecification;
+      const hasCategory = ["==", ["get", category], true] as maplibregl.FilterSpecification;
       const tone = category === "food" ? ("foodTone" as const) : ("studyTone" as const);
-      map.setFilter("spot-buildings-dot", visible);
-      map.setFilter("spot-buildings-label", visible);
+      map.setFilter("spot-buildings-dot", hasCategory);
+      map.setFilter("spot-buildings-label", null); // every name tag, always
+      map.setPaintProperty("spot-buildings-label", "text-color", [
+        "case",
+        ["==", ["get", category], true],
+        "#DAD7CE", // has spots of this category — full emphasis (13.1:1)
+        "#9A9488", // context only — recessive but legible (6.3:1)
+      ]);
       // Glow only where the active category has a live tone.
       map.setFilter("spot-buildings-glow", [
         "all",
-        visible,
+        hasCategory,
         hasTone(tone),
       ] as unknown as maplibregl.FilterSpecification);
       map.setPaintProperty("spot-buildings-dot", "circle-color", toneColor(tone));
@@ -337,7 +354,7 @@ export default function MapView({
       for (const b of buildings) {
         map.setFeatureState(
           { source: "campus-buildings", id: b.building },
-          { active: category === "food" ? b.food : b.study },
+          { active: category === "study" ? true : b.food },
         );
       }
     };
@@ -363,13 +380,13 @@ export default function MapView({
     window.addEventListener(RECENTER_EVENT, onRecenter);
 
     // Cleanup note: deps are stable for a given page load (server-computed
-    // buildings, router), so this effect runs once; the early-return path
-    // above never re-registers listeners.
+    // buildings), so this effect runs once; the early-return path above never
+    // re-registers listeners.
     return () => {
       window.removeEventListener(CATEGORY_EVENT, onCategory);
       window.removeEventListener(RECENTER_EVENT, onRecenter);
     };
-  }, [buildings, styleLoaded, router]);
+  }, [buildings, styleLoaded]);
 
   // Size with h/w, not inset-0: MapLibre's own CSS forces the container to
   // position:relative, which would cancel inset-0 and collapse it to height 0.
