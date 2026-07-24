@@ -36,9 +36,27 @@ export async function generateMetadata({
   const { slug } = await params;
   const detail = await getSpotDetail(slug);
   if (!detail) return { title: "Not found — GritCheck" };
+  const { item } = detail;
+  const title = `${item.name} — GritCheck`;
+  // Category-aware, statics only — search snippets get cached, so no live
+  // wording that could go stale (§4.4 applies to metadata too).
+  const description =
+    item.category === "food"
+      ? `${item.name} in ${item.building} at UMBC — live line and crowd reports, hours today, and whether it's worth the walk.`
+      : `${item.name} in ${item.building} at UMBC — live crowd and noise reports, hours today, and where to actually get work done.`;
   return {
-    title: `${detail.item.name} — GritCheck`,
-    description: `${detail.item.name} at UMBC: live status, hours, and whether it's worth the walk.`,
+    title,
+    description,
+    alternates: { canonical: `/spots/${item.slug}` },
+    // The colocated opengraph-image.tsx supplies the card image.
+    openGraph: {
+      title,
+      description,
+      url: `/spots/${item.slug}`,
+      siteName: "GritCheck",
+      type: "website",
+    },
+    twitter: { card: "summary_large_image" },
   };
 }
 

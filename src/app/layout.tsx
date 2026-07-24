@@ -62,6 +62,17 @@ export const metadata: Metadata = {
   title: "GritCheck",
   description:
     "Live food and study spots at UMBC — know the best place to go, and whether to trust it.",
+  // Link previews (§Phase 5 SEO): the opengraph-image.tsx file convention
+  // injects the image tags; these set the text half. summary_large_image
+  // makes the 1200×630 card render full-width instead of as a thumbnail.
+  openGraph: {
+    siteName: "GritCheck",
+    type: "website",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
   // iOS add-to-home-screen behavior (§Phase 5): fullscreen standalone with the
   // status bar drawn over our own chrome — MapCanvas already pads for the
   // notch via env(safe-area-inset-top).
