@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree, Space_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import { OpenTracker } from "@/components/OpenTracker";
 import { SwRegister } from "@/components/SwRegister";
@@ -107,6 +108,8 @@ export default function RootLayout({
         <SwRegister />
         {/* "Offline — showing last-known data" pill (§4.4). */}
         <OfflineBanner />
+        {/* Second-visit add-to-home-screen bar; yields to the follow-up. */}
+        <InstallPrompt />
       </body>
     </html>
   );

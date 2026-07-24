@@ -44,6 +44,17 @@ function readCandidate(): FollowUpCandidate | null {
   }
 }
 
+/** Whether this session already used its one follow-up prompt. Lets other
+ *  bottom-bar surfaces (InstallPrompt) yield — corrective data outranks a
+ *  nudge, and two stacked bars is exactly the nagging §4.2 bans. */
+export function wasFollowUpShownThisSession(): boolean {
+  try {
+    return sessionStorage.getItem(SHOWN_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
 /** The candidate to prompt about right now, or null. Marks the session's
  *  one prompt as used — callers must actually show it. */
 export function takeFollowUpPrompt(): FollowUpCandidate | null {
