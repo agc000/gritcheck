@@ -14,6 +14,7 @@ import {
   type CategoryEventDetail,
   type SelectBuildingEventDetail,
 } from "@/lib/map-events";
+import { MAP_COLORS } from "@/lib/map-colors";
 import type { Category } from "@/lib/types";
 
 export type BuildingMarker = {
@@ -198,13 +199,22 @@ export default function MapView({
       type: "fill-extrusion",
       source: "campus-buildings",
       paint: {
+        // Footprint tint says WHAT a building holds, and says it the same on
+        // both tabs — a legend has to mean one thing to be readable, so this
+        // replaced the old tab-dependent active/dim shading. The division of
+        // labor across the map is now: footprints = what's here, dots/glow =
+        // how busy it is, paths = how to walk there.
         "fill-extrusion-color": [
           "case",
           ["boolean", ["feature-state", "selected"], false],
-          "#FFC20E",
-          ["boolean", ["feature-state", "active"], true],
-          "#3B372C",
-          "#2B2820",
+          "#FFC20E", // §4.1's one sanctioned gold use: current selection
+          ["boolean", ["feature-state", "both"], false],
+          MAP_COLORS.both,
+          ["boolean", ["feature-state", "study"], false],
+          MAP_COLORS.study,
+          ["boolean", ["feature-state", "food"], false],
+          MAP_COLORS.food,
+          "#2B2820", // mapped building with nothing in it yet
         ],
         "fill-extrusion-height": ["get", "height"],
         "fill-extrusion-opacity": 0.95,
@@ -351,10 +361,18 @@ export default function MapView({
       map.setPaintProperty("spot-buildings-dot", "circle-color", toneColor(tone));
       map.setPaintProperty("spot-buildings-glow", "circle-color", toneColor(tone));
       clearSelection();
+      // Category tints don't depend on the tab, but re-applying here is the
+      // cheap way to be robust: feature-state set before the geojson source
+      // finishes loading is silently dropped, and this runs at setup AND on
+      // every tab switch, so a lost first write self-heals.
       for (const b of buildings) {
         map.setFeatureState(
           { source: "campus-buildings", id: b.building },
-          { active: category === "study" ? true : b.food },
+          {
+            food: b.food && !b.study,
+            study: b.study && !b.food,
+            both: b.food && b.study,
+          },
         );
       }
     };

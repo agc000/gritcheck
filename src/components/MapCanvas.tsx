@@ -3,8 +3,79 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
+import { MAP_COLORS } from "@/lib/map-colors";
 import { BrandLockup } from "./BrandMark";
 import type { BuildingMarker } from "./MapView";
+
+// Pedestrian glyph for the walking-path row (Alan asked for "person walking
+// for walk"). Drawn rather than imported so it inherits the path color.
+function WalkIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="13" cy="4.2" r="2.2" fill="currentColor" stroke="none" />
+      {/* torso → front leg */}
+      <path d="M12.6 8.4 10.8 14l3 2.3.7 4.6" />
+      {/* back leg */}
+      <path d="M10.8 14 8 15.9l-1 4.3" />
+      {/* arms */}
+      <path d="m11.8 10.4 3.5 1.7M11.4 12.1 8.5 10.6" />
+    </svg>
+  );
+}
+
+// What the map's colors mean. Static markup — no state, no listeners — and
+// only rendered once the map itself is up, so it adds nothing to the initial
+// paint or to hydration.
+const LEGEND: Array<{ color: string; label: string }> = [
+  { color: MAP_COLORS.food, label: "Food" },
+  { color: MAP_COLORS.study, label: "Study" },
+  { color: MAP_COLORS.both, label: "Both" },
+];
+
+function MapLegend() {
+  return (
+    // pointer-events-none: chrome must never swallow a map gesture.
+    <div className="pointer-events-none absolute top-[max(1rem,env(safe-area-inset-top))] right-[max(1rem,env(safe-area-inset-right))] rounded-md bg-black/80 px-2.5 py-2">
+      <ul className="flex flex-col gap-1.5">
+        <li className="flex items-center gap-1.5">
+          {/* Inline color, not a Tailwind class: one source of truth with
+              the style JSON's line-color (src/lib/map-colors.ts). */}
+          <span
+            className="flex shrink-0"
+            style={{ color: MAP_COLORS.path }}
+          >
+            <WalkIcon className="h-3.5 w-3.5" />
+          </span>
+          <span className="text-[10.5px] font-semibold text-muted">
+            Walking path
+          </span>
+        </li>
+        {LEGEND.map(({ color, label }) => (
+          <li key={label} className="flex items-center gap-1.5">
+            {/* Square, not a dot: these tint building footprints, and the
+                round status dots already mean something else. */}
+            <span
+              className="h-3 w-3 shrink-0 rounded-[3px]"
+              style={{ backgroundColor: color }}
+            />
+            <span className="text-[10.5px] font-semibold text-muted">
+              {label}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 // MapLibre reaches for window/document, so the GL view is client-only and never
 // server-rendered. Loading it this way is also our graceful degradation (§Phase
@@ -89,6 +160,8 @@ export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
   return (
     <div className="absolute inset-0">
       {mapReady && <MapView buildings={buildings} />}
+      {/* Legend rides with the map — no map, nothing to explain. */}
+      {mapReady && <MapLegend />}
 
       {/* Top bar: Grits mark + wordmark (mockup .map-top). Visual only (§4.7).
           Padding clears the iOS notch/status bar in standalone PWA mode. */}
