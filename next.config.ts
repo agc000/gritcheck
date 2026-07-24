@@ -8,10 +8,35 @@ import { withSerwist } from "@serwist/turbopack";
 // - Referrer-Policy: outbound clicks don't leak full URLs.
 // - Permissions-Policy: geolocation only for our own origin (the "Closest"
 //   sort + Phase 4 spot pre-select use it); camera/mic/etc. flatly denied.
-// A full Content-Security-Policy is deliberately NOT here yet: Next inline
-// hydration scripts and MapLibre's blob: workers need a tested nonce/allow
-// list — shipping a blind CSP breaks the app. Tracked for the Phase 5
-// hardening pass alongside the service worker.
+// Content-Security-Policy (the Phase 5 hardening pass this comment used to
+// defer to). Everything the app legitimately talks to, nothing else:
+// - connect-src: Supabase REST/Realtime/Functions (http + ws forms of the one
+//   env URL) and OpenFreeMap tiles/glyphs/sprites — MapLibre fetches all of
+//   those itself, images arrive as blobs (hence img-src blob:).
+// - worker-src blob:: MapLibre spawns its workers from blob URLs; 'self'
+//   covers the service worker at /serwist/sw.js.
+// - script-src keeps 'unsafe-inline': Next's hydration bootstrap is inline
+//   scripts, and a nonce pipeline (middleware + strict-dynamic) isn't worth
+//   its complexity while the app renders zero user HTML (§5.5:
+//   dangerouslySetInnerHTML banned, comments are escaped text). The CSP's
+//   real work here is closing exfiltration, embedding, and plugin vectors.
+// Dev is exempt: HMR needs eval and ships no CSP anyway.
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  `connect-src 'self' ${supabaseUrl} ${supabaseUrl.replace(/^http/, "ws")} https://tiles.openfreemap.org`,
+  "worker-src 'self' blob:",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -21,6 +46,9 @@ const securityHeaders = [
     value:
       "geolocation=(self), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()",
   },
+  ...(process.env.NODE_ENV === "production"
+    ? [{ key: "Content-Security-Policy", value: contentSecurityPolicy }]
+    : []),
 ];
 
 const nextConfig: NextConfig = {

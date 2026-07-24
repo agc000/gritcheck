@@ -15,23 +15,36 @@ const MapView = dynamic(() => import("./MapView"), {
   loading: () => <div className="absolute inset-0 bg-map-bg" />,
 });
 
+// Phase 5 TBT adoption (gate decision 2026-07-23): idle-gating wasn't enough —
+// idle arrives ~1s after hydration, so maplibre's parse/eval (~2.4s throttled)
+// still landed inside the Lighthouse trace and any slow phone's settle window.
+// The map now mounts on the user's FIRST GESTURE (they're engaging; the eval
+// cost lands after the 5-second answer is already on screen) or after a quiet
+// fallback so a passive viewer still gets the map. Both constants are
+// feel-check material, not law — tune on a real phone, log changes here.
+const MOUNT_FALLBACK_MS = 10_000;
+const INTERACTION_EVENTS = ["pointerdown", "keydown", "wheel"] as const;
+
 export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
-  // Mount the GL map only after the browser goes idle: the list is the
-  // product's 5-second answer (§1.1) and paints from SSR immediately — the
-  // map must never compete with it for the main thread (Lighthouse gate:
-  // maplibre eval was 4.3s of throttled TBT when mounted eagerly).
   const [mapReady, setMapReady] = useState(false);
   useEffect(() => {
-    // timeout 4000 (was 1500, PSI audit): on slow devices the 1.5s cap made
-    // maplibre eval land inside the LCP window, starving the main thread so
-    // even server-painted text couldn't repaint (92% "render delay"). Idle
-    // devices still mount immediately; only busy ones wait longer.
-    if ("requestIdleCallback" in window) {
-      const id = requestIdleCallback(() => setMapReady(true), { timeout: 4000 });
-      return () => cancelIdleCallback(id);
+    let armed = false;
+    const arm = () => {
+      if (armed) return;
+      armed = true;
+      cleanup();
+      setMapReady(true);
+    };
+    const t = setTimeout(arm, MOUNT_FALLBACK_MS);
+    const cleanup = () => {
+      clearTimeout(t);
+      for (const e of INTERACTION_EVENTS) window.removeEventListener(e, arm);
+    };
+    for (const e of INTERACTION_EVENTS) {
+      // passive: the listener must never add latency to the gesture itself.
+      window.addEventListener(e, arm, { passive: true });
     }
-    const t = setTimeout(() => setMapReady(true), 600); // Safari fallback
-    return () => clearTimeout(t);
+    return cleanup;
   }, []);
 
   return (
