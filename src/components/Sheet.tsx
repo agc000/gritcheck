@@ -101,8 +101,18 @@ export function Sheet({ children }: { children: React.ReactNode }) {
           <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3" strokeLinecap="round" />
         </svg>
       </button>
-      {/* Grabber bar — the drag affordance. */}
-      <div className="mx-auto mt-2.5 mb-1.5 h-1 w-9 shrink-0 rounded-full bg-line" />
+      {/* Grabber. The visible bar stays 4px (§4.2 restraint), but the DRAG
+          TARGET is this whole strip — a 4px-tall handle is unhittable with a
+          thumb, which is a large part of why pulling the sheet down felt
+          finicky. touch-action:none matters more than the size: without it
+          iOS can claim the gesture as a native scroll before vaul's
+          pointermove ever runs, and once the browser owns a touch, JS cannot
+          take it back mid-gesture — the drag then either stalls or turns into
+          page overscroll. Outside the scroll container, so it drags at any
+          scroll position. */}
+      <div className="shrink-0 touch-none pt-2.5 pb-2.5" aria-hidden>
+        <div className="mx-auto h-1 w-9 rounded-full bg-line" />
+      </div>
       {/* Scroll the list at the default AND full snaps — only lock it at the
           peek sliver, where the gesture should expand the sheet, not scroll. */}
       {/* overscroll-none keeps iOS rubber-band scrolling from fighting the
@@ -159,11 +169,16 @@ export function Sheet({ children }: { children: React.ReactNode }) {
       snapPoints={[SNAP_PEEK, SNAP_DEFAULT, SNAP_FULL]}
       activeSnapPoint={snap}
       setActiveSnapPoint={setSnap}
-      // vaul's default is 100ms: a fast swipe right after a scroll fling gets
-      // reinterpreted as a sheet drag and collapses the snap (Alan's phone
-      // report). 500ms keeps consecutive scroll swipes as scrolls; a deliberate
-      // pause-then-drag still moves the sheet.
-      scrollLockTimeout={500}
+      // Lowered 500 → 250 (Alan's swipe-down lag report 2026-07-24). 500ms
+      // was set when this was the ONLY guard against a post-fling swipe
+      // collapsing the snap; the data-vaul-no-drag toggle below now guards
+      // that precisely (you can only drag at scrollTop 0), so the timeout is
+      // just a blunt second lock — and every ms of it is dead time where a
+      // deliberate pull-down does nothing, which is what "laggy" was. 250ms
+      // still absorbs the tail of a fling.
+      // FEEL-CHECK KNOB: if a fling ever collapses the sheet again, raise
+      // this first — it is the one number governing that tradeoff.
+      scrollLockTimeout={250}
     >
       <Drawer.Portal>
         <Drawer.Content className={sheetClasses} aria-describedby={undefined}>

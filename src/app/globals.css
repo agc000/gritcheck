@@ -55,6 +55,20 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
   }
+
+  /* Swipe-down scar tissue (Alan's phone report 2026-07-24). The sheet
+     declines a drag in two legitimate cases — the list is scrolled, or vaul's
+     scroll lock is still armed — and without this the declined gesture chains
+     up to the DOCUMENT, where iOS answers with pull-to-refresh and the
+     rubber-band page bounce. That's the "iPhone pulldown thing": not the
+     drawer misbehaving, but the browser taking over a gesture aimed at it.
+     The app shell is fixed and never scrolls as a document, so nothing is
+     lost; the detail page still scrolls normally, minus pull-to-refresh
+     (correct for an installed PWA). */
+  html,
+  body {
+    overscroll-behavior: none;
+  }
 }
 
 @layer utilities {
