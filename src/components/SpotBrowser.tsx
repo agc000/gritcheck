@@ -5,18 +5,32 @@ import { FilterChips } from "@/components/FilterChips";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SortMenu } from "@/components/SortMenu";
 import { SpotRow } from "@/components/SpotRow";
-import { buildingKey } from "@/lib/buildings";
+import { buildingKey, type CampusBuilding } from "@/lib/buildings";
 import { useNowMs } from "@/lib/clock";
 import { CHIPS_BY_CATEGORY, matchesChip } from "@/lib/filters";
 import { recordFollowUpCandidate } from "@/lib/followup";
 import {
   CATEGORY_EVENT,
+  COLLAPSE_SHEET_EVENT,
+  FIND_BUILDING_EVENT,
   SELECT_BUILDING_EVENT,
+  setPendingFind,
   type CategoryEventDetail,
+  type FindBuildingEventDetail,
   type SelectBuildingEventDetail,
 } from "@/lib/map-events";
 import { SORTS_BY_CATEGORY, sortSpots } from "@/lib/sort";
 import type { Category, SpotListItem } from "@/lib/types";
+
+// The sheet's tabs: the two spot categories plus Find Building (2026-07-25,
+// Alan — replaced the search-drawer flow), which lists every campus building
+// and highlights the tapped one on the map.
+type BrowseTab = Category | "buildings";
+const TABS: ReadonlyArray<{ value: BrowseTab; label: string }> = [
+  { value: "food", label: "Food" },
+  { value: "study", label: "Study" },
+  { value: "buildings", label: "Find Building" },
+];
 
 // Client owner of browse state (tab now; filters/sort in tasks 5–6). Local
 // component state, not a store or URL — it's ephemeral view state with exactly
@@ -25,11 +39,16 @@ import type { Category, SpotListItem } from "@/lib/types";
 export function SpotBrowser({
   items,
   nowMs,
+  campusBuildings,
 }: {
   items: SpotListItem[];
   nowMs: number;
+  campusBuildings: CampusBuilding[];
 }) {
-  const [category, setCategory] = useState<Category>("food");
+  const [tab, setTab] = useState<BrowseTab>("food");
+  // The spot-list machinery below (chips, sorts, rows) is category-driven;
+  // null = the Find Building tab, which uses none of it.
+  const category: Category | null = tab === "buildings" ? null : tab;
   // Chip selection is per-category so switching tabs doesn't carry a stale
   // filter across ("Vegan" means nothing on the Study list).
   const [chipByCategory, setChipByCategory] = useState<
@@ -59,13 +78,17 @@ export function SpotBrowser({
   // re-verdict as data ages instead of freezing at render time.
   const now = new Date(useNowMs(nowMs));
 
-  const chips = CHIPS_BY_CATEGORY[category];
-  const activeChip = chips.find((c) => c.id === chipByCategory[category]) ?? null;
-  const sorts = SORTS_BY_CATEGORY[category];
-  const activeSort =
-    sorts.find((s) => s.id === sortByCategory[category]) ?? sorts[0];
+  const chips = category ? CHIPS_BY_CATEGORY[category] : [];
+  const activeChip = category
+    ? (chips.find((c) => c.id === chipByCategory[category]) ?? null)
+    : null;
+  const sorts = category ? SORTS_BY_CATEGORY[category] : [];
+  const activeSort = category
+    ? (sorts.find((s) => s.id === sortByCategory[category]) ?? sorts[0])
+    : null;
 
   const handleSortChange = (id: string) => {
+    if (!category) return;
     setSortByCategory((prev) => ({ ...prev, [category]: id }));
     if (id === "closest" && !location && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -77,16 +100,35 @@ export function SpotBrowser({
     }
   };
 
-  const visible = sortSpots(
-    items.filter(
-      (item) =>
-        item.category === category &&
-        matchesChip(activeChip, item.attributes) &&
-        (building === null || buildingKey(item.building) === building),
-    ),
-    activeSort,
-    { now, location },
-  );
+  const visible = activeSort
+    ? sortSpots(
+        items.filter(
+          (item) =>
+            item.category === category &&
+            matchesChip(activeChip, item.attributes) &&
+            (building === null || buildingKey(item.building) === building),
+        ),
+        activeSort,
+        { now, location },
+      )
+    : [];
+
+  // Find Building tap → the map machinery the search drawer used to drive:
+  // park the target (map may not be mounted yet), broadcast it, and drop the
+  // sheet to the peek sliver so the camera landing is visible.
+  const pickBuilding = (b: CampusBuilding) => {
+    const detail: FindBuildingEventDetail = {
+      name: b.name,
+      lng: b.lng,
+      lat: b.lat,
+      buildingKey: b.buildingKey,
+    };
+    setPendingFind(detail);
+    window.dispatchEvent(
+      new CustomEvent<FindBuildingEventDetail>(FIND_BUILDING_EVENT, { detail }),
+    );
+    window.dispatchEvent(new CustomEvent(COLLAPSE_SHEET_EVENT));
+  };
 
   // Best bet = the top row of the sorted list (§1.3) — the sort order IS the
   // recommendation. Never crown a closed spot: recommending somewhere you
@@ -109,39 +151,70 @@ export function SpotBrowser({
     <div>
       <div className="sticky top-0 z-10 bg-sheet px-4 pt-1 pb-3">
         <SegmentedControl
-          value={category}
+          options={TABS}
+          value={tab}
           onChange={(next) => {
-            setCategory(next);
+            setTab(next);
             // Tab switch drops the building scope — the map drops its gold
             // selection on the same signal (applyCategory), so the two stay
             // mirrored even when the map isn't mounted yet.
             setBuilding(null);
-            // Map highlights follow the active tab (MapView listens).
-            window.dispatchEvent(
-              new CustomEvent<CategoryEventDetail>(CATEGORY_EVENT, {
-                detail: { category: next },
-              }),
-            );
+            // Map highlights follow the active spot tab (MapView listens).
+            // Find Building leaves the map's category state as-is: the tab is
+            // wayfinding over whatever was already lit.
+            if (next !== "buildings") {
+              window.dispatchEvent(
+                new CustomEvent<CategoryEventDetail>(CATEGORY_EVENT, {
+                  detail: { category: next },
+                }),
+              );
+            }
           }}
         />
-        {/* Subbar (mockup): chips left, sort right. */}
-        <div className="mt-3 flex items-center gap-2">
-          <FilterChips
-            chips={chips}
-            activeId={chipByCategory[category]}
-            onChange={(id) =>
-              setChipByCategory((prev) => ({ ...prev, [category]: id }))
-            }
-          />
-          <SortMenu
-            options={sorts}
-            activeId={activeSort.id}
-            onChange={handleSortChange}
-          />
-        </div>
+        {/* Subbar (mockup): chips left, sort right. Find Building has
+            neither — the whole tab is one alphabetical list. */}
+        {category && activeSort && (
+          <div className="mt-3 flex items-center gap-2">
+            <FilterChips
+              chips={chips}
+              activeId={chipByCategory[category]}
+              onChange={(id) =>
+                setChipByCategory((prev) => ({ ...prev, [category]: id }))
+              }
+            />
+            <SortMenu
+              options={sorts}
+              activeId={activeSort.id}
+              onChange={handleSortChange}
+            />
+          </div>
+        )}
       </div>
 
-      {building && (
+      {tab === "buildings" && (
+        <ul className="divide-y divide-line">
+          {campusBuildings.map((b) => (
+            <li key={b.name}>
+              <button
+                type="button"
+                onClick={() => pickBuilding(b)}
+                className="flex w-full items-baseline justify-between gap-3 px-4.5 py-3 text-left"
+              >
+                <span className="min-w-0 truncate text-[14px] font-semibold">
+                  {b.name}
+                </span>
+                {b.spots !== undefined && (
+                  <span className="shrink-0 text-[12px] text-muted">
+                    {b.spots} {b.spots === 1 ? "spot" : "spots"}
+                  </span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {category && building && (
         // The sheet's mirror of the map's gold building selection — gold-soft
         // like the Best bet card (the sanctioned selection wash, §4.1).
         <div className="mx-2.5 mb-1.5 flex items-center justify-between gap-3 rounded-card bg-gold-soft px-3.5 py-2">
@@ -160,38 +233,39 @@ export function SpotBrowser({
         </div>
       )}
 
-      {visible.length === 0 ? (
-        // §4.7 voice: dry and factual. Grits artwork joins in Phase 7 polish.
-        <div className="px-5 py-12 text-center">
-          <p className="text-sm font-semibold">
-            {building
-              ? `Nothing in ${building}${activeChip ? ` matches “${activeChip.label}”` : category === "study" ? " to study in yet" : " to eat at yet"}.`
-              : activeChip
-                ? `Nothing matches “${activeChip.label}”.`
-                : category === "study"
-                  ? "No study spots yet."
-                  : "No food spots yet."}
-          </p>
-          <p className="mt-1 text-xs text-muted">
-            {building
-              ? "Show all looks across campus."
-              : activeChip
-                ? "Try a different filter."
-                : "Zones are being mapped now."}
-          </p>
-        </div>
-      ) : (
-        <>
-          {bestBet && <SpotRow item={bestBet} now={now} best />}
-          <ul className="divide-y divide-line">
-            {rest.map((item) => (
-              <li key={item.slug}>
-                <SpotRow item={item} now={now} />
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      {category &&
+        (visible.length === 0 ? (
+          // §4.7 voice: dry and factual. Grits artwork joins in Phase 7 polish.
+          <div className="px-5 py-12 text-center">
+            <p className="text-sm font-semibold">
+              {building
+                ? `Nothing in ${building}${activeChip ? ` matches “${activeChip.label}”` : category === "study" ? " to study in yet" : " to eat at yet"}.`
+                : activeChip
+                  ? `Nothing matches “${activeChip.label}”.`
+                  : category === "study"
+                    ? "No study spots yet."
+                    : "No food spots yet."}
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              {building
+                ? "Show all looks across campus."
+                : activeChip
+                  ? "Try a different filter."
+                  : "Zones are being mapped now."}
+            </p>
+          </div>
+        ) : (
+          <>
+            {bestBet && <SpotRow item={bestBet} now={now} best />}
+            <ul className="divide-y divide-line">
+              {rest.map((item) => (
+                <li key={item.slug}>
+                  <SpotRow item={item} now={now} />
+                </li>
+              ))}
+            </ul>
+          </>
+        ))}
     </div>
   );
 }

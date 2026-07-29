@@ -28,13 +28,13 @@ export type SelectBuildingEventDetail = { building: string | null };
 // Recenter control (Sheet chrome) → MapView eases the camera home.
 export const RECENTER_EVENT = "gritcheck:recenter";
 
-// Find-a-building (§7.2's freshman question: "where is my 9am?").
-// Sheet chrome's magnifier → FindSheet opens; picking a result dispatches
-// FIND_BUILDING and MapView eases the camera + drops a gold pulse. The
-// pending slot exists because the map is gesture-mounted: a search completed
-// before MapView's listeners attach would otherwise vanish — MapView drains
-// it on setup.
-export const OPEN_FIND_EVENT = "gritcheck:open-find";
+// Find Building tab (§7.2's freshman question: "where is my 9am?"). Tapping
+// a row dispatches FIND_BUILDING; MapView eases the camera and drops a gold
+// pulse (or gold-selects the footprint for the interactive five). The pending
+// slot exists because the map is gesture-mounted: a pick completed before
+// MapView's listeners attach would otherwise vanish — MapView drains it on
+// setup. (The v1 search-drawer version of this flow was removed 2026-07-25,
+// Alan: too fiddly; the tab reuses the same map machinery.)
 export const FIND_BUILDING_EVENT = "gritcheck:find-building";
 
 export type FindBuildingEventDetail = {

@@ -9,3 +9,16 @@ export const buildingKey = (b: string) =>
     .replace(/\s*\(.+\)$/, "")
     .replace(/\s+(ground|\d+(?:st|nd|rd|th))\s+floor$/i, "")
     .trim();
+
+// One row of the Find Building tab: every campus building (the 5 interactive
+// spot buildings merged with the OSM label points), assembled server-side in
+// page.tsx.
+export type CampusBuilding = {
+  name: string;
+  lat: number;
+  lng: number;
+  /** Set for the interactive five — tapping gold-selects the footprint. */
+  buildingKey?: string;
+  /** Spot count for the interactive five (row sub-text). */
+  spots?: number;
+};

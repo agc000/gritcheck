@@ -1,11 +1,12 @@
-import { FindSheet } from "@/components/FindSheet";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { FollowUpPrompt } from "@/components/FollowUpPrompt";
 import { MapCanvas } from "@/components/MapCanvas";
 import { LiveRefresh } from "@/components/LiveRefresh";
 import { Sheet } from "@/components/Sheet";
 import { SpotBrowser } from "@/components/SpotBrowser";
 import { UpdateSheet } from "@/components/UpdateSheet";
-import { buildingKey } from "@/lib/buildings";
+import { buildingKey, type CampusBuilding } from "@/lib/buildings";
 import { getSpotList } from "@/lib/spots";
 import { liveVerdict, type Tone } from "@/lib/status";
 
@@ -85,6 +86,41 @@ export default async function Home() {
     studyTone: a.studyTone,
   }));
 
+  // Find Building tab roster: the interactive five + every OSM label point
+  // (public/campus-labels.geojson, baked from the campus map 2026-07-24).
+  // Read server-side so the list is in the SSR paint — no client fetch, no
+  // loading state. readFile, not import: public/ is a static dir, and the
+  // route is force-dynamic anyway.
+  const labelsFile = JSON.parse(
+    await readFile(
+      join(process.cwd(), "public/campus-labels.geojson"),
+      "utf-8",
+    ),
+  ) as GeoJSON.FeatureCollection;
+  const interactive: CampusBuilding[] = buildings.map((b) => ({
+    name: b.building,
+    lat: b.lat,
+    lng: b.lng,
+    buildingKey: b.building,
+    spots: b.spots,
+  }));
+  const seen = new Set(interactive.map((b) => b.name.toLowerCase()));
+  const campusBuildings: CampusBuilding[] = [
+    ...interactive,
+    ...labelsFile.features.flatMap((f) =>
+      f.geometry.type === "Point" && f.properties?.name &&
+      !seen.has(String(f.properties.name).toLowerCase())
+        ? [
+            {
+              name: String(f.properties.name),
+              lng: f.geometry.coordinates[0],
+              lat: f.geometry.coordinates[1],
+            },
+          ]
+        : [],
+    ),
+  ].sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <main className="fixed inset-0 bg-map-bg">
       <MapCanvas buildings={buildings} />
@@ -94,13 +130,15 @@ export default async function Home() {
             Failed to load spots: {error}
           </p>
         ) : (
-          <SpotBrowser items={items} nowMs={nowMs} />
+          <SpotBrowser
+            items={items}
+            nowMs={nowMs}
+            campusBuildings={campusBuildings}
+          />
         )}
       </Sheet>
       {/* Modal update flow; portals to <body>, opened by the FAB's event. */}
       {!error && <UpdateSheet items={items} />}
-      {/* Find-a-building search (magnifier in the sheet chrome opens it). */}
-      <FindSheet buildings={buildings} />
       {/* Realtime: any INSERT on updates re-pulls server data (idle-gated). */}
       <LiveRefresh />
       {/* One-per-session "Did X pan out?" bar (§4.2). */}
