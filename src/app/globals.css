@@ -94,34 +94,6 @@
     }
   }
 
-  /* Find-a-building pulse: the gold "you're looking for THIS one" ring the
-     camera lands on. Gold = selection (§4.1's sanctioned use). The ring is a
-     DOM MapLibre marker, so CSS animates it on the compositor — zero canvas
-     repaints. */
-  @keyframes find-pulse {
-    0% {
-      transform: scale(0.55);
-      opacity: 0.9;
-    }
-    100% {
-      transform: scale(1.6);
-      opacity: 0;
-    }
-  }
-  .find-pulse-ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 9999px;
-    border: 2px solid var(--color-gold);
-    animation: find-pulse 1.6s ease-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .find-pulse-ring {
-      animation: none;
-      transform: none;
-      opacity: 0.8;
-    }
-  }
 }
 
 /* Line slider (§4.3 amendment 2026-07-17, Alan): the ONE sanctioned

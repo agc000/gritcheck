@@ -94,6 +94,11 @@ export default function MapView({
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [styleLoaded, setStyleLoaded] = useState(false);
   const selectedKeyRef = useRef<string | null>(null);
+  // Name of the building the find flow highlighted — drives the clear chip.
+  // The chip's onClick reaches the map-effect's teardown helpers through
+  // clearAllRef (written inside the effect, never during render).
+  const [findName, setFindName] = useState<string | null>(null);
+  const clearAllRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -232,6 +237,26 @@ export default function MapView({
       },
     });
 
+    // Find Building highlight layer: OSM footprints for the 51 roster
+    // buildings (public/campus-footprints.geojson), hidden until applyFind
+    // filters one in. Same gold, same extrusion language as a selected
+    // interactive building — one visual meaning for "this one".
+    map.addSource("campus-footprints", {
+      type: "geojson",
+      data: "/campus-footprints.geojson",
+    });
+    map.addLayer({
+      id: "campus-find-fill",
+      type: "fill-extrusion",
+      source: "campus-footprints",
+      filter: ["==", ["get", "key"], ""],
+      paint: {
+        "fill-extrusion-color": "#FFC20E",
+        "fill-extrusion-height": ["coalesce", ["get", "height"], 10],
+        "fill-extrusion-opacity": 0.95,
+      },
+    });
+
     const clearSelection = () => {
       if (selectedKeyRef.current) {
         map.setFeatureState(
@@ -242,12 +267,14 @@ export default function MapView({
       }
     };
 
-    // Find-a-building marker (declared here so tap handlers below can drop
-    // it; applyFind further down populates it).
-    let findMarker: maplibregl.Marker | null = null;
+    // Find-highlight teardown (declared here so tap handlers below can drop
+    // it; applyFind further down populates it). The highlight itself is the
+    // campus-find-fill layer — filtered to one building key, or to nothing.
     const clearFind = () => {
-      findMarker?.remove();
-      findMarker = null;
+      if (map.getLayer("campus-find-fill")) {
+        map.setFilter("campus-find-fill", ["==", ["get", "key"], ""]);
+      }
+      setFindName(null);
     };
 
     // Building tap: gold-select the footprint, then route — one spot goes
@@ -280,37 +307,25 @@ export default function MapView({
       window.dispatchEvent(new CustomEvent(EXPAND_SHEET_EVENT));
     });
 
-    // Find-a-building (FindSheet dispatches; §7.2 wayfinding). A DOM marker
-    // so the gold pulse animates in CSS on the compositor. Built with
-    // createElement/textContent, never innerHTML (§5.5 spirit, even for our
-    // own data).
+    // Find Building highlight (§7.2 wayfinding): every roster building gets
+    // the SAME treatment as the interactive five — its real footprint,
+    // extruded gold (v2, Alan 2026-07-25: the dot-and-ring marker read as a
+    // different, lesser thing). Interactive buildings gold-select their
+    // curated footprint; everything else lights its OSM footprint via the
+    // campus-find-fill filter.
     const applyFind = (f: FindBuildingEventDetail) => {
       clearFind();
+      clearSelection();
       if (f.buildingKey) {
-        // Interactive building: the gold footprint IS the locator.
-        clearSelection();
         map.setFeatureState(
           { source: "campus-buildings", id: f.buildingKey },
           { selected: true },
         );
         selectedKeyRef.current = f.buildingKey;
       } else {
-        const el = document.createElement("div");
-        el.className = "relative h-12 w-12";
-        const ring = document.createElement("div");
-        ring.className = "find-pulse-ring";
-        const dot = document.createElement("div");
-        dot.className =
-          "absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold shadow-[0_0_12px_2px_rgba(255,194,14,0.6)]";
-        const tag = document.createElement("div");
-        tag.className =
-          "absolute bottom-full left-1/2 mb-1 -translate-x-1/2 whitespace-nowrap rounded-control bg-black/85 px-2 py-1 text-[11px] font-bold text-ink";
-        tag.textContent = f.name;
-        el.append(ring, dot, tag);
-        findMarker = new maplibregl.Marker({ element: el })
-          .setLngLat([f.lng, f.lat])
-          .addTo(map);
+        map.setFilter("campus-find-fill", ["==", ["get", "key"], f.name]);
       }
+      setFindName(f.name);
       map.easeTo({
         center: [f.lng, f.lat],
         zoom: Math.max(map.getZoom(), 15.5),
@@ -321,9 +336,24 @@ export default function MapView({
       applyFind((e as CustomEvent<FindBuildingEventDetail>).detail);
     };
     window.addEventListener(FIND_BUILDING_EVENT, onFind);
-    // A search completed before this map mounted parked its target here.
-    const pending = takePendingFind();
-    if (pending) applyFind(pending);
+    // The clear chip's handler: drop the highlight, the gold selection, and
+    // the sheet's mirror of it, in one tap.
+    clearAllRef.current = () => {
+      clearFind();
+      clearSelection();
+      window.dispatchEvent(
+        new CustomEvent<SelectBuildingEventDetail>(SELECT_BUILDING_EVENT, {
+          detail: { building: null },
+        }),
+      );
+    };
+    // A pick completed before this map mounted parked its target here. The
+    // microtask keeps applyFind's setState out of the synchronous effect
+    // body (react-hooks/set-state-in-effect is a CI error).
+    queueMicrotask(() => {
+      const pending = takePendingFind();
+      if (pending) applyFind(pending);
+    });
 
     // Tap on empty map: drop any gold selection, the find marker, AND the
     // list scope that mirrors them (the sheet collapse for the same tap is
@@ -473,11 +503,33 @@ export default function MapView({
       window.removeEventListener(CATEGORY_EVENT, onCategory);
       window.removeEventListener(RECENTER_EVENT, onRecenter);
       window.removeEventListener(FIND_BUILDING_EVENT, onFind);
-      clearFind();
+      clearAllRef.current = null;
     };
   }, [buildings, styleLoaded]);
 
-  // Size with h/w, not inset-0: MapLibre's own CSS forces the container to
-  // position:relative, which would cancel inset-0 and collapse it to height 0.
-  return <div ref={containerRef} className="h-full w-full" />;
+  return (
+    // The map container gets a div of its OWN (MapLibre appends its canvas
+    // there and React must never manage those children); the chip is a
+    // sibling over it. Container sizes with h/w, not inset-0: MapLibre
+    // forces position:relative on it, which would cancel inset-0 and
+    // collapse it to height 0.
+    <div className="relative h-full w-full">
+      <div ref={containerRef} className="h-full w-full" />
+      {findName && (
+        // Clear chip for the find highlight (Alan, 2026-07-25). Gold text =
+        // it names the current selection. Sits under the top chrome row,
+        // centered — lockup owns the left, legend the right.
+        <button
+          type="button"
+          onClick={() => clearAllRef.current?.()}
+          className="absolute left-1/2 top-[max(3.5rem,calc(env(safe-area-inset-top)+2.5rem))] z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/85 px-3.5 py-2.5 text-[12.5px] font-bold text-gold shadow-[0_4px_16px_rgba(0,0,0,0.35)]"
+        >
+          {findName}
+          <span aria-hidden className="font-semibold text-muted">
+            ✕
+          </span>
+        </button>
+      )}
+    </div>
+  );
 }

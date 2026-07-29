@@ -86,9 +86,12 @@ export default async function Home() {
     studyTone: a.studyTone,
   }));
 
-  // Find Building tab roster: the interactive five + every OSM label point
-  // (public/campus-labels.geojson, baked from the campus map 2026-07-24).
-  // Read server-side so the list is in the SSR paint — no client fetch, no
+  // Find Building tab roster: the interactive five + the roster-flagged OSM
+  // label points (public/campus-labels.geojson, baked from the campus map
+  // 2026-07-24). `roster: false` marks garages/infrastructure/research-park
+  // buildings that stay on the MAP as context labels but out of the LIST
+  // (Alan, 2026-07-25: buildings and residential areas only). Read
+  // server-side so the list is in the SSR paint — no client fetch, no
   // loading state. readFile, not import: public/ is a static dir, and the
   // route is force-dynamic anyway.
   const labelsFile = JSON.parse(
@@ -109,6 +112,7 @@ export default async function Home() {
     ...interactive,
     ...labelsFile.features.flatMap((f) =>
       f.geometry.type === "Point" && f.properties?.name &&
+      f.properties.roster === true &&
       !seen.has(String(f.properties.name).toLowerCase())
         ? [
             {
