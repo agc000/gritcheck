@@ -48,6 +48,27 @@ const toneColor = (prop: "foodTone" | "studyTone") =>
 const hasTone = (prop: "foodTone" | "studyTone") =>
   ["!=", ["coalesce", ["get", prop], "none"], "none"] as const;
 
+// Which buildings read as "in play" for the active tab. The two tabs ask
+// genuinely different questions, so they read from different sources:
+//   Food  — feature-state, set from the spot roster: only buildings that
+//           actually sell food. Vendors are the whole point.
+//   Study — the curated `studyCapable` property on the footprint. Study space
+//           is everywhere on campus, so this is opt-OUT: True Grit's is the
+//           residential dining hall and has none (Alan, 2026-07-24). It is a
+//           fact about the building, not about our spot coverage, which is
+//           why it lives in the geojson and not in the seed data.
+const buildingColor = (category: Category) =>
+  [
+    "case",
+    ["boolean", ["feature-state", "selected"], false],
+    "#FFC20E", // §4.1's one sanctioned gold use: current selection
+    category === "study"
+      ? ["boolean", ["coalesce", ["get", "studyCapable"], true], true]
+      : ["boolean", ["feature-state", "active"], false],
+    "#3B372C",
+    "#2B2820",
+  ] as maplibregl.ExpressionSpecification;
+
 // Campus camera. Extents are PLACEHOLDER — Alan to confirm on the campus walk
 // (§Phase 3 "Alan provides"). Bounds keep the map pinned to UMBC's core so it
 // can never be panned to open ocean; center/zoom frame the academic row.
@@ -202,14 +223,7 @@ export default function MapView({
         // status — so buildings stay a warm gray context layer and only the
         // dots/glow carry the signal (category tints were tried and reverted
         // 2026-07-24: they muddied the one language that matters).
-        "fill-extrusion-color": [
-          "case",
-          ["boolean", ["feature-state", "selected"], false],
-          "#FFC20E", // §4.1's one sanctioned gold use: current selection
-          ["boolean", ["feature-state", "active"], true],
-          "#3B372C",
-          "#2B2820",
-        ],
+        "fill-extrusion-color": buildingColor("food"), // sheet's default tab
         "fill-extrusion-height": ["get", "height"],
         "fill-extrusion-opacity": 0.95,
       },
@@ -355,13 +369,20 @@ export default function MapView({
       map.setPaintProperty("spot-buildings-dot", "circle-color", toneColor(tone));
       map.setPaintProperty("spot-buildings-glow", "circle-color", toneColor(tone));
       clearSelection();
-      // Food is vendor-located, so only food buildings lift on that tab;
-      // study space is effectively everywhere, so Study lifts them all
-      // (Alan, 2026-07-24).
+      // Swap which rule the footprints read (see buildingColor).
+      map.setPaintProperty(
+        "campus-buildings-fill",
+        "fill-extrusion-color",
+        buildingColor(category),
+      );
+      // Only the food rule needs per-building state; the study rule reads the
+      // footprint's own property. Re-set on every tab switch because
+      // feature-state written before the geojson finishes loading is silently
+      // dropped, so a lost first write self-heals here.
       for (const b of buildings) {
         map.setFeatureState(
           { source: "campus-buildings", id: b.building },
-          { active: category === "study" ? true : b.food },
+          { active: b.food },
         );
       }
     };

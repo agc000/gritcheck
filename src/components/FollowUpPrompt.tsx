@@ -15,12 +15,13 @@ import { supabase } from "@/lib/supabase";
 // bottom edge with the same physics language as everything else, without
 // blocking the app underneath.
 //
-// Answer mapping: "Yes, good" / "Meh" feed worth-it (the 7-day quality
-// signal); "Packed" feeds crowd — 9 on the 1–10 scale (§3.1 amendment),
-// which both categories' verdict paths read as the packed band.
+// Answer mapping (reworded 2026-07-24, Alan: no slangy "Meh" — §4.7 dry):
+// "Worth it" / "Not worth it" feed worth-it (the 7-day quality signal);
+// "Packed" feeds crowd — 9 on the 1–10 scale (§3.1 amendment), which both
+// categories' verdict paths read as the packed band.
 const ANSWERS = [
-  { label: "Yes, good", body: { worth_it: true } },
-  { label: "Meh", body: { worth_it: false } },
+  { label: "Worth it", body: { worth_it: true } },
+  { label: "Not worth it", body: { worth_it: false } },
   { label: "Packed", body: { crowd: 9 } },
 ] as const;
 

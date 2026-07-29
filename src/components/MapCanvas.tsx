@@ -3,12 +3,12 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
-import { MAP_COLORS } from "@/lib/map-colors";
+import { PATH_COLOR } from "@/lib/map-colors";
 import { BrandLockup } from "./BrandMark";
 import type { BuildingMarker } from "./MapView";
 
 // Pedestrian glyph for the walking-path row (Alan asked for "person walking
-// for walk"). Drawn rather than imported so it inherits the path color.
+// for walk"). Drawn inline so it inherits currentColor.
 function WalkIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -51,12 +51,9 @@ function MapLegend() {
     <div className="pointer-events-none absolute top-[max(1rem,env(safe-area-inset-top))] right-[max(1rem,env(safe-area-inset-right))] rounded-md bg-black/80 px-2.5 py-2">
       <ul className="flex flex-col gap-1.5">
         <li className="flex items-center gap-1.5">
-          {/* Inline color, not a Tailwind class: one source of truth with
-              the style JSON's line-color (src/lib/map-colors.ts). */}
-          <span
-            className="flex shrink-0"
-            style={{ color: MAP_COLORS.path }}
-          >
+          {/* Icon carries the path color (PATH_COLOR — single source with
+              the style JSON's road-path line-color). */}
+          <span className="flex shrink-0" style={{ color: PATH_COLOR }}>
             <WalkIcon className="h-3.5 w-3.5" />
           </span>
           <span className="text-[10.5px] font-semibold text-muted">
