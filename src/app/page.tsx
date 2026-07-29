@@ -1,3 +1,4 @@
+import { FindSheet } from "@/components/FindSheet";
 import { FollowUpPrompt } from "@/components/FollowUpPrompt";
 import { MapCanvas } from "@/components/MapCanvas";
 import { LiveRefresh } from "@/components/LiveRefresh";
@@ -98,6 +99,8 @@ export default async function Home() {
       </Sheet>
       {/* Modal update flow; portals to <body>, opened by the FAB's event. */}
       {!error && <UpdateSheet items={items} />}
+      {/* Find-a-building search (magnifier in the sheet chrome opens it). */}
+      <FindSheet buildings={buildings} />
       {/* Realtime: any INSERT on updates re-pulls server data (idle-gated). */}
       <LiveRefresh />
       {/* One-per-session "Did X pan out?" bar (§4.2). */}

@@ -9,9 +9,12 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import {
   CATEGORY_EVENT,
   EXPAND_SHEET_EVENT,
+  FIND_BUILDING_EVENT,
   RECENTER_EVENT,
   SELECT_BUILDING_EVENT,
+  takePendingFind,
   type CategoryEventDetail,
+  type FindBuildingEventDetail,
   type SelectBuildingEventDetail,
 } from "@/lib/map-events";
 import type { Category } from "@/lib/types";
@@ -239,6 +242,14 @@ export default function MapView({
       }
     };
 
+    // Find-a-building marker (declared here so tap handlers below can drop
+    // it; applyFind further down populates it).
+    let findMarker: maplibregl.Marker | null = null;
+    const clearFind = () => {
+      findMarker?.remove();
+      findMarker = null;
+    };
+
     // Building tap: gold-select the footprint, then route — one spot goes
     // straight to its detail; multi-spot buildings raise the sheet to browse.
     // stopPropagation keeps the Sheet's map-tap-collapse listener out of it.
@@ -248,6 +259,7 @@ export default function MapView({
       const key = feature?.properties?.key as string | undefined;
       if (!key) return;
       clearSelection();
+      clearFind();
       map.setFeatureState(
         { source: "campus-buildings", id: key },
         { selected: true },
@@ -268,14 +280,61 @@ export default function MapView({
       window.dispatchEvent(new CustomEvent(EXPAND_SHEET_EVENT));
     });
 
-    // Tap on empty map: drop any gold selection AND the list scope that
-    // mirrors it (the sheet collapse for the same tap is Sheet's listener).
+    // Find-a-building (FindSheet dispatches; §7.2 wayfinding). A DOM marker
+    // so the gold pulse animates in CSS on the compositor. Built with
+    // createElement/textContent, never innerHTML (§5.5 spirit, even for our
+    // own data).
+    const applyFind = (f: FindBuildingEventDetail) => {
+      clearFind();
+      if (f.buildingKey) {
+        // Interactive building: the gold footprint IS the locator.
+        clearSelection();
+        map.setFeatureState(
+          { source: "campus-buildings", id: f.buildingKey },
+          { selected: true },
+        );
+        selectedKeyRef.current = f.buildingKey;
+      } else {
+        const el = document.createElement("div");
+        el.className = "relative h-12 w-12";
+        const ring = document.createElement("div");
+        ring.className = "find-pulse-ring";
+        const dot = document.createElement("div");
+        dot.className =
+          "absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold shadow-[0_0_12px_2px_rgba(255,194,14,0.6)]";
+        const tag = document.createElement("div");
+        tag.className =
+          "absolute bottom-full left-1/2 mb-1 -translate-x-1/2 whitespace-nowrap rounded-control bg-black/85 px-2 py-1 text-[11px] font-bold text-ink";
+        tag.textContent = f.name;
+        el.append(ring, dot, tag);
+        findMarker = new maplibregl.Marker({ element: el })
+          .setLngLat([f.lng, f.lat])
+          .addTo(map);
+      }
+      map.easeTo({
+        center: [f.lng, f.lat],
+        zoom: Math.max(map.getZoom(), 15.5),
+        duration: 900,
+      });
+    };
+    const onFind = (e: Event) => {
+      applyFind((e as CustomEvent<FindBuildingEventDetail>).detail);
+    };
+    window.addEventListener(FIND_BUILDING_EVENT, onFind);
+    // A search completed before this map mounted parked its target here.
+    const pending = takePendingFind();
+    if (pending) applyFind(pending);
+
+    // Tap on empty map: drop any gold selection, the find marker, AND the
+    // list scope that mirrors them (the sheet collapse for the same tap is
+    // Sheet's listener).
     map.on("click", (e) => {
       const hits = map.queryRenderedFeatures(e.point, {
         layers: ["campus-buildings-fill"],
       });
       if (hits.length === 0) {
         clearSelection();
+        clearFind();
         window.dispatchEvent(
           new CustomEvent<SelectBuildingEventDetail>(SELECT_BUILDING_EVENT, {
             detail: { building: null },
@@ -413,6 +472,8 @@ export default function MapView({
     return () => {
       window.removeEventListener(CATEGORY_EVENT, onCategory);
       window.removeEventListener(RECENTER_EVENT, onRecenter);
+      window.removeEventListener(FIND_BUILDING_EVENT, onFind);
+      clearFind();
     };
   }, [buildings, styleLoaded]);
 

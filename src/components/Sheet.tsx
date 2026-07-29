@@ -4,7 +4,12 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import type { UIEvent } from "react";
 import { Drawer } from "vaul";
 
-import { EXPAND_SHEET_EVENT, RECENTER_EVENT } from "@/lib/map-events";
+import {
+  COLLAPSE_SHEET_EVENT,
+  EXPAND_SHEET_EVENT,
+  OPEN_FIND_EVENT,
+  RECENTER_EVENT,
+} from "@/lib/map-events";
 import { UpdateButton } from "./UpdateButton";
 
 // §4.2: snap points at ~15% (peek), ~55% (default), ~90% (full). vaul is the
@@ -66,9 +71,13 @@ export function Sheet({ children }: { children: React.ReactNode }) {
     // collapse listener above never fights this.
     const onExpand = () => setSnap(SNAP_DEFAULT);
     window.addEventListener(EXPAND_SHEET_EVENT, onExpand);
+    // Find flow: get the sheet out of the way of the camera landing.
+    const onCollapse = () => setSnap(SNAP_PEEK);
+    window.addEventListener(COLLAPSE_SHEET_EVENT, onCollapse);
     return () => {
       document.removeEventListener("click", onMapTap);
       window.removeEventListener(EXPAND_SHEET_EVENT, onExpand);
+      window.removeEventListener(COLLAPSE_SHEET_EVENT, onCollapse);
     };
   }, []);
 
@@ -79,6 +88,28 @@ export function Sheet({ children }: { children: React.ReactNode }) {
       {/* Inside the sheet so it rides the edge through every snap and drag —
           §4.2 "riding above the sheet edge". */}
       <UpdateButton />
+      {/* Find a building: rides above recenter on the left edge. Utility
+          control — ink on dark, not gold (§4.1). */}
+      <button
+        type="button"
+        aria-label="Find a building"
+        data-vaul-no-drag
+        onClick={() => window.dispatchEvent(new CustomEvent(OPEN_FIND_EVENT))}
+        className="absolute -top-28 left-[max(1rem,env(safe-area-inset-left))] flex h-11 w-11 items-center justify-center rounded-full bg-black/80 text-ink shadow-[0_4px_16px_rgba(0,0,0,0.35)] transition-transform duration-150 ease-out active:scale-97 motion-reduce:transition-none"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden
+          className="h-4.5 w-4.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        >
+          <circle cx="11" cy="11" r="6.5" />
+          <path d="m20.5 20.5-4.8-4.8" />
+        </svg>
+      </button>
       {/* Recenter: utility control, so ink-on-dark, not gold (§4.1 — gold is
           signal only). Mirrors the FAB on the left edge. */}
       <button
