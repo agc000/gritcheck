@@ -32,13 +32,17 @@ function WalkIcon({ className }: { className?: string }) {
   );
 }
 
-// What the map's colors mean. Static markup — no state, no listeners — and
-// only rendered once the map itself is up, so it adds nothing to the initial
-// paint or to hydration.
-const LEGEND: Array<{ color: string; label: string }> = [
-  { color: MAP_COLORS.food, label: "Food" },
-  { color: MAP_COLORS.study, label: "Study" },
-  { color: MAP_COLORS.both, label: "Both" },
+// What the map's dots mean. Status is the map's ONLY color language (§4.3
+// traffic-light semantics), so the legend reads as one scale: empty → full,
+// plus the closed state, which is most of the map outside meal hours and
+// would otherwise be an unexplained gray.
+// Static markup — no state, no listeners — and only rendered once the map is
+// up, so it adds nothing to the initial paint or to hydration.
+const LEGEND: Array<{ swatch: string; label: string }> = [
+  { swatch: "bg-go", label: "Empty" },
+  { swatch: "bg-hold", label: "In between" },
+  { swatch: "bg-skip", label: "Full" },
+  { swatch: "bg-closed", label: "Closed" },
 ];
 
 function MapLegend() {
@@ -59,15 +63,13 @@ function MapLegend() {
             Walking path
           </span>
         </li>
-        {LEGEND.map(({ color, label }) => (
+        {LEGEND.map(({ swatch, label }) => (
           <li key={label} className="flex items-center gap-1.5">
-            {/* Square, not a dot: these tint building footprints, and the
-                round status dots already mean something else. */}
+            {/* Round and small, matching the map's status dots exactly. */}
             <span
-              className="h-3 w-3 shrink-0 rounded-[3px]"
-              style={{ backgroundColor: color }}
+              className={`ml-0.75 h-2 w-2 shrink-0 rounded-full ${swatch}`}
             />
-            <span className="text-[10.5px] font-semibold text-muted">
+            <span className="ml-0.75 text-[10.5px] font-semibold text-muted">
               {label}
             </span>
           </li>
