@@ -11,7 +11,13 @@ export default function manifest(): MetadataRoute.Manifest {
     // Stable identity independent of start_url, so tweaking start_url later
     // never makes browsers treat the install as a different app.
     id: "/",
-    start_url: "/",
+    // Tagged so a home-screen launch is attributable in the §7.4 source
+    // breakdown — without it every installed user reports no source forever,
+    // even the ones who originally arrived from an orientation-week QR code.
+    // Safe to change precisely because `id` above is stable: browsers key the
+    // install on `id`, so this doesn't orphan anyone's existing install. The
+    // service worker ignores `src` when matching the precache (see sw.ts).
+    start_url: "/?src=homescreen",
     display: "standalone",
     // The product is a phone-in-hand glance (§1.1); landscape is never designed
     // for. iOS ignores this; Android honors it.

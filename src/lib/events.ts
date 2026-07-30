@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import { getDeviceId } from "./device";
+import { isStandalone } from "./install";
 
 // §3.1 events: product analytics, write-only from the client (anon INSERT
 // policy + grant). Names are the §3.1 vocabulary; §7.4 reads them weekly.
@@ -27,7 +28,17 @@ export function markAppOpen() {
     // Private mode: still log the open, just without session dedupe/timing.
   }
   const src = new URLSearchParams(window.location.search).get("src");
-  logEvent("open_app", src ? { source: src } : {});
+  // `standalone` separates an installed home-screen launch from a browser
+  // visit — otherwise the two are indistinguishable in the data, and launch
+  // week needs the install funnel to be readable end to end:
+  // install_shown → install_answered → standalone open_app.
+  // Note (iOS): installing mints a NEW device_id, because iOS gives
+  // home-screen apps their own storage container. An installed user is a
+  // fresh device here by design of the platform, not by ours.
+  logEvent("open_app", {
+    standalone: isStandalone(),
+    ...(src ? { source: src } : {}),
+  });
 }
 
 export function msSinceOpen(): number | null {

@@ -29,6 +29,12 @@ declare const self: ServiceWorkerGlobalScope;
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
+  precacheOptions: {
+    // The manifest's start_url is "/?src=homescreen" for attribution, but the
+    // precache holds "/". Without this, every home-screen launch would miss
+    // the precache entry — so strip `src` when matching.
+    ignoreURLParametersMatching: [/^src$/],
+  },
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
