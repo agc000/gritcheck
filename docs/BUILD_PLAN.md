@@ -469,10 +469,20 @@ a Vercel Analytics 404 that exists solely on localhost. The ~3-point
 performance delta is real-network cost (FCP 1.0 s, Speed Index 2.8 s), and
 the gate holds with margin on the hardware students will actually use.
 
-**Every Phase 5 exit criterion is met.** Remaining before the phase is struck
-closed: Alan's amendment-1 feel-check (first sheet drag smooth, map appearing
-on release) — a subjective bar deliberately written into the gate so a good
-score could never buy a worse-feeling app.
+**Amendment-1 feel-check — PASS** (Alan, real iPhone, 2026-07-30: "feels
+smooth"). This bar was written into the gate deliberately so a good score
+could never buy a worse-feeling app, and it earned its place: the first
+interaction-gated mount scored perfectly while making the first sheet drag
+stutter, and only a human dragging a sheet caught it.
+
+### ✅ PHASE 5 CLOSED — 2026-07-30
+
+Every exit criterion met on production hardware: installable (Chrome criteria
++ real iPhone add-to-home-screen), perf **91** on gritcheck.live against a
+≥90 gate, spot pages indexable. The phase's defining decision was refusing to
+amend the gate: it opened with a measured 60 and a 2,780 ms TBT debt that
+caching provably cannot fix, and closed by owning that debt instead of
+rewriting the number. §12 Q+A recorded above. **Next: Phase 6.**
 
 ### Phase 6 — Scraper in production + hardening
 Tasks: finalize scraper from Phase 0 spike — dining runs **Playwright/headless Chromium in GH Actions** and intercepts the dineoncampus JSON API (`apiv4.dineoncampus.com`; Cloudflare TLS fingerprinting 403s plain fetches, a real browser passes clean), library uses **LibCal's open JSON API** (`api3.libcal.com/api_hours_grid.php?iid=991`, plain fetch); **re-capture both fixtures in late August** — the Phase 0 snapshots are summer session with most venues closed all week; GH Actions cron (2×/day, plus manual dispatch); upsert with `source='scraped'`, keep `manual` overrides winning; failure alerting (Action failure → GitHub notification is enough); scraper unit tests on fixtures; error boundary + minimal logging in app; legal footer ("unofficial, built by a UMBC student"), simple privacy note (anonymous device ID, no accounts, no PII).
