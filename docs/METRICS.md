@@ -73,15 +73,45 @@ group by 1
 order by opens desc;
 ```
 
-## 4. Where they came from (QR attribution)
+## 4a. Which flyer/QR actually acquired people — **the printing decision**
 
-Put a distinct `?src=` on every QR code you print — `gritcheck.live/?src=qr-commons`,
-`?src=qr-aok`, `?src=flyer-dorm`. `homescreen` appears automatically for
-installed launches; `(direct)` means someone typed the URL or used a bookmark.
+`acquisition_src` is written on a device's first visit and never overwritten,
+so it survives installing to the home screen. Put a distinct `?src=` on every
+code you print — `gritcheck.live/?src=qr-commons`, `?src=qr-aok`,
+`?src=flyer-dorm`.
 
 ```sql
 select
-  coalesce(props->>'source', '(direct)') as source,
+  coalesce(props->>'acquisition_src', '(unset)') as acquisition_src,
+  count(distinct device_id) as devices,
+  count(*)                  as opens
+from events
+where name = 'open_app'
+  and created_at >= now() - interval '30 days'
+group by 1
+order by devices desc;
+```
+
+Read `devices`, not `opens` — you're counting people acquired, not visits.
+
+Two buckets that aren't placements:
+- `(direct)` — no `?src=` on their first visit: typed it, bookmark, untagged share.
+- `(pre-install)` — an iOS user whose first visit *in that storage container*
+  was already a home-screen launch. iOS gives installed apps storage separate
+  from Safari, so their original flyer/QR is unrecoverable. **The size of this
+  bucket is the measurement of what iOS costs you in attribution** — it isn't
+  a bug, and it doesn't exist on Android.
+
+## 4b. How they got in *this* time
+
+`launch_src` is per-open: `homescreen` for installed launches, a `?src=` when
+they tapped a tagged link, `(direct)` otherwise. This is engagement, not
+acquisition — a returning student shows `(direct)` or `homescreen` no matter
+which flyer first brought them.
+
+```sql
+select
+  coalesce(props->>'launch_src', '(unset)') as launch_src,
   count(*)                  as opens,
   count(distinct device_id) as devices
 from events

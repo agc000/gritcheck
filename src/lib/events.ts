@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { acquisitionSrc, launchSrc } from "./attribution";
 import { getDeviceId } from "./device";
 import { isStandalone } from "./install";
 
@@ -27,7 +28,6 @@ export function markAppOpen() {
   } catch {
     // Private mode: still log the open, just without session dedupe/timing.
   }
-  const src = new URLSearchParams(window.location.search).get("src");
   // `standalone` separates an installed home-screen launch from a browser
   // visit — otherwise the two are indistinguishable in the data, and launch
   // week needs the install funnel to be readable end to end:
@@ -35,9 +35,15 @@ export function markAppOpen() {
   // Note (iOS): installing mints a NEW device_id, because iOS gives
   // home-screen apps their own storage container. An installed user is a
   // fresh device here by design of the platform, not by ours.
+  //
+  // Two source fields, deliberately (see lib/attribution.ts): acquisition is
+  // sticky and answers "did the flyers work"; launch is per-open and answers
+  // "how did they get in this time". One field could not do both — the
+  // homescreen start_url was overwriting acquisition for installed users.
   logEvent("open_app", {
     standalone: isStandalone(),
-    ...(src ? { source: src } : {}),
+    acquisition_src: acquisitionSrc(),
+    launch_src: launchSrc(),
   });
 }
 

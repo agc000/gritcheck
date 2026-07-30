@@ -401,14 +401,24 @@ Tasks: Serwist service worker (cache shell + last-known data; offline shows cach
 *Gate results, measured 2026-07-30 (local Lighthouse, prod build, mobile
 emulation — NOT yet prod PSI):*
 
-| Metric | Before | After | Gate |
+Re-measured on the final build (2026-07-30) after the map/label work and the
+analytics split — three consecutive runs, reported as a range because a single
+number would be a lie about a noisy metric:
+
+| Metric | Before | After (3 runs) | Gate |
 |---|---|---|---|
-| Performance (home) | 60 | **94** (93–94 across runs) | ≥90 ✅ |
-| TBT | 2,780 ms | **~40 ms** | — |
-| LCP / CLS | — | 3.0–3.1 s / **0** | — |
+| Performance (home) | 60 | **94 / 95 / 94** | ≥90 ✅ |
+| TBT | 2,780 ms | **10–30 ms** | — |
+| LCP / CLS | — | 2.9–3.1 s / **0** | — |
 | Accessibility | — | **100** | — |
 | SEO | — | **100** | — |
-| Best practices | — | 96 | — |
+| Best practices | — | 96 (100 in prod) | — |
+
+*Honesty note on variance:* one mid-phase run measured 93 with TBT 100 ms, and
+an earlier table here recorded "94 / ~40 ms" from a single run. Once the main
+thread is near-idle, TBT is dominated by scheduling noise — 10 ms and 100 ms
+are the same engineering result, and both are ~1% of the 2,780 ms we started
+from. The range above supersedes the earlier point estimates.
 
 The ≥90 gate was met by *owning* the TBT debt, exactly as amendment 1
 committed — not by amending the number. Best-practices 96 loses its points
@@ -492,6 +502,42 @@ Tasks: finalize scraper from Phase 0 spike — dining runs **Playwright/headless
 Tasks: full §4.8 audit of every screen; copy pass (§4.7); micro-interactions; 404/offline/empty states with Grits; seed **fresh real data week** (Alan updates statuses himself daily so the beta never looks dead); recruit 10–20 friends as beta users; fix the top 5 friction points they hit; tag `v1.0.0`.
 **Alan provides:** beta testers; a week of self-seeded updates; final consensus-line pass.
 **Exit:** a stranger handed the URL can install it, get a useful answer, and submit an update without explanation.
+
+*Carried into Phase 7 from Phase 5 (logged 2026-07-30, deliberately NOT built):*
+
+- **Realtime fan-out — filtered subscription.** `LiveRefresh` subscribes to
+  *every* INSERT on `updates` with no filter, and each one fires
+  `router.refresh()` on a `force-dynamic` page — a full server render plus
+  three Supabase queries. So the cost scales as **concurrent clients ×
+  update rate**, not as users: 150 concurrent students at lunch with 10
+  updates/min is ~1,500 SSR renders and ~4,500 queries per minute, to tell
+  each client about a spot they mostly aren't looking at. It also multiplies
+  the Realtime *message* quota against the same plan ceiling as connections,
+  so both limits are consumed by one design.
+  This was the right call at 22 spots and zero traffic — per-spot patching
+  across three trees costs more than it saves until the load is real — and
+  it is written in the file as such.
+  **Trigger:** if Supabase's *Realtime Peak Connections* shows a sustained
+  peak above **120** (the free tier's ceiling is 200), ship the filtered
+  subscription that week. Fix is an afternoon: filter server-side to the
+  spots actually on screen, or carry the changed row's status in the channel
+  payload so no refetch is needed. Do not pre-build it (§0.3).
+
+- **Spot detail page perf.** 89 locally (LCP 3.8 s): `getSpotDetail` runs two
+  sequential query stages that PostgREST embedded filters could collapse into
+  one round trip.
+
+- **Back-nav resets browse state** — tab/filter/sort are component state;
+  restoring them needs URL params.
+
+*Accepted scope drift, recorded 2026-07-30 (Phase 3 map work that shipped
+during Phase 5 without a written amendment at the time):* the Find Building
+tab, footprint highlighting on tap, the curated `studyCapable` property, and
+the OSM POI label layer with its class/name filters are all §Phase 3 map
+scope. They were built in Phase 5 in response to live feedback while the map
+was already open on screen. Recorded rather than relitigated — but the
+pattern (map polish arriving mid-phase) is worth watching, since it is
+exactly how a phase's exit criteria drift out from under it.
 
 ---
 
