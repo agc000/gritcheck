@@ -398,6 +398,42 @@ Tasks: Serwist service worker (cache shell + last-known data; offline shows cach
    Phase 4 already shipped robots.txt, the dynamic sitemap, metadataBase,
    and favicons — this phase's SEO work is per-spot metadata + OG images.
 
+*Gate results, measured 2026-07-30 (local Lighthouse, prod build, mobile
+emulation — NOT yet prod PSI):*
+
+| Metric | Before | After | Gate |
+|---|---|---|---|
+| Performance (home) | 60 | **94** (93–94 across runs) | ≥90 ✅ |
+| TBT | 2,780 ms | **~40 ms** | — |
+| LCP / CLS | — | 3.0–3.1 s / **0** | — |
+| Accessibility | — | **100** | — |
+| SEO | — | **100** | — |
+| Best practices | — | 96 | — |
+
+The ≥90 gate was met by *owning* the TBT debt, exactly as amendment 1
+committed — not by amending the number. Best-practices 96 loses its points
+only to a local-only Vercel Analytics 404 that doesn't exist in production.
+
+**Shipped:** manifest + maskable icons + 10 iOS startup images; Serwist
+service worker (`@serwist/turbopack` 9.5.12, iife-compiled for Safari <16.4)
+with `/~offline` fallback and an offline banner; the honest clock
+(`src/lib/clock.ts`) that makes cached verdicts age instead of lying;
+second-visit install prompt; per-spot metadata + branded OG cards; enforced
+CSP; interaction-gated map mount.
+
+**Known, deliberately not fixed here:** the spot detail page measures 89
+locally (LCP 3.8 s) — `getSpotDetail` runs two sequential query stages and
+could collapse to one with PostgREST embedded filters. Logged as a cheap
+Phase 7 follow-up rather than churn during gate close; the gate is the home
+page, which is the 5-second answer.
+
+**⚠ NOT YET SATISFIED — these need Alan on real hardware, and the phase is not
+closed until they pass:** (a) prod PSI on gritcheck.live after deploy,
+(b) Chrome DevTools installability criteria, (c) **add-to-home-screen on a
+real iPhone** — the exit criterion's hard case, and the one thing no amount
+of local tooling can vouch for, (d) the amendment-1 feel-check: first sheet
+drag smooth, map appearing on release.
+
 ### Phase 6 — Scraper in production + hardening
 Tasks: finalize scraper from Phase 0 spike — dining runs **Playwright/headless Chromium in GH Actions** and intercepts the dineoncampus JSON API (`apiv4.dineoncampus.com`; Cloudflare TLS fingerprinting 403s plain fetches, a real browser passes clean), library uses **LibCal's open JSON API** (`api3.libcal.com/api_hours_grid.php?iid=991`, plain fetch); **re-capture both fixtures in late August** — the Phase 0 snapshots are summer session with most venues closed all week; GH Actions cron (2×/day, plus manual dispatch); upsert with `source='scraped'`, keep `manual` overrides winning; failure alerting (Action failure → GitHub notification is enough); scraper unit tests on fixtures; error boundary + minimal logging in app; legal footer ("unofficial, built by a UMBC student"), simple privacy note (anonymous device ID, no accounts, no PII).
 **Exit:** hours update end-to-end from UMBC's site with no human touch; a deliberately broken fixture fails loudly, not silently.
@@ -607,6 +643,96 @@ the product sells. The genuinely optimistic surfaces are the flag button (mark
 The principle: be optimistic exactly where the server can't meaningfully say
 "no" in a way the user needs to see — and honest everywhere else.*
 **Phase 5:** Explain stale-while-revalidate like you're teaching a freshman. What are the three Core Web Vitals and which one does the map threaten? Why PWA over native for *this* product — give the distribution argument, not just the effort argument.
+*Phase 5 ANSWERED (ritual amended 2026-07-15: Q+A recorded together, no grading loop):*
+
+**① Stale-while-revalidate, for a freshman.** You get home hungry and there's
+leftovers in the fridge. You eat them *right now* — no waiting — and while
+you're eating you start cooking tomorrow's meal. You never wait for food, but
+what you eat is always one meal behind. That's SWR: serve the cached copy
+instantly, fire a network request in the background, and swap the cache so the
+*next* visit is fresh. You trade freshness for zero latency, and the staleness
+is bounded to exactly one request.
+
+The interesting part is where we refused to use it. Serwist's `defaultCache`
+applies SWR to the immutable stuff — CSS, JS chunks, fonts, images — where
+being one version behind is invisible because the filenames are content-hashed.
+But **pages and data are NetworkFirst, not SWR**, and that's a product decision,
+not a default we inherited. GritCheck's entire value is a live verdict; SWR on
+a spot page would paint a cached "No line" while revalidating, which is
+precisely §4.4's ban on presenting stale data as current. For a lunch-line app,
+staleness *is* the failure mode — so the cache only ever answers when the
+network genuinely fails.
+
+That exposed a subtler bug worth telling: caching a page also freezes the page's
+sense of time. Verdicts are pure functions of `now`, and `now` was stamped at
+server render — so a service-worker-cached page would replay "8 min ago"
+forever, re-breaking the §5.4 guardrail ("a quiet update from 11 AM must never
+render as current at 3 PM") through the cache's side door. The fix was
+`src/lib/clock.ts`: a minute-tick `useSyncExternalStore` whose server snapshot
+keeps hydration byte-identical, so a cached verdict *ages by itself* into "No
+recent data · typical: quiet". **Offline honesty needed a clock before it
+needed a cache.**
+
+**② The three Core Web Vitals, and which one the map threatens.** LCP (loading
+— when the largest text/image block paints, good ≤2.5 s), INP (responsiveness
+— Interaction to Next Paint, which replaced FID in March 2024, good ≤200 ms),
+CLS (visual stability, good ≤0.1).
+
+The map threatens **INP**, because INP measures main-thread blocking and
+MapLibre's parse/eval is ~2.4 s of it on a throttled mid-range phone. Lab
+proxy: TBT, which is what we could actually measure. The isolation experiment
+made it unambiguous — **60 with the map idle-mounted (TBT 2,780 ms) vs 94–95
+with the map mount disabled (TBT 10–30 ms)**. The map was effectively the
+entire gap; hydration was innocent, which killed the tempting theory that we
+had a React problem. It threatened LCP too, indirectly: in Phase 3 the eval
+landed inside the LCP window and starved the main thread so hard that even
+server-painted text couldn't repaint (92% "render delay"). CLS was never at
+risk — 0 throughout — because the map is absolutely positioned behind a fixed
+sheet and the SSR twin reserves the sheet's exact geometry.
+
+The fix: mount the map on the user's first gesture, in an idle slot, with a
+10 s fallback so a passive viewer still gets a map. **60 → 94, TBT 2,780 →
+~40 ms, LCP 3.1 s, CLS 0.** And the part that actually belongs in an interview:
+v1 of that fix mounted on `pointerdown`, which ran MapLibre's eval *inside the
+user's first sheet drag* and made it stutter. The score was perfect and the app
+felt worse. We moved the eval out of the *gesture* rather than out of the
+*load* — waiting for `pointerup`, then idle. A caching strategy can't fix
+execution cost: caching skips the fetch, never the parse. That regression was
+found by a human dragging a sheet on a phone, not by an auditor, which is
+exactly why the §Phase 5 gate wrote the feel-check in as a condition.
+
+**③ Why PWA over native — the distribution argument.** The acquisition channel
+*is* the argument. Launch is orientation week (§7.2): QR codes on flyers,
+tables, dorm doors, and the moment of intent is a student standing in a hallway
+deciding where to eat *right now*. A native app inserts an App Store round trip
+between that intent and the answer — search, disambiguate, download over
+congested campus wifi, possibly an Apple ID password. Every one of those is a
+conversion cliff at the exact moment attention peaks. A URL is about two
+seconds to the answer. The install decision then happens *after* the product
+proves useful, which is why our prompt waits for the second visit and yields
+the session entirely if the follow-up prompt fired: earn the home screen,
+don't ask for it.
+
+Three more distribution properties native can't match here:
+- **Sharing.** The unit of sharing on a campus is a link in a group chat. A
+  link to a spot page opens that spot for everyone. A native deep link opens
+  the App Store for anyone who doesn't have the app — every share leaks.
+- **Indexing.** "true grit's hours umbc" is a real search. Our spot pages are
+  SSR'd with per-spot metadata, OG cards, and a DB-backed sitemap, so Google
+  can rank them. A native app is invisible to that channel entirely.
+- **Update velocity.** Launch week is when the product is most wrong. We push
+  a fix and everyone has it next load; native puts a review queue between the
+  bug and the fix during the only week that matters.
+
+The effort argument (one codebase, one solo builder, two platforms) is real but
+secondary — it's why it's *possible*, not why it's *right*. Costs we accepted
+out loud rather than pretending away: foreground-only geolocation with no
+background geofencing (§13.2 accepts this and argues it's a non-creepy
+feature), iOS push requiring an actual home-screen install, and iOS giving us
+no `beforeinstallprompt` — so the iOS nudge is share-sheet instructions and
+ten hand-generated splash screens, because a dark app that launches through a
+white flash reads as broken.
+
 **Phase 6:** Why must the scraper be idempotent (what's an upsert)? Why is "fail loudly" a design goal — what's the horror story of a scraper failing silently? Where do secrets live and what never touches the client bundle?
 **Phase 7 / meta (rehearse these aloud — they're the interview):** "Walk me through what happens when a user opens the app" (full request lifecycle, cold vs warm cache). "How do you stop one person from poisoning the data?" (§5.5, tell it as a story). "How would this scale to 100 campuses?" (what breaks first: Realtime connections, then tile hosting, then moderation — and what's deliberately single-campus). "What would you build differently with 10 engineers?" (honest answer: almost nothing at this scale — that's the point).
 
