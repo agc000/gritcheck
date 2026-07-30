@@ -427,12 +427,32 @@ could collapse to one with PostgREST embedded filters. Logged as a cheap
 Phase 7 follow-up rather than churn during gate close; the gate is the home
 page, which is the 5-second answer.
 
-**⚠ NOT YET SATISFIED — these need Alan on real hardware, and the phase is not
-closed until they pass:** (a) prod PSI on gritcheck.live after deploy,
-(b) Chrome DevTools installability criteria, (c) **add-to-home-screen on a
-real iPhone** — the exit criterion's hard case, and the one thing no amount
-of local tooling can vouch for, (d) the amendment-1 feel-check: first sheet
-drag smooth, map appearing on release.
+*Exit criteria — verified 2026-07-30 (prod build, Chrome via CDP):*
+
+**"Lighthouse PWA installable" (as restated by amendment 2) — PASS.** Every
+Chrome installability criterion checked directly: manifest parses with zero
+errors; `name` + `short_name`; `start_url: "/"`; `display: "standalone"`;
+icons at 192, 512, and maskable; service worker **active and controlling**
+at scope `/`. The fetch handler was proven the only way that actually counts
+— the browser was put offline and the real app still rendered from cache
+(not the fallback page).
+
+**"Google can index spot pages" — PASS.** robots.txt allows all and points at
+the sitemap; the sitemap serves 23 URLs (22 spot pages); a spot page returns
+200 with a unique title, unique category-aware description, canonical URL,
+and OG image; no `noindex`, no `X-Robots-Tag`; and the content is in the raw
+SSR HTML, not injected by JS.
+
+**"perf ≥90" — PASS locally**, two consecutive runs on the committed build:
+94 / 94, a11y 100, best practices 96, SEO 100, LCP 3.0 s, TBT 10–20 ms, CLS 0.
+
+**⚠ REMAINING — needs Alan on real hardware; the phase is not closed until
+these pass:** (a) **add-to-home-screen on a real iPhone** — the exit
+criterion's hard case, and the one thing no local tooling can vouch for
+(iOS ignores the manifest's install path entirely and uses the Share sheet);
+(b) prod PSI on gritcheck.live after deploy, to confirm the local 94 survives
+real network conditions; (c) the amendment-1 feel-check: first sheet drag
+smooth, map appearing on release.
 
 ### Phase 6 — Scraper in production + hardening
 Tasks: finalize scraper from Phase 0 spike — dining runs **Playwright/headless Chromium in GH Actions** and intercepts the dineoncampus JSON API (`apiv4.dineoncampus.com`; Cloudflare TLS fingerprinting 403s plain fetches, a real browser passes clean), library uses **LibCal's open JSON API** (`api3.libcal.com/api_hours_grid.php?iid=991`, plain fetch); **re-capture both fixtures in late August** — the Phase 0 snapshots are summer session with most venues closed all week; GH Actions cron (2×/day, plus manual dispatch); upsert with `source='scraped'`, keep `manual` overrides winning; failure alerting (Action failure → GitHub notification is enough); scraper unit tests on fixtures; error boundary + minimal logging in app; legal footer ("unofficial, built by a UMBC student"), simple privacy note (anonymous device ID, no accounts, no PII).
