@@ -3,19 +3,30 @@ import { supabase } from "./supabase";
 import { nyClock, timeToMinutes, type HoursInterval } from "./time";
 import type { Category, SpotListItem } from "./types";
 
+// Columns come back nullable because spot_effective_hours is a view (Postgres
+// infers no NOT NULL through one). The underlying spot_hours columns are all
+// NOT NULL, so `complete` below is a type narrowing, not a data guard.
 type HoursRow = {
-  spot_id: string;
-  day_of_week: number;
-  opens: string;
-  closes: string;
+  spot_id: string | null;
+  day_of_week: number | null;
+  opens: string | null;
+  closes: string | null;
 };
+
+type CompleteHoursRow = { [K in keyof HoursRow]: NonNullable<HoursRow[K]> };
+
+const complete = (row: HoursRow): row is CompleteHoursRow =>
+  row.spot_id !== null &&
+  row.day_of_week !== null &&
+  row.opens !== null &&
+  row.closes !== null;
 
 // Today's intervals plus yesterday's cross-midnight stragglers (a spot open
 // "Fri 18:00–02:00" is still open at 1 AM Saturday).
 function todaysIntervals(rows: HoursRow[], dow: number): HoursInterval[] {
   const yesterday = (dow + 6) % 7;
   const intervals: HoursInterval[] = [];
-  for (const row of rows) {
+  for (const row of rows.filter(complete)) {
     const opens = timeToMinutes(row.opens);
     const closes = timeToMinutes(row.closes);
     if (row.day_of_week === dow) {
@@ -46,12 +57,17 @@ export async function getSpotList(): Promise<{
         .select("id,slug,name,category,building,lat,lng,consensus,attributes,baseline")
         .order("name"),
       supabase.from("spot_current_status").select("*"),
-      supabase.from("spot_hours").select("spot_id,day_of_week,opens,closes"),
+      // spot_effective_hours, not spot_hours: the view resolves manual >
+      // scraped > manual-provisional to ONE tier per spot (20260730000100), so
+      // leftover seed rows can never widen a scraped spot's open window.
+      supabase
+        .from("spot_effective_hours")
+        .select("spot_id,day_of_week,opens,closes"),
     ]);
 
   const statusBySlug = new Map((statuses ?? []).map((s) => [s.slug, s]));
   const hoursBySpot = new Map<string, HoursRow[]>();
-  for (const row of hours ?? []) {
+  for (const row of (hours ?? []).filter(complete)) {
     const list = hoursBySpot.get(row.spot_id) ?? [];
     list.push(row);
     hoursBySpot.set(row.spot_id, list);
@@ -124,7 +140,7 @@ export const getSpotDetail = cache(async function getSpotDetail(
         .eq("slug", slug)
         .maybeSingle(),
       supabase
-        .from("spot_hours")
+        .from("spot_effective_hours")
         .select("spot_id,day_of_week,opens,closes")
         .eq("spot_id", spot.id),
       // RLS already filters hidden rows (§3.5) — no client-side moderation.

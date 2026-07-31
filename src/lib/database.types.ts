@@ -294,6 +294,33 @@ export type Database = {
         }
         Relationships: []
       }
+      spot_effective_hours: {
+        Row: {
+          closes: string | null
+          day_of_week: number | null
+          id: number | null
+          opens: string | null
+          scraped_at: string | null
+          source: string | null
+          spot_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spot_hours_spot_id_fkey"
+            columns: ["spot_id"]
+            isOneToOne: false
+            referencedRelation: "spot_current_status"
+            referencedColumns: ["spot_id"]
+          },
+          {
+            foreignKeyName: "spot_hours_spot_id_fkey"
+            columns: ["spot_id"]
+            isOneToOne: false
+            referencedRelation: "spots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       flag_update: {
