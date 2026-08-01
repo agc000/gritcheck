@@ -12,7 +12,7 @@
 
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(15);
+select plan(18);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 insert into spots (id, slug, name, category, building, lat, lng) values
@@ -145,6 +145,32 @@ select throws_ok(
   $$select replace_scraped_hours('{"spots": [{"slug": "rpc-renamed", "hours": []}]}'::jsonb)$$,
   'unknown spot slug(s): rpc-renamed',
   'a renamed spot reddens the run instead of being silently skipped'
+);
+
+-- ── 7. Who may call it at all ───────────────────────────────────────────────
+-- These assert the ACL directly rather than probing with a request, because a
+-- probe only tells you about the instance you probed. 20260731000100 shipped
+-- with anon still holding EXECUTE in production while this suite passed
+-- locally: Supabase's default ACL grants EXECUTE to anon BY NAME, and revoking
+-- from PUBLIC does not remove a named grant. The function is SECURITY DEFINER
+-- and reachable over PostgREST, so anon EXECUTE means anyone holding the
+-- client-bundle key can rewrite campus hours. Fixed in 20260731000200.
+select function_privs_are(
+  'public', 'replace_scraped_hours', array['jsonb'],
+  'anon', array[]::text[],
+  'anon holds NO privilege on replace_scraped_hours'
+);
+
+select function_privs_are(
+  'public', 'replace_scraped_hours', array['jsonb'],
+  'authenticated', array[]::text[],
+  'authenticated holds NO privilege on replace_scraped_hours'
+);
+
+select function_privs_are(
+  'public', 'replace_scraped_hours', array['jsonb'],
+  'service_role', array['EXECUTE'],
+  'service_role — the scraper''s GitHub Actions identity — may execute it'
 );
 
 select * from finish();
