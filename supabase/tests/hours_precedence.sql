@@ -11,7 +11,7 @@
 
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(10);
+select plan(13);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- Slugs namespaced so they cannot collide with seeded spots.
@@ -125,6 +125,42 @@ select throws_ok(
   '23514',
   null,
   'a typo''d source is rejected, never silently ranked NULL'
+);
+
+-- ── 7. The coverage gate: scraped-and-closed is CLOSED, not a fallback ──────
+-- 20260731000100. 'prec-untouched' still has its seven provisional rows and no
+-- scraped rows at all. Marking it as covered by a scrape must hide them: the
+-- scraper looked, found the venue shut all week, and that is the true answer.
+-- Without this gate the spot would quietly display last season's guess — the
+-- normal case off-season, where 12 of 22 dining venues are closed all week.
+update spots
+set hours_scraped_at = now()
+where slug = 'prec-untouched';
+
+select is(
+  (select count(*)::int from spot_effective_hours h
+     join spots s on s.id = h.spot_id where s.slug = 'prec-untouched'),
+  0,
+  'GATE: a scraped spot with zero scraped rows shows NO hours, not provisional'
+);
+
+select is(
+  (select count(*)::int from spot_hours h
+     join spots s on s.id = h.spot_id where s.slug = 'prec-untouched'),
+  7,
+  'the provisional rows still exist underneath — suppressed, not deleted'
+);
+
+-- ── 8. The gate never overrides a human ─────────────────────────────────────
+update spots
+set hours_scraped_at = now()
+where slug = 'prec-override';
+
+select is(
+  (select array_agg(distinct h.source) from spot_effective_hours h
+     join spots s on s.id = h.spot_id where s.slug = 'prec-override'),
+  array['manual'],
+  'a covered spot still yields to manual — the scraper cannot outrank Alan'
 );
 
 select * from finish();

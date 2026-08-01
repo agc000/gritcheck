@@ -113,6 +113,7 @@ export type Database = {
           consensus: string | null
           created_at: string
           frozen: boolean
+          hours_scraped_at: string | null
           id: string
           lat: number
           lng: number
@@ -128,6 +129,7 @@ export type Database = {
           consensus?: string | null
           created_at?: string
           frozen?: boolean
+          hours_scraped_at?: string | null
           id?: string
           lat: number
           lng: number
@@ -143,6 +145,7 @@ export type Database = {
           consensus?: string | null
           created_at?: string
           frozen?: boolean
+          hours_scraped_at?: string | null
           id?: string
           lat?: number
           lng?: number
@@ -326,6 +329,10 @@ export type Database = {
       flag_update: {
         Args: { p_device_id: string; p_update_id: number }
         Returns: undefined
+      }
+      replace_scraped_hours: {
+        Args: { payload: Json }
+        Returns: Json
       }
     }
     Enums: {
