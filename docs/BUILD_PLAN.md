@@ -530,6 +530,31 @@ Tasks: full §4.8 audit of every screen; copy pass (§4.7); micro-interactions; 
 - **Back-nav resets browse state** — tab/filter/sort are component state;
   restoring them needs URL params.
 
+*Added to Phase 7 from Phase 6 (Alan, 2026-08-02 — raised mid-Phase-6, logged
+rather than built, per §0.2 and the drift lesson recorded above):*
+
+- **Map placeholder needs a label.** The map region is unlabelled until the
+  map mounts, so a first-time student sees brand-coloured emptiness with no
+  account of what it is. The obvious fix — a "Loading Map…" spinner — is
+  **wrong here**, and the reason is worth keeping: the map deliberately does
+  not mount until the user's first gesture *ends*, in an idle slot (§Phase 5
+  perf architecture; mounting on `pointerdown` made the first sheet drag
+  stutter). So for anyone who lands and reads the sheet without touching
+  anything, a loading label would sit there forever and read as broken rather
+  than as pending. The honest treatment is a **static labelled placeholder**
+  in the brand backdrop that invites the gesture, switching to a genuine
+  loading state only once mounting has actually begun. Two states, not one.
+  Belongs with the §4.8 audit at 390×844 — it is a real component, not a
+  string swap. Do not "fix" it by mounting the map eagerly (§Phase 5 item 6).
+
+- **Copy pass to a ~5th-grade reading level** (folds into the existing §4.7
+  copy-pass task). Alan's framing: the app must never make the answer harder
+  to reach than the walk. This does not conflict with §4.7 — "dry, factual,
+  no exclamation marks" and "plain enough for a tired student at 11 PM" pull
+  the same direction; plain is the point, terse is the method. Run it over
+  every screen at once: piecemeal edits mean auditing the same strings twice,
+  and consistency of voice is most of what makes copy feel considered.
+
 *Accepted scope drift, recorded 2026-07-30 (Phase 3 map work that shipped
 during Phase 5 without a written amendment at the time):* the Find Building
 tab, footprint highlighting on tap, the curated `studyCapable` property, and
