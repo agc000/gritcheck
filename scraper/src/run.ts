@@ -4,6 +4,7 @@
 //   node scraper/src/run.ts --dry-run           fetch live, print, write NOTHING
 //   node scraper/src/run.ts --fixtures          parse the committed snapshots, print only
 //   node scraper/src/run.ts --fixtures --write  same, but write (local stack only)
+//   node scraper/src/run.ts --allow-empty-feed  confirm a genuinely shut campus
 //
 // Exit code IS the alert: GH Actions turns a non-zero exit into a failure
 // notification, which §Phase 6 accepts as sufficient alerting. So every failure
@@ -16,12 +17,16 @@ import {
   readDiningFixture,
   readLibcalFixture,
 } from "./fetch.ts";
+import { runAllInvariants } from "./invariants.ts";
 import { parseDining, parseLibCal } from "./parse.ts";
 import { buildPayload, loadSpots } from "./payload.ts";
 import type { ScrapePayload } from "./types.ts";
 
 const args = new Set(process.argv.slice(2));
 const useFixtures = args.has("--fixtures");
+// Confirms that a feed returning zero hours everywhere is genuinely a shut
+// campus (break week) and not a broken parser. See assertNoFeedCollapse.
+const allowEmptyFeed = args.has("--allow-empty-feed");
 // Fixture runs print and stop unless --write is explicit, so a stray --fixtures
 // can never publish summer-session hours over real ones.
 const dryRun = args.has("--dry-run") || (useFixtures && !args.has("--write"));
@@ -45,7 +50,13 @@ async function main() {
   const libcal = parseLibCal(libcalRaw);
   console.log(`  parsed ${dining.size} dining locations, ${libcal.size} libcal locations`);
 
-  const payload = buildPayload(loadSpots(), dining, libcal);
+  const spots = loadSpots();
+  const payload = buildPayload(spots, dining, libcal);
+
+  // Throws before anything is written: a run that cannot be trusted must leave
+  // the previous hours standing rather than replace them with nonsense.
+  runAllInvariants(payload, spots, dining, libcal, allowEmptyFeed);
+
   console.log(`  ${summarize(payload)}`);
 
   for (const spot of payload.spots) {
