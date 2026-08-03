@@ -14,7 +14,8 @@ export type EventName =
   | "followup_shown"
   | "followup_answered"
   | "install_shown"
-  | "install_answered";
+  | "install_answered"
+  | "client_error";
 
 // Session-open timestamp: §7.4 wants "% of sessions reaching a spot detail
 // in <10 s", so view_spot events carry ms_since_open.
