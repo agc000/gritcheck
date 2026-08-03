@@ -73,9 +73,17 @@ jobs:
             ${{ inputs.allow_empty_feed && '--allow-empty-feed' || '' }} \
             ${{ inputs.dry_run && '--dry-run' || '' }}
 
-      # "Fail loudly" needs a destination Alan actually reads. GitHub's failure
-      # email does not qualify during move-in week.
-      - name: Notify Discord on failure
+      # INTENTIONALLY INERT (Alan, 2026-08-03). Alan takes failure alerts through
+      # GitHub mobile push notifications instead, so DISCORD_WEBHOOK_URL is
+      # deliberately not set and this step no-ops with a log line rather than
+      # failing. It is kept rather than deleted because "fail loudly needs a
+      # destination" still holds: if mobile push proves too easy to miss during
+      # move-in week, setting the secret turns this back on with no code change.
+      #
+      # If you are reading this because alerts are not arriving: check that
+      # GitHub mobile push for Actions failures is still enabled FIRST — that is
+      # the live channel. This step is the spare.
+      - name: Notify Discord on failure (inert unless the secret is set)
         if: failure() && vars.DISCORD_ALERTS != 'off'
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}

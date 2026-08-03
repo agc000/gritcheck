@@ -534,6 +534,52 @@ covers only the 4 library-fed study spots, and omits every dining spot from the
 payload — omission is what leaves their hours standing, since coverage would
 suppress the provisional seed and render them all closed (§20260731000100).
 
+**PROCEDURE — how dining hours actually get updated.** "Manual" means running
+one command from Alan's laptop, NOT typing hours into a table. The laptop's
+residential IP is the only thing CI lacks, so the code path is identical to the
+scheduled run — same `run.ts`, same parser, same invariants, same
+`replace_scraped_hours` RPC. Only `--feeds` and the network location differ.
+
+```sh
+# 1. Preview. Fetches live, prints every spot's hours, writes NOTHING.
+node --env-file=.env.local scraper/src/run.ts --feeds=dining --dry-run
+
+# 2. Write it. Same command without --dry-run.
+node --env-file=.env.local scraper/src/run.ts --feeds=dining
+```
+
+`.env.local` supplies `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`
+and points at **production** — there is no separate step and no Studio editing.
+Always run step 1 first and read the output; it is the diff.
+
+**Run it at minimum: the week before each semester starts, and again in week 1
+once hours settle.** Twice a semester, four times a year. Rollback if a run
+writes something wrong: `delete from spot_hours where source = 'scraped'` —
+the provisional seed is shadowed, never deleted, so the previous state is one
+statement away (§20260730000100).
+
+**Venue churn found 2026-08-03** (live feed vs the July fixture — Alan to
+confirm on campus):
+- **`jerk-lime` "Jerk + Lime"** — a genuinely new venue, not in the seed. Needs
+  a spot row (coords, attributes, consensus) if it should appear.
+- **Duplicate slugs, both live right now:** `blends-and-bowls` "Blends and
+  Bowls" (mapped) *and* `blends-bowls` "Blends & Bowls"; `piccola-italia`
+  "Piccola Italia" (mapped) *and* `picola-italia` "Picola Italia" (sic). All
+  four report closed all week, so the feed gives no signal about which is
+  authoritative for the fall.
+- **`true-grit-s-retriever-market`** — present since July, never mapped to a
+  spot. Deliberate or an omission?
+
+**The risk those duplicates create, and why no invariant catches it.** If UMBC
+populates the NEW slug for the fall and leaves the old one present-but-empty,
+the scrape keeps succeeding: the mapped venue still exists, so the
+absent-from-feed check passes, and "closed all week" is a legal answer that
+`assertNoFeedCollapse` only rejects when EVERY venue in the feed is empty. The
+result is one venue silently reading closed all semester. This is the residual
+gap in "fail loudly" and it is a mapping question, not a code one — resolve it
+by pointing `hours_source.source_slug` at whichever slug carries real fall hours
+once the late-August re-capture shows which one does.
+
 **REVISIT TRIGGER — either of:** (a) an unfronted dineoncampus API appears, or
 any endpoint serving the same weekly schedule without a Cloudflare challenge;
 (b) UMBC publishes dining hours somewhere else — a campus page, a feed, an open
