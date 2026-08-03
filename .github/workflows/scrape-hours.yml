@@ -1,0 +1,94 @@
+name: Scrape hours
+
+# Refreshes spot_hours from UMBC's published sources (BUILD_PLAN §Phase 6).
+#
+# LIBRARY ONLY — this is the amended scope, not an oversight. Cloudflare
+# challenges dineoncampus from GitHub runners AND challenges its apiv4 endpoint
+# from any non-browser client, so dining hours cannot be scraped from CI at all.
+# Measured 2026-08-03 (runner IP 20.29.188.152). Dining hours are maintained by
+# hand; see the amendment in §Phase 6 for the finding and the revisit trigger.
+#
+# The run covers only the four library-fed spots. Every dining spot is omitted
+# from the payload, which is what leaves its hours untouched — replace_scraped_hours
+# only ever touches spots it is handed.
+#
+# SCHEDULING CAVEATS, both real:
+#   * GitHub's scheduler is BEST-EFFORT. Runs routinely drift 10+ minutes and
+#     can be dropped entirely under load, so these times are "shortly after",
+#     never "at". Nothing downstream assumes a precise cadence.
+#   * Cron here is UTC and does NOT observe daylight saving. The times below are
+#     pinned to EDT, which is what the fall semester runs on. When EST begins in
+#     early November they land an hour earlier in campus time (05:30 and 13:30);
+#     shift the crons by +1h then if that matters.
+#   * A repo with 60 days of no activity has its scheduled workflows DISABLED by
+#     GitHub. A cron that never runs never fails, so the failure alert below
+#     cannot catch it — worth an occasional glance at the Actions tab.
+
+on:
+  schedule:
+    # 10:30 UTC = 06:30 EDT — before breakfast, so morning hours are fresh.
+    - cron: "30 10 * * *"
+    # 18:30 UTC = 14:30 EDT — before the dinner and evening-study rush.
+    - cron: "30 18 * * *"
+  workflow_dispatch:
+    inputs:
+      allow_empty_feed:
+        description: "Confirm a genuinely shut campus (break week). Only set this after looking."
+        type: boolean
+        default: false
+      dry_run:
+        description: "Fetch and print, write nothing."
+        type: boolean
+        default: false
+
+# Two runs writing hours at once would interleave their replacements.
+concurrency:
+  group: scrape-hours
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Node 24 strips TypeScript types natively, so the scraper's .ts files run
+      # without a transpile step. No Playwright install: the library feed is a
+      # plain fetch, and dining (which needs a browser) is not run here.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Scrape library hours
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        # Secrets are passed as env vars, never as CLI arguments — arguments are
+        # visible in the process list to anything else on the runner (§0.10).
+        run: |
+          npm run scrape -- --feeds=library \
+            ${{ inputs.allow_empty_feed && '--allow-empty-feed' || '' }} \
+            ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      # "Fail loudly" needs a destination Alan actually reads. GitHub's failure
+      # email does not qualify during move-in week.
+      - name: Notify Discord on failure
+        if: failure() && vars.DISCORD_ALERTS != 'off'
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "DISCORD_WEBHOOK_URL is not set — skipping notification."
+            exit 0
+          fi
+          # Body goes via a file so the webhook URL never appears in a process
+          # list, and jq builds the JSON so a message can never break the quoting.
+          jq -n --arg url "$RUN_URL" \
+            '{content: ("GritCheck: the hours scrape FAILED.\nNothing was written; the last good hours are still live.\n" + $url)}' \
+            > payload.json
+          curl -sS -X POST -H "Content-Type: application/json" -d @payload.json "$WEBHOOK" >/dev/null
+          echo "Discord notified."
