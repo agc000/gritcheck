@@ -496,7 +496,50 @@ rewriting the number. §12 Q+A recorded above. **Next: Phase 6.**
 
 ### Phase 6 — Scraper in production + hardening
 Tasks: finalize scraper from Phase 0 spike — dining runs **Playwright/headless Chromium in GH Actions** and intercepts the dineoncampus JSON API (`apiv4.dineoncampus.com`; Cloudflare TLS fingerprinting 403s plain fetches, a real browser passes clean), library uses **LibCal's open JSON API** (`api3.libcal.com/api_hours_grid.php?iid=991`, plain fetch); **re-capture both fixtures in late August** — the Phase 0 snapshots are summer session with most venues closed all week; GH Actions cron (2×/day, plus manual dispatch); upsert with `source='scraped'`, keep `manual` overrides winning; failure alerting (Action failure → GitHub notification is enough); scraper unit tests on fixtures; error boundary + minimal logging in app; legal footer ("unofficial, built by a UMBC student"), simple privacy note (anonymous device ID, no accounts, no PII).
-**Exit:** hours update end-to-end from UMBC's site with no human touch; a deliberately broken fixture fails loudly, not silently.
+**Exit (AMENDED 2026-08-03 — see below):** ~~hours update end-to-end from UMBC's site with no human touch~~ → **study hours update end-to-end from UMBC's site with no human touch; dining hours are maintained manually**; a deliberately broken fixture fails loudly, not silently.
+
+*Amendment 2026-08-03 (Alan) — dining cannot be scraped from CI.*
+
+**The finding.** A throwaway probe workflow measured this from a real GitHub
+runner rather than assuming it, because Phase 0's evidence came from Alan's
+residential IP and datacenter IPs are treated far more harshly:
+
+| path | result |
+|---|---|
+| plain `curl` → dineoncampus page, from runner `20.29.188.152` | **403**, Cloudflare `Just a moment...` |
+| headless Chromium → dineoncampus page, from the same runner | **403**, same challenge (page title confirms) |
+| plain `curl` **and** Node `fetch` → `apiv4.dineoncampus.com/locations/weekly_schedule`, from Alan's *residential* IP | **403** — the API is fronted too, and gates on TLS fingerprint, not just IP |
+| `curl` → LibCal `api_hours_grid.php?iid=991`, from the runner | **200**, clean JSON |
+
+So the browser trick that works from a laptop does not survive a datacenter IP,
+and the underlying API refuses every non-browser client from anywhere. There is
+no unfronted path to dining hours. The library feed is unaffected.
+
+**Why stealth hardening was rejected** (spoofed viewport/locale, hiding
+`navigator.webdriver`, launch flags): it is circumvention of a bot-protection
+measure; on datacenter ranges Cloudflare weights IP reputation heavily so it
+would most likely fail anyway; and a bypass that works in August and breaks
+silently in October is worse than no bypass, because it converts a known
+manual process into an unnoticed data outage during the semester. Alan's call,
+and the right one — the §5.5 proportionality principle applied to ingestion.
+
+**Why not a self-hosted runner** (which *would* work — it is the IP that already
+succeeds): it needs a laptop awake in a dorm at 06:30, and on a public repo it
+would let fork PRs execute code on Alan's machine. Both costs exceed typing
+dining hours in a few times a semester.
+
+**What this costs.** 16 food spots keep `manual`/`manual-provisional` hours that
+Alan updates when dining publishes each semester's schedule. The scheduled run
+covers only the 4 library-fed study spots, and omits every dining spot from the
+payload — omission is what leaves their hours standing, since coverage would
+suppress the provisional seed and render them all closed (§20260731000100).
+
+**REVISIT TRIGGER — either of:** (a) an unfronted dineoncampus API appears, or
+any endpoint serving the same weekly schedule without a Cloudflare challenge;
+(b) UMBC publishes dining hours somewhere else — a campus page, a feed, an open
+data endpoint. Re-test with `npm run scrape -- --dry-run` from a runner; the
+dining parser, mapping, invariants and tests are all built and still pass, so
+restoring dining is a matter of changing `--feeds=library` back to `all`.
 
 ### Phase 7 — Polish sprint + private beta
 Tasks: full §4.8 audit of every screen; copy pass (§4.7); micro-interactions; 404/offline/empty states with Grits; seed **fresh real data week** (Alan updates statuses himself daily so the beta never looks dead); recruit 10–20 friends as beta users; fix the top 5 friction points they hit; tag `v1.0.0`.
