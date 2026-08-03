@@ -135,6 +135,91 @@ export function assertNoFeedCollapse(
   }
 }
 
+// ── Warnings: suspicious, not wrong ─────────────────────────────────────────
+
+/** Slug comparison ignoring punctuation and case: "blends-and-bowls" -> "blendsandbowls". */
+const normalizeSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+/** Levenshtein distance, bailing out once it cannot beat `max`. */
+function editDistance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const curr = [i];
+    let rowMin = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
+      rowMin = Math.min(rowMin, curr[j]);
+    }
+    if (rowMin > max) return max + 1;
+    prev = curr;
+  }
+  return prev[b.length];
+}
+
+// Both real cases sit at or under 3: piccolaitalia/picolaitalia is 1,
+// blendsandbowls/blendsbowls is 3. The length floor keeps short slugs from
+// matching each other on noise.
+const NEAR_DUPLICATE_DISTANCE = 3;
+const MIN_SLUG_LENGTH = 8;
+
+/**
+ * WARNS, never fails: a mapped venue reporting closed all week WHILE a
+ * near-identical slug sits in the same feed.
+ *
+ * This is the one silent failure the invariants cannot legitimately catch.
+ * UMBC currently publishes both `blends-and-bowls` and `blends-bowls`, and both
+ * `piccola-italia` and `picola-italia`. If they populate the new slug for the
+ * fall and leave the mapped one present-but-empty, every check still passes —
+ * the venue exists, and "closed" is a legal answer that assertNoFeedCollapse
+ * only rejects when the WHOLE feed is empty. One venue would read closed all
+ * semester with nothing going red.
+ *
+ * It cannot be an error: closed-all-week is genuinely normal in summer and over
+ * breaks, so failing on it would redden runs that are perfectly correct and
+ * train everyone to ignore the alert. A warning is the honest strength of the
+ * signal — it says "look at this", not "this is broken", because from the feed
+ * alone those two are indistinguishable.
+ */
+export function findSuspiciousDuplicates(
+  payload: ScrapePayload,
+  spots: Spot[],
+  dining: DiningFeed,
+): string[] {
+  const sourceBySlug = new Map(
+    spots
+      .filter((s) => s.hours_source.kind === "dining")
+      .map((s) => [s.slug, (s.hours_source as { source_slug: string }).source_slug]),
+  );
+
+  const warnings: string[] = [];
+  for (const spot of payload.spots) {
+    if (spot.hours.length > 0) continue;
+    const mine = sourceBySlug.get(spot.slug);
+    if (!mine) continue;
+    const mineNorm = normalizeSlug(mine);
+    if (mineNorm.length < MIN_SLUG_LENGTH) continue;
+
+    for (const other of dining.keys()) {
+      if (other === mine) continue;
+      const otherNorm = normalizeSlug(other);
+      if (otherNorm.length < MIN_SLUG_LENGTH) continue;
+      if (editDistance(mineNorm, otherNorm, NEAR_DUPLICATE_DISTANCE) > NEAR_DUPLICATE_DISTANCE) {
+        continue;
+      }
+      const otherRows = dining.get(other)?.length ?? 0;
+      warnings.push(
+        `${spot.slug}: mapped to "${mine}" which reports CLOSED ALL WEEK, while the feed ` +
+          `also carries the near-identical "${other}" (${otherRows} hour rows). ` +
+          `If UMBC moved this venue to the new slug, repoint hours_source.source_slug — ` +
+          `otherwise it reads closed all semester and nothing fails.`,
+      );
+    }
+  }
+  return warnings;
+}
+
 /**
  * NOT BUILT, deliberately (§0.3): comparing this run against the previous one to
  * catch a partial cliff — say LibCal quietly halving its output. It is the

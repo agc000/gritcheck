@@ -24,7 +24,7 @@ import {
   readDiningFixture,
   readLibcalFixture,
 } from "./fetch.ts";
-import { runAllInvariants } from "./invariants.ts";
+import { findSuspiciousDuplicates, runAllInvariants } from "./invariants.ts";
 import { parseDining, parseLibCal } from "./parse.ts";
 import { ALL_FEEDS, buildPayload, loadSpots, type FeedKind } from "./payload.ts";
 import type { DiningFeed, LibcalFeed, ScrapePayload } from "./types.ts";
@@ -86,6 +86,15 @@ async function main() {
   runAllInvariants(payload, spots, dining, libcal, allowEmptyFeed, feeds);
 
   console.log(`  ${summarize(payload)}`);
+
+  // Suspicious, not wrong — the run continues. In Actions the ::warning::
+  // prefix surfaces these as annotations on the run page; there is deliberately
+  // no push, because a passing run has no channel to push through.
+  const warnings = findSuspiciousDuplicates(payload, spots, dining);
+  const inActions = process.env.GITHUB_ACTIONS === "true";
+  for (const w of warnings) {
+    console.log(inActions ? `::warning::${w}` : `  WARNING: ${w}`);
+  }
 
   for (const spot of payload.spots) {
     const detail =

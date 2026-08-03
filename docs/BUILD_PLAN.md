@@ -662,6 +662,44 @@ Principles: **authenticity beats polish** on campus (the winning story is "a UMB
 ### 7.1 Pre-launch (August)
 Landing page live at the domain with install CTA. Handles secured: IG `@gritcheck` (or `@gritcheck.umbc`), TikTok same. Seed content batch: photograph/video every spot (b-roll bank). Write the r/UMBC launch post draft. Print QR table tents + stickers (QR → site with `?src=qr-{location}` for attribution). Soft outreach: RAs Alan knows, club Discord admins, CS/IS groupchats — ask for day-one shares, not vague support.
 
+### 7.1.1 Launch checklist (ordered, deliberately undated)
+
+*Added 2026-08-03. Ordered by dependency, not by calendar — Alan does not yet
+know which day fall hours publish, and dating these would only create fake
+deadlines to slip.*
+
+**Late August, once fall dining hours publish — one pass, on campus:**
+Deliberately batched rather than done piecemeal now. Real August hours are
+accurate for an audience that does not exist yet and wrong for the one that
+arrives at move-in, and writing them early stakes launch on remembering to
+re-run. Provisional hours are biased toward term time, which is the correct
+bias for the students who show up.
+
+1. **Run the dining write** (`--feeds=dining`, procedure in §Phase 6), diff
+   against provisional, and confirm the summer→fall transition was captured
+   rather than assumed.
+2. **Resolve the duplicate slugs** — `piccola-italia` / `picola-italia` and
+   `blends-and-bowls` / `blends-bowls`. Point `hours_source.source_slug` at
+   whichever carries real fall hours. Until this is done, a mapped venue can
+   silently read closed all semester (§Phase 6 amendment).
+3. **Seed Jerk + Lime** if it should exist; **decide on
+   `true-grit-s-retriever-market`** (present in the feed since July, never
+   mapped — deliberate or an omission?).
+4. **Fill SPOT_DATA Part 3 static attributes** from the campus walk — the §0.7
+   data debt: ILSB + Engineering coords, the unmapped study zones.
+5. **Re-capture both fixtures** (§Phase 6) and re-run the scraper tests. This
+   is the hard dependency of Phase 6's exit criterion.
+
+**Before launch, any time — order-independent:**
+
+- **Supabase Pro + Spend Cap enabled.** The free tier's project-pause is a
+  launch-week risk (§8); the Spend Cap is what stops a viral moment becoming
+  an invoice.
+- **`acquisition_src` / `launch_src` split shipped before QR codes go to
+  print.** The QR URLs carry `?src=qr-{location}` (§7.1) and printed codes
+  cannot be revised — attribution has to be correct *before* the print run,
+  not after (see docs/METRICS.md).
+
 ### 7.2 Launch week = orientation week (the whole ballgame)
 - **r/UMBC post:** builder story, screenshots, direct link, explicit "it's free, no accounts, I want feedback." Reply to every comment for 48 h. (Reddit rewards maker-posts and punishes anything ad-shaped.)
 - **Fizz:** no ads — be *useful*. Post live-condition screenshots at high-pain moments ("Grit's line rn 💀 — checked on gritcheck"). Anonymous-adjacent culture; the app should feel like a Fizz-native tip, not a promo.

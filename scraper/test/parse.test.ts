@@ -16,7 +16,7 @@ import { describe, it } from "node:test";
 import { readDiningFixture, readLibcalFixture } from "../src/fetch.ts";
 import { parseDining, parseLibCal, libcalTime } from "../src/parse.ts";
 import { buildPayload, loadSpots } from "../src/payload.ts";
-import { runAllInvariants } from "../src/invariants.ts";
+import { findSuspiciousDuplicates, runAllInvariants } from "../src/invariants.ts";
 import type { HoursRow } from "../src/types.ts";
 
 const spots = loadSpots();
@@ -218,6 +218,70 @@ describe("mapping onto spots", () => {
     // rather than fall back to it.
     const closed = payload.spots.filter((s) => s.hours.length === 0);
     assert.ok(closed.length > 0, "the summer fixture should contain closed venues");
+  });
+});
+
+describe("near-duplicate slug warnings", () => {
+  const dining = parseDining(readDiningFixture());
+  const libcal = parseLibCal(readLibcalFixture());
+  const payload = buildPayload(spots, dining, libcal);
+
+  it("stays quiet when nothing is suspicious", () => {
+    // The July fixture predates the duplicate slugs, so a clean run must warn
+    // about nothing — a warning that always fires is one nobody reads.
+    assert.deepEqual(findSuspiciousDuplicates(payload, spots, dining), []);
+  });
+
+  it("flags a closed mapped venue sitting beside a near-identical slug", () => {
+    // Reproduces what UMBC actually published in August: the mapped venue goes
+    // quiet while a differently-spelled twin appears alongside it.
+    const raw = clone(diningFixture());
+    const mapped = raw.theLocations.find((l) => l.slug === "piccola-italia")!;
+    for (const day of mapped.week) {
+      day.closed = true;
+      day.hours = [];
+    }
+    raw.theLocations.push({ ...clone(mapped), slug: "picola-italia", name: "Picola Italia" });
+
+    const feed = parseDining(raw);
+    const warnings = findSuspiciousDuplicates(
+      buildPayload(spots, feed, libcal),
+      spots,
+      feed,
+    );
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /piccolo-italia/);
+    assert.match(warnings[0], /picola-italia/);
+  });
+
+  it("says nothing when the mapped venue still reports hours", () => {
+    // A twin slug is only worth flagging if OUR venue went quiet.
+    const raw = clone(diningFixture());
+    const mapped = raw.theLocations.find((l) => l.slug === "piccola-italia")!;
+    raw.theLocations.push({ ...clone(mapped), slug: "picola-italia", name: "Picola Italia" });
+    const feed = parseDining(raw);
+    assert.deepEqual(
+      findSuspiciousDuplicates(buildPayload(spots, feed, libcal), spots, feed),
+      [],
+    );
+  });
+
+  it("does not confuse two genuinely different venues", () => {
+    // Commons Retriever Market vs True Grit's Retriever Market share a suffix
+    // and must never be reported as the same venue.
+    const raw = clone(diningFixture());
+    for (const loc of raw.theLocations) {
+      if (loc.slug !== "commons-retriever-market") continue;
+      for (const day of loc.week) {
+        day.closed = true;
+        day.hours = [];
+      }
+    }
+    const feed = parseDining(raw);
+    assert.deepEqual(
+      findSuspiciousDuplicates(buildPayload(spots, feed, libcal), spots, feed),
+      [],
+    );
   });
 });
 
