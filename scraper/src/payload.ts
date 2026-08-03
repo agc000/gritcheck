@@ -34,10 +34,15 @@ export function loadSpots(): Spot[] {
  * way this pipeline breaks, and skipping it would write 19 spots and call it a
  * success — the silent partial the exit criterion forbids.
  */
+/** Which feeds a run is responsible for. See ALL_FEEDS. */
+export type FeedKind = "dining" | "library";
+export const ALL_FEEDS: ReadonlySet<FeedKind> = new Set(["dining", "library"]);
+
 export function buildPayload(
   spots: Spot[],
   dining: DiningFeed,
   libcal: LibcalFeed,
+  feeds: ReadonlySet<FeedKind> = ALL_FEEDS,
 ): ScrapePayload {
   const covered: SpotHours[] = [];
   const missing: string[] = [];
@@ -45,6 +50,11 @@ export function buildPayload(
   for (const spot of spots) {
     const src = spot.hours_source;
     if (src.kind === "manual") continue;
+    // A feed this run is not responsible for: omit the spot entirely, which is
+    // what leaves its existing hours standing. Critically it must NOT be marked
+    // as covered — coverage suppresses the provisional seed, so a library-only
+    // run that "covered" the dining spots would show all 16 food venues closed.
+    if (!feeds.has(src.kind)) continue;
 
     if (src.kind === "dining") {
       const hours = dining.get(src.source_slug);

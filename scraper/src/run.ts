@@ -5,6 +5,13 @@
 //   node scraper/src/run.ts --fixtures          parse the committed snapshots, print only
 //   node scraper/src/run.ts --fixtures --write  same, but write (local stack only)
 //   node scraper/src/run.ts --allow-empty-feed  confirm a genuinely shut campus
+//   node scraper/src/run.ts --feeds=library     run one feed only (default: all)
+//
+// --feeds exists because dining cannot be scraped from CI: Cloudflare challenges
+// both the page and the apiv4 endpoint from any non-browser client and from
+// datacenter IPs (§Phase 6, amended 2026-08-03). The scheduled workflow runs
+// --feeds=library; the default stays `all` so a bare run still attempts dining
+// and fails loudly rather than quietly pretending dining is not a problem.
 //
 // Exit code IS the alert: GH Actions turns a non-zero exit into a failure
 // notification, which §Phase 6 accepts as sufficient alerting. So every failure
@@ -19,8 +26,8 @@ import {
 } from "./fetch.ts";
 import { runAllInvariants } from "./invariants.ts";
 import { parseDining, parseLibCal } from "./parse.ts";
-import { buildPayload, loadSpots } from "./payload.ts";
-import type { ScrapePayload } from "./types.ts";
+import { ALL_FEEDS, buildPayload, loadSpots, type FeedKind } from "./payload.ts";
+import type { DiningFeed, LibcalFeed, ScrapePayload } from "./types.ts";
 
 const args = new Set(process.argv.slice(2));
 const useFixtures = args.has("--fixtures");
@@ -31,6 +38,17 @@ const allowEmptyFeed = args.has("--allow-empty-feed");
 // can never publish summer-session hours over real ones.
 const dryRun = args.has("--dry-run") || (useFixtures && !args.has("--write"));
 
+function parseFeedsArg(): ReadonlySet<FeedKind> {
+  const raw = [...args].find((a) => a.startsWith("--feeds="))?.split("=")[1];
+  if (raw === undefined || raw === "all") return ALL_FEEDS;
+  const picked = raw.split(",").map((s) => s.trim());
+  const bad = picked.filter((p) => p !== "dining" && p !== "library");
+  if (bad.length > 0 || picked.length === 0) {
+    throw new Error(`--feeds must be all, dining, library (got "${raw}")`);
+  }
+  return new Set(picked as FeedKind[]);
+}
+
 function summarize(payload: ScrapePayload): string {
   const spots = payload.spots.length;
   const rows = payload.spots.reduce((n, s) => n + s.hours.length, 0);
@@ -39,23 +57,33 @@ function summarize(payload: ScrapePayload): string {
 }
 
 async function main() {
+  const feeds = parseFeedsArg();
   const source = useFixtures ? "fixtures" : "live";
-  console.log(`Scrape run (${source}${dryRun ? ", dry run" : ""})`);
+  console.log(
+    `Scrape run (${source}${dryRun ? ", dry run" : ""}) · feeds: ${[...feeds].join("+")}`,
+  );
 
-  const [diningRaw, libcalRaw] = useFixtures
-    ? [readDiningFixture(), readLibcalFixture()]
-    : await Promise.all([fetchDining(), fetchLibCal()]);
+  // A feed we are not responsible for is never fetched and stays an empty map;
+  // every consumer is told which feeds are live, so an empty map is understood
+  // as "not asked for" rather than "came back empty".
+  let dining: DiningFeed = new Map();
+  let libcal: LibcalFeed = new Map();
 
-  const dining = parseDining(diningRaw);
-  const libcal = parseLibCal(libcalRaw);
-  console.log(`  parsed ${dining.size} dining locations, ${libcal.size} libcal locations`);
+  if (feeds.has("dining")) {
+    dining = parseDining(useFixtures ? readDiningFixture() : await fetchDining());
+    console.log(`  parsed ${dining.size} dining locations`);
+  }
+  if (feeds.has("library")) {
+    libcal = parseLibCal(useFixtures ? readLibcalFixture() : await fetchLibCal());
+    console.log(`  parsed ${libcal.size} libcal locations`);
+  }
 
   const spots = loadSpots();
-  const payload = buildPayload(spots, dining, libcal);
+  const payload = buildPayload(spots, dining, libcal, feeds);
 
   // Throws before anything is written: a run that cannot be trusted must leave
   // the previous hours standing rather than replace them with nonsense.
-  runAllInvariants(payload, spots, dining, libcal, allowEmptyFeed);
+  runAllInvariants(payload, spots, dining, libcal, allowEmptyFeed, feeds);
 
   console.log(`  ${summarize(payload)}`);
 

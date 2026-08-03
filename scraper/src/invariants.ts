@@ -14,6 +14,7 @@
 // feed there, is every mapped spot present, is the shape sane — and never on
 // the calendar. Nothing here encodes which venue is open on which day; those
 // assertions would pass all summer and fail every September.
+import { ALL_FEEDS, type FeedKind } from "./payload.ts";
 import type { DiningFeed, LibcalFeed, ScrapePayload } from "./types.ts";
 import type { Spot } from "../seed/schema.ts";
 
@@ -34,13 +35,17 @@ function fail(message: string): never {
 }
 
 /** Did each feed actually arrive? Catches truncation and silent emptying. */
-export function assertFeedsPlausible(dining: DiningFeed, libcal: LibcalFeed): void {
-  if (dining.size < MIN_DINING_LOCATIONS) {
+export function assertFeedsPlausible(
+  dining: DiningFeed,
+  libcal: LibcalFeed,
+  feeds: ReadonlySet<FeedKind> = ALL_FEEDS,
+): void {
+  if (feeds.has("dining") && dining.size < MIN_DINING_LOCATIONS) {
     fail(
       `dining feed returned ${dining.size} locations, expected at least ${MIN_DINING_LOCATIONS} — truncated or the shape moved`,
     );
   }
-  if (libcal.size < MIN_LIBCAL_LOCATIONS) {
+  if (feeds.has("library") && libcal.size < MIN_LIBCAL_LOCATIONS) {
     fail(
       `libcal feed returned ${libcal.size} locations, expected at least ${MIN_LIBCAL_LOCATIONS} — truncated or the shape moved`,
     );
@@ -54,9 +59,13 @@ export function assertFeedsPlausible(dining: DiningFeed, libcal: LibcalFeed): vo
  * prevents (19 of 20 spots written, run reports success) is exactly the silent
  * partial the phase forbids.
  */
-export function assertCoverageComplete(payload: ScrapePayload, spots: Spot[]): void {
+export function assertCoverageComplete(
+  payload: ScrapePayload,
+  spots: Spot[],
+  feeds: ReadonlySet<FeedKind> = ALL_FEEDS,
+): void {
   const expected = spots
-    .filter((s) => s.hours_source.kind !== "manual")
+    .filter((s) => s.hours_source.kind !== "manual" && feeds.has(s.hours_source.kind))
     .map((s) => s.slug);
   const got = new Set(payload.spots.map((s) => s.slug));
   const absent = expected.filter((slug) => !got.has(slug));
@@ -107,11 +116,12 @@ export function assertNoFeedCollapse(
   payload: ScrapePayload,
   spots: Spot[],
   allowEmptyFeed: boolean,
+  feeds: ReadonlySet<FeedKind> = ALL_FEEDS,
 ): void {
   if (allowEmptyFeed) return;
 
   const kindBySlug = new Map(spots.map((s) => [s.slug, s.hours_source.kind]));
-  for (const kind of ["dining", "library"] as const) {
+  for (const kind of feeds) {
     const fromFeed = payload.spots.filter((s) => kindBySlug.get(s.slug) === kind);
     if (fromFeed.length === 0) continue;
     const withHours = fromFeed.filter((s) => s.hours.length > 0).length;
@@ -140,9 +150,10 @@ export function runAllInvariants(
   dining: DiningFeed,
   libcal: LibcalFeed,
   allowEmptyFeed: boolean,
+  feeds: ReadonlySet<FeedKind> = ALL_FEEDS,
 ): void {
-  assertFeedsPlausible(dining, libcal);
-  assertCoverageComplete(payload, spots);
+  assertFeedsPlausible(dining, libcal, feeds);
+  assertCoverageComplete(payload, spots, feeds);
   assertRowsWellFormed(payload);
-  assertNoFeedCollapse(payload, spots, allowEmptyFeed);
+  assertNoFeedCollapse(payload, spots, allowEmptyFeed, feeds);
 }

@@ -190,6 +190,29 @@ describe("mapping onto spots", () => {
     assert.equal(new Set(sets).size, 1, "spots sharing a lid must get identical hours");
   });
 
+  // Dining cannot be scraped from CI (Cloudflare; §Phase 6 amended 2026-08-03),
+  // so the scheduled run covers the library only. The danger is coverage: a
+  // dining spot wrongly marked covered would have its provisional hours
+  // suppressed and would render closed. Omission is what keeps it safe.
+  it("a library-only run omits dining spots entirely", () => {
+    const libraryOnly = buildPayload(spots, dining, libcal, new Set(["library"] as const));
+    const covered = new Set(libraryOnly.spots.map((s) => s.slug));
+    const expected = spots.filter((s) => s.hours_source.kind === "library");
+    assert.equal(libraryOnly.spots.length, expected.length);
+    for (const s of spots) {
+      if (s.hours_source.kind === "dining") {
+        assert.equal(covered.has(s.slug), false, `${s.slug} must not be covered`);
+      }
+    }
+  });
+
+  it("a library-only run still demands every library spot", () => {
+    const libraryOnly = buildPayload(spots, dining, libcal, new Set(["library"] as const));
+    assert.doesNotThrow(() =>
+      runAllInvariants(libraryOnly, spots, dining, libcal, false, new Set(["library"] as const)),
+    );
+  });
+
   it("expresses a closed-all-week venue as [], not as absence", () => {
     // This is what lets migration 20260731000100 suppress the provisional seed
     // rather than fall back to it.
