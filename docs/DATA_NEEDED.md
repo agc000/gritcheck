@@ -187,15 +187,55 @@ HIGH trust) and `docs/umbc_study_spots_research_2026-08-04.md` (provenance
 `web_unverified`, URL-sourced, explicitly not physically inspected).
 **Nothing was seeded** — see the blocker below, which is absolute.*
 
-### THE BLOCKER: neither source contains a single coordinate
+### Coordinates are NOT the blocker (corrected 2026-08-04)
 
-`spots.lat` / `spots.lng` are NOT NULL and the seed schema enforces a campus
-bounding box (39.24–39.27, −76.73–−76.69). **Zero of the 28 zones can be seeded
-until Alan walks the buildings and records entrance lat/lng.** This is not a
-preference — the validator rejects the rows. 13 buildings need coordinates:
-Public Policy, Physics, RAC, ITE, Performing Arts, Fine Arts, Meyerhoff,
-Sherman Hall, Sondheim Hall, Math & Psychology, Biological Sciences, Chemistry,
-Administration.
+An earlier version of this section said no coordinates existed and that seeding
+was impossible. **That was wrong.** `public/campus-labels.geojson` — already in
+the repo, already shipping as the map's label layer — carries an OSM point for
+every building in the recon:
+
+| building | lat, lng | source |
+|---|---|---|
+| Public Policy | 39.255199, −76.709128 | geojson |
+| Physics | 39.254489, −76.709574 | geojson |
+| Retriever Activities Center (RAC) | 39.252858, −76.712553 | geojson |
+| ITE | 39.253837, −76.714276 | geojson |
+| Performing Arts & Humanities | 39.255312, −76.715369 | geojson |
+| Fine Arts | 39.255178, −76.713642 | geojson |
+| Meyerhoff Hall | 39.254922, −76.712803 | geojson |
+| Sherman Hall | 39.253641, −76.713422 | geojson |
+| Sondheim Hall | 39.253472, −76.712790 | geojson |
+| Mathematics & Psychology | 39.254102, −76.712470 | geojson |
+| Biological Sciences | 39.254942, −76.712089 | geojson |
+| Chemistry Lecture Hall | 39.254868, −76.712590 | geojson |
+| Engineering | 39.254517, −76.713956 | geojson |
+| ILSB | 39.253950, −76.710844 | geojson |
+| Administration | 39.252959, −76.713397 | SPOT_DATA Part 2 (Admin Coffee Shop) |
+| Commons / UC / AOK | various | SPOT_DATA Part 2 (dining rows) |
+
+All fall inside the seed validator's campus bounding box. Every zone in a
+building would share that building's point — which is **exactly what the three
+seeded AOK study rows already do** (all three carry 39.256313, −76.711555), so
+this is established practice, not a new compromise.
+
+- [ ] Two caveats to confirm, neither blocking: these are OSM *label* points,
+      not walked entrances (Alan's file asked for entrances); and the Chemistry
+      label reads "Chemistry Lecture Hall", which may be a different structure
+      from the Chemistry Building the recon describes.
+
+### THE ACTUAL BLOCKER: hours
+
+`hours_source.kind = "manual"` with no rows in `spot_hours` renders a spot
+**permanently Closed** — `commons-top-floor` does exactly this today. None of
+the 13 new buildings appear in the dining or library feeds, so every one of the
+28 zones would need manual hours or ship as a dead row.
+
+- [ ] **Seeding 28 zones without hours would add 28 permanently-closed spots** —
+      strictly worse than not seeding them. Hours are the gate, not coordinates.
+- [ ] The web file offers UMBC Police door-unlock schedules as a backbone, but
+      they are `web_unverified`, describe *when doors unlock* rather than *when
+      a space is usable*, and contradict ILSB's own published hours. Not seedable
+      as-is.
 
 ### The recon and the seeded roster do not overlap AT ALL
 
@@ -260,10 +300,8 @@ Administration.
 - [ ] **Outlets: 27 of 28 zones UNKNOWN.** Both files say explicitly that no web
       source can supply this. Requires one dedicated physical pass. This is the
       column repeatedly called the product's moat.
-- [ ] **Hours for all 13 new buildings.** The web file offers UMBC Police door
-      schedules as a backbone, but they are `web_unverified`, describe *door
-      unlock times* rather than *study availability*, and contradict ILSB's own
-      page. Do not seed them as hours.
+- [ ] **Hours for all 13 new buildings** — see "THE ACTUAL BLOCKER" above. This
+      is the one item that decides whether any of this can ship.
 - [ ] **The Morning / Midday / Evening / Night crowd chart for all 28 zones AND
       all 6 seeded study spots.** Neither file contains it. Alan's fill-tendency
       column is a *static* tendency, not a time curve.
