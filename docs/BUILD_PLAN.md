@@ -260,6 +260,28 @@ Gold is a **signal**, not decoration: Update button, active filter state, Best b
 ### 4.3 Status verdicts (UI words, not raw data)
 Food: `Short line / Normal line / Long line / Packed / Closed`. Study: `Quiet / Seats open / Filling up / Packed / No recent data / Closed`. Verdict word + color; details live in the detail view.
 
+*Amended 2026-08-04 (Alan, baseline-as-primary): with no live data a row now
+reads **`Usually quiet` / `Usually normal` / `Usually packed` / `Usually
+empty`** — the §3.4 baseline vocabulary with a qualifier — instead of
+`No recent data` with `typical: quiet` demoted to grey sub-text.*
+
+*Why: the old rendering **inverted §5.3**, which already said "Low → UI shows
+baseline as primary with 'typical' framing". Leading with the absence meant
+that on day one, before a single update exists, every spot on a campus we
+genuinely know a lot about announced that we knew nothing. That is the §9
+cold-start risk arriving through the copy rather than the data. The word
+"Usually" carries the honesty the old headline was carrying, so nothing is
+dressed up as live — and the row answers the question instead of apologising
+for not having been asked yet.*
+
+*No new vocabulary was invented: the four words come straight from §3.4, and
+the tones follow the same go/hold/skip banding as the live scales (empty and
+quiet → go, normal → hold, packed → skip). `No recent data` survives for the
+case it was always right for — a spot with no live reading AND no baseline
+covering that day-part, where saying so remains the honest answer. The map's
+building glow is unchanged and still keys off live data only (§Phase 3): the
+map answers "what is happening now", the row answers "what should I expect".*
+
 *Amended 2026-07-17 (Alan, line scale): the update flow collects `line` as a
 **1–10 score** (1 = walk right up, 10 = out the door) via a **slider on a
 green→amber→red gradient track** — the ONE sanctioned gradient in the app,

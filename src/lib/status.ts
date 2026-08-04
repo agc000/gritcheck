@@ -33,6 +33,18 @@ const STUDY_VERDICTS: Record<string, [string, Tone]> = {
   packed: ["Packed", "skip"],
 };
 
+// Baseline verdicts (§4.3 amendment 2026-08-04). Reuses §3.4's own vocabulary
+// rather than inventing words, so the only new thing on screen is the qualifier
+// — "Usually" is what keeps this honest, and it does the work the old
+// "No recent data" headline was doing. Tones follow the same go/hold/skip
+// banding as the live scales.
+const BASELINE_VERDICTS: Record<string, [string, Tone]> = {
+  empty: ["Usually empty", "go"],
+  quiet: ["Usually quiet", "go"],
+  normal: ["Usually normal", "hold"],
+  packed: ["Usually packed", "skip"],
+};
+
 // Day-part boundaries for baseline lookup (§3.4). Constants, not magic
 // numbers, per §5.3's spirit — tune once real usage shows the real rhythm.
 const DAY_PARTS: Array<{ from: number; to: number; part: string }> = [
@@ -114,13 +126,18 @@ export function getVerdict(item: SpotListItem, now: Date): Verdict {
   const live = liveVerdict(item, now);
   if (live) return live;
 
-  // Baseline fallback (§3.4): honest "typical" framing, never dressed up as
-  // a live reading — the mockup's "No recent data · typical: quiet" pattern.
+  // Baseline as PRIMARY (§5.3: "Low → UI shows baseline as primary with
+  // 'typical' framing"). It previously led with "No recent data" and demoted
+  // the baseline to grey sub-text — which inverted the spec and, with zero
+  // updates on day one, made a campus we genuinely know a lot about read as an
+  // empty app. "Usually" carries the honesty; nothing is dressed up as live.
   const typical = baselineWord(item.baseline, now);
-  return {
-    word: "No recent data",
-    tone: "hold",
-    fresh: typical ? `typical: ${typical}` : null,
-    freshTone: "faint",
-  };
+  const mapped = typical ? BASELINE_VERDICTS[typical] : undefined;
+  if (mapped) {
+    return { word: mapped[0], tone: mapped[1], fresh: null, freshTone: "faint" };
+  }
+
+  // Genuinely nothing known for this spot at this hour — no live data and no
+  // baseline covering this day-part. Saying so is still the right answer.
+  return { word: "No recent data", tone: "hold", fresh: null, freshTone: "faint" };
 }
