@@ -42,6 +42,59 @@ from events
 where name = 'open_app';
 ```
 
+## 1b. How many actual PEOPLE — the number to quote
+
+Section 1 counts *storage containers*, not humans. On iOS, installing to the
+home screen creates a container separate from Safari, so one person who browsed
+and then installed is **two** `device_id`s. Raw lifetime uniques are therefore
+an over-count, and it grows with every install.
+
+`acquisition_src = '(pre-install)'` identifies exactly those duplicates: it is
+written when a container's *very first* open is already a home-screen launch,
+which on iOS can only happen to someone who was in Safari first (you cannot
+install without visiting). So subtracting that bucket un-inflates the total.
+
+```sql
+with per_device as (
+  select
+    device_id,
+    max(props ->> 'acquisition_src') as acquisition_src  -- written once, never changes
+  from events
+  where name = 'open_app' and device_id is not null
+  group by device_id
+)
+select
+  count(*)                                                  as containers,      -- raw, the UPPER bound
+  count(*) filter (where acquisition_src = '(pre-install)') as ios_duplicates,
+  count(*) filter (where acquisition_src is distinct from '(pre-install)')
+                                                            as people_estimate  -- the number to quote
+from per_device;
+```
+
+**Quote `people_estimate`, and say it's an estimate.** Being able to explain
+*why* it differs from the raw count is worth more in an interview than a bigger
+number: it shows you know what your telemetry actually measures.
+
+**Residual error, both directions, small:** it slightly *under*-counts anyone
+who installed on two devices (iPhone and iPad are genuinely two containers for
+one person, and both look like duplicates). It slightly *over*-counts if a
+Safari visit happened in private mode, since no persistent container was written
+to pair with. Neither is worth engineering around.
+
+**Do NOT apply this subtraction to DAU/WAU in section 1.** Different question,
+opposite error. An installed iOS user is *active* through their installed
+container — filtering out `(pre-install)` devices would delete your most engaged
+users from the daily count. Double-counting in DAU only happens if someone opens
+*both* Safari and the installed app on the same day, which is rare because
+installing is precisely how people stop using Safari for it. Section 1 is close
+enough; section 1b is for the lifetime total.
+
+**Why there is no true de-duplication:** linking the two containers would mean
+smuggling the old `device_id` into the installed app through the manifest's
+`start_url` at install time. That is a real technique and it is also fragile
+across iOS versions, so it is deliberately not built (§0.3). The bucket is
+measured instead of guessed, which is enough to state a defensible number.
+
 ## 2. Daily trend (the one to watch during launch week)
 
 ```sql
