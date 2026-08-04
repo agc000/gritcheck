@@ -495,6 +495,11 @@ caching provably cannot fix, and closed by owning that debt instead of
 rewriting the number. §12 Q+A recorded above. **Next: Phase 6.**
 
 ### Phase 6 — Scraper in production + hardening
+*Added 2026-08-04 (Alan): **map placeholder label** — moved in from §Phase 7,
+see the struck entry there for the full reasoning. Two states, not one: a
+static label before the map is asked for, and a real loading line once the
+chunk is actually fetching.*
+
 Tasks: finalize scraper from Phase 0 spike — dining runs **Playwright/headless Chromium in GH Actions** and intercepts the dineoncampus JSON API (`apiv4.dineoncampus.com`; Cloudflare TLS fingerprinting 403s plain fetches, a real browser passes clean), library uses **LibCal's open JSON API** (`api3.libcal.com/api_hours_grid.php?iid=991`, plain fetch); **re-capture both fixtures in late August** — the Phase 0 snapshots are summer session with most venues closed all week; GH Actions cron (2×/day, plus manual dispatch); upsert with `source='scraped'`, keep `manual` overrides winning; failure alerting (Action failure → GitHub notification is enough); scraper unit tests on fixtures; error boundary + minimal logging in app; legal footer ("unofficial, built by a UMBC student"), simple privacy note (anonymous device ID, no accounts, no PII).
 **Exit (AMENDED 2026-08-03 — see below):** ~~hours update end-to-end from UMBC's site with no human touch~~ → **study hours update end-to-end from UMBC's site with no human touch; dining hours are maintained manually**; a deliberately broken fixture fails loudly, not silently.
 
@@ -580,6 +585,47 @@ gap in "fail loudly" and it is a mapping question, not a code one — resolve it
 by pointing `hours_source.source_slug` at whichever slug carries real fall hours
 once the late-August re-capture shows which one does.
 
+*Phase 6 lesson — "the green result that proved nothing" (recorded 2026-08-04).*
+
+Phase 6's exit criterion is *"fails loudly, not silently."* Three separate
+near-misses during the phase had the identical shape, and none of them were in
+the scraper — they were in the **verification**. Each produced a passing result
+that was evidence of nothing, and each was caught by luck or by a second look
+rather than by the check that was supposed to catch it.
+
+1. **The read path that would have unioned hours forever.** `is_open` selected
+   from `spot_hours` with no source filter, so scraped rows could only ever
+   *widen* a spot's open window. The scraper would have run green twice a day,
+   written rows correctly, and changed nothing a student saw. Caught by asking
+   "what does a successful run actually change?" before writing the upsert.
+2. **The ACL that passed locally for an environmental reason.** `revoke all …
+   from public` left `anon` holding EXECUTE on a SECURITY DEFINER function in
+   production, because Supabase's default ACL grants it BY NAME. The local test
+   passed — this machine carries a narrowed default ACL — so a curl returning
+   `42501` on one instance was presented as proof about another. Fixed by
+   asserting the ACL itself with pgTAP `function_privs_are()`.
+3. **The dry run that skipped the credentials.** The repo secret was named
+   `SUPABASE_SREVICE_ROLE_KEY`. The dispatched smoke test passed anyway, because
+   `--dry-run` returned *before* the credential check — the rehearsal skipped the
+   one thing most likely to be wrong. In an Actions log, `***` means a secret
+   resolved and blank means it did not; that one character was the whole signal.
+
+**The pattern:** a check that has never been observed to fail is not yet a check.
+All three passed for reasons unrelated to the thing being tested. The habits that
+catch this class, and that every later phase should keep:
+
+- **Assert the state, not the symptom.** Query the ACL; do not infer it from a
+  status code. Query the effective rows; do not infer them from "the run said OK".
+- **Prove the test fails.** Before trusting a new assertion, break the thing
+  deliberately and watch it go red. Every corruption case in
+  `scraper/test/parse.test.ts` was verified this way, and the suite opens by
+  asserting the *uncorrupted* fixtures pass — otherwise the other seven prove
+  nothing.
+- **A rehearsal must exercise what the real run exercises**, especially the parts
+  most likely to be misconfigured. A dry run that skips authentication is a demo.
+- **Ask what a successful run should CHANGE**, and verify that, not that it
+  exited 0.
+
 **REVISIT TRIGGER — either of:** (a) an unfronted dineoncampus API appears, or
 any endpoint serving the same weekly schedule without a Cloudflare challenge;
 (b) UMBC publishes dining hours somewhere else — a campus page, a feed, an open
@@ -622,7 +668,14 @@ Tasks: full §4.8 audit of every screen; copy pass (§4.7); micro-interactions; 
 *Added to Phase 7 from Phase 6 (Alan, 2026-08-02 — raised mid-Phase-6, logged
 rather than built, per §0.2 and the drift lesson recorded above):*
 
-- **Map placeholder needs a label.** The map region is unlabelled until the
+- ~~**Map placeholder needs a label.**~~ **MOVED INTO PHASE 6, 2026-08-04**
+  (Alan). Amended rather than built silently, per the drift lesson below.
+  Reasoning for the move: Phase 6's gate is still open on the late-August
+  re-capture, so §0.2 forbids starting Phase 7 proper; the item is small,
+  self-contained, and sits beside Phase 6's other "what does the user see when
+  something isn't there" work (error boundaries, offline). The original
+  analysis, which the implementation follows exactly, is kept below.
+  The map region is unlabelled until the
   map mounts, so a first-time student sees brand-coloured emptiness with no
   account of what it is. The obvious fix — a "Loading Map…" spinner — is
   **wrong here**, and the reason is worth keeping: the map deliberately does
