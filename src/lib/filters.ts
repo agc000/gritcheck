@@ -21,7 +21,13 @@ const FOOD_CHIPS: FilterChip[] = [
 ];
 
 const STUDY_CHIPS: FilterChip[] = [
-  { id: "silent", label: "Silent", match: (a) => a.silent === true },
+  // Accepts either field: `silent` predates the recon and is still set on the
+  // seeded AOK rows; `noise` came with the §3.2 amendment (2026-08-04).
+  {
+    id: "silent",
+    label: "Silent",
+    match: (a) => a.silent === true || a.noise === "silent",
+  },
   { id: "group_ok", label: "Group OK", match: (a) => a.group_ok === true },
   // "Outlets" chip means outlets worth going for, not merely present.
   { id: "outlets", label: "Outlets", match: (a) => a.outlets === "good" },

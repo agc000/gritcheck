@@ -19,15 +19,42 @@ const foodAttributes = z
   .partial()
   .strict();
 
+// §3.2 amended 2026-08-04 (Alan, study recon): the original enums were written
+// in Phase 0, before any zone had been walked. Alan's firsthand recon uses a
+// richer vocabulary, and translating his words into the old values would have
+// silently destroyed the distinctions he went and observed. The schema moves to
+// the data, not the other way round.
 const studyAttributes = z
   .object({
+    // `silent` predates `noise` and drives the Silent filter chip. Kept so the
+    // already-seeded AOK rows stay valid; `noise` carries the full reading.
     silent: z.boolean(),
+    noise: z.enum(["silent", "quiet", "mid", "loud", "varies"]),
     group_ok: z.boolean(),
     outlets: z.enum(["good", "limited", "bad"]),
     whiteboards: z.boolean(),
     open_24h: z.boolean(),
     near_food: z.boolean(),
-    seating: z.enum(["tables", "couches", "mixed"]),
+    // Gains desks/cubbies/booths/balcony from the recon vocabulary.
+    seating: z.enum([
+      "tables",
+      "couches",
+      "mixed",
+      "desks",
+      "cubbies",
+      "booths",
+      "balcony",
+    ]),
+    // How reliably a seat is free — a STATIC tendency, deliberately not the
+    // §3.4 time-of-day baseline. "Almost always empty, very quiet" is the
+    // single most useful thing the recon captured, and it had nowhere to live.
+    fill_tendency: z.enum([
+      "reliably_open",
+      "usually_open",
+      "varies",
+      "usually_taken",
+      "reliably_full",
+    ]),
   })
   .partial()
   .strict();
