@@ -665,6 +665,32 @@ Tasks: full §4.8 audit of every screen; copy pass (§4.7); micro-interactions; 
 - **Back-nav resets browse state** — tab/filter/sort are component state;
   restoring them needs URL params.
 
+*Measurements for the §4.8 audit task, taken 2026-08-04 at 390×844 against a
+production build (Phase 6 quality gate). Logged rather than fixed: this is
+Phase 2/3 UI and belongs to Phase 7's audit, not to Phase 6 — the same reason
+the Phase 3 map work should have been amended before it shipped mid-phase.*
+
+**Measure the HIT AREA, not the box.** `getBoundingClientRect()` includes an
+element's own padding but tells you nothing about a pseudo-element overlay or a
+handler on a parent, and two of the three controls that looked like failures
+turned out to be fine. The honest measure is walking `elementFromPoint` outward
+from the centre until it stops resolving to the element or its descendants:
+
+| control | visible box | **effective hit area** | verdict |
+|---|---|---|---|
+| Food / Study / Find Building tabs | 40px | **46px** | PASS — do not "fix" |
+| Sort control ("Shortest line") | 32px | **45px** | PASS — do not "fix" |
+| Filter chips (All, Coffee, Vegetarian, Vegan, Halal, Open late, Meal swipe) | 35px | **35px** | **FAIL — the only real one** |
+
+So the audit's actual finding is **one** item: the filter chips have no extended
+hit area and sit 9px under the §4.8 floor. The tabs and the sort control are
+already compliant and would have been a wasted change.
+
+Method note for whoever runs this: the chips live in a horizontal scroller, and
+probing one that is scrolled out of view returns a 1px hit area — an artifact of
+`elementFromPoint` hitting whatever is on top, not a finding. Scroll each into
+view before measuring, or four of the seven will look catastrophically broken.
+
 *Added to Phase 7 from Phase 6 (Alan, 2026-08-02 — raised mid-Phase-6, logged
 rather than built, per §0.2 and the drift lesson recorded above):*
 
@@ -1035,6 +1061,122 @@ ten hand-generated splash screens, because a dark app that launches through a
 white flash reads as broken.
 
 **Phase 6:** Why must the scraper be idempotent (what's an upsert)? Why is "fail loudly" a design goal — what's the horror story of a scraper failing silently? Where do secrets live and what never touches the client bundle?
+
+*Phase 6 ANSWERED (ritual amended 2026-07-15: Q+A recorded together, no
+grading loop):*
+
+**① Idempotency, and what an upsert actually is.** A scrape run is not a
+one-off migration; it is the same job firing twice a day, forever, against a
+source that mostly has not changed. Idempotent means running it N times leaves
+the database in the same state as running it once — so the correct mental model
+is *"make the database match the source"*, not *"apply what I found"*. The
+second framing is how you get duplicates: run one inserts Monday 09:00–17:00,
+run two inserts it again, and by Friday True Grit's has ten copies of every
+shift and the UI renders whichever it feels like.
+
+An **upsert** is the primitive for that: insert the row, or update it if a row
+with the same key already exists — one statement, no read-then-write race. But
+a plain per-row upsert is the *wrong* primitive here, and understanding why is
+the actual lesson. Upserting rows can only ever add or amend hours; it can
+never **remove** one. If UMBC cuts True Grit's late-night block, an upsert loop
+writes the four remaining shifts perfectly and silently leaves the fifth
+standing. The database ends up as the union of every schedule UMBC has ever
+published. So `replace_scraped_hours` does delete-then-insert **scoped to the
+spots the run covered**, inside one transaction — the whole run lands or none
+of it does. That is why it is a `SECURITY DEFINER` RPC and not two PostgREST
+calls: over HTTP those are two transactions, and a process killed between them
+leaves a spot with zero hours and the app quietly serving stale fallbacks with
+nothing reporting a problem. Proof it converges: the same payload three times
+running gave `deleted 0 / inserted 66`, then `66/66`, then `66/66`.
+
+The subtler half is **what "covered" means**. A venue closed all week produces
+zero rows, which is indistinguishable from a venue the run never looked at —
+and in the summer fixtures that is 12 of 22 dining venues, so it is the normal
+case, not an edge case. If you infer coverage from row counts, every closed
+venue quietly falls back to whatever placeholder hours were seeded last
+semester. Hence `spots.hours_scraped_at`: coverage is recorded explicitly, so
+`{"slug": "chick-fil-a", "hours": []}` means "I looked, it is shut" and is a
+different statement from that spot's absence from the payload. Idempotency is
+about repeat *writes*; this is about repeat *readings* meaning the same thing.
+
+**② "Fail loudly", and the horror story.** The canonical horror story is the
+scraper that runs green for a semester while the site it scrapes has quietly
+changed one field name, so every run writes nothing and every dashboard stays
+comfortingly green — until someone walks to a dining hall at 8 PM on the word
+of hours that were last true in August. The damage is not the outage; it is
+that **nobody knew there was one**. A scraper that crashes gets fixed in a day.
+A scraper that succeeds at nothing gets fixed when a user is embarrassed by it.
+
+The design consequence is that success has to be defined as *the thing changed
+correctly*, never *the process exited 0*. In this build that meant four layers,
+each catching what the one below cannot: the **parsers** reject anything
+structurally wrong (an unknown LibCal status, a day index disagreeing with its
+own date, an unparseable time); the **invariant layer** rejects input that is
+individually well-formed but collectively implausible (a feed under its size
+floor, a mapped spot missing from the payload, every venue in one feed
+reporting closed); the **RPC** rejects an empty run or an unknown slug at the
+data layer; and the **exit code** is the alert, because a non-zero exit is what
+GitHub turns into a notification.
+
+The part I did not expect: **all three near-misses this phase were in the
+verification, not the scraper.** A read path that would have unioned hours
+forever, an ACL that passed locally for an environmental reason, and a dry run
+that skipped the credential check and so blessed a misspelled secret. Each
+produced a passing result that was evidence of nothing. The habit that comes
+out of it — written up above as "the green result that proved nothing" — is that
+**a check you have never watched fail is not yet a check**, so you break the
+thing deliberately and confirm it goes red. Every corruption case in the test
+suite was verified that way, and the suite opens by asserting the *uncorrupted*
+fixtures pass, because otherwise the other seven prove nothing.
+
+The counterweight is proportionality (§5.5 applied to ingestion): loud is not
+the same as paranoid. Closed-all-week is genuinely normal in summer and over
+breaks, so failing on it would redden correct runs and train me to ignore the
+alert — which is how you get a silent failure with extra steps. That is why it
+warns rather than fails, why the whole-feed collapse check has a deliberate
+`--allow-empty-feed` override on a manual dispatch, and why run-over-run cliff
+detection was *not* built: it is the strongest check available and also the one
+most likely to cry wolf across a semester boundary, so it waits for real in-term
+data to set its threshold.
+
+**③ Where secrets live, and what never touches the client bundle.** Three
+tiers, and the distinction that matters is not "secret vs not" but **what each
+key can do if someone has it**.
+
+The **service role key** bypasses RLS entirely — it is effectively database
+root. It exists in exactly two places: a GitHub Actions repository secret, and
+Alan's local `.env.local`, which is gitignored. It is passed to the scraper as
+an **environment variable, never as a CLI argument**, because arguments are
+visible in the process list to anything else on the runner. It never appears in
+a committed file and it can never reach the browser: a `NEXT_PUBLIC_` prefix is
+what opts a variable into the client bundle, and this one deliberately does not
+have it.
+
+The **anon key** is different, and getting this right is the whole point of the
+architecture: it **is** public, it ships in the client bundle, and that is fine
+*because it is not the security boundary*. RLS is. The anon key only lets you
+attempt queries; the policies decide what comes back. Public read on spots and
+hours, no insert policy on `updates` at all — writes go exclusively through the
+Edge Function, which enforces the §5.5 rate limits with the service role. The
+mental model I would give in an interview: **the key authenticates a role, the
+policies authorize the row.** Leaking the anon key costs nothing; leaking the
+service key costs everything.
+
+The trap this phase actually sprang: **grants are not RLS, and Supabase's
+defaults are not what you would guess.** `revoke all on function … from public`
+left `anon` holding EXECUTE on a `SECURITY DEFINER` function in production,
+because Supabase ships a default ACL granting EXECUTE to `anon` and
+`authenticated` **by name**, and revoking from PUBLIC does not touch a named
+grant. For a few hours anyone holding the client-bundle key could have rewritten
+every venue's hours on campus. The standing rule now: every new function revokes
+EXECUTE from `anon` and `authenticated` by name, and the ACL is asserted in
+pgTAP with `function_privs_are()` rather than probed with a request — because a
+status code from one instance is not evidence about another.
+
+And the small operational tell worth keeping: in an Actions log, `***` means a
+secret resolved and **blank means it did not**. A one-character typo in a secret
+*name* (`SUPABASE_SREVICE_ROLE_KEY`) is invisible everywhere else, and it will
+sail through any rehearsal that does not actually read the credential.
 **Phase 7 / meta (rehearse these aloud — they're the interview):** "Walk me through what happens when a user opens the app" (full request lifecycle, cold vs warm cache). "How do you stop one person from poisoning the data?" (§5.5, tell it as a story). "How would this scale to 100 campuses?" (what breaks first: Realtime connections, then tile hosting, then moderation — and what's deliberately single-campus). "What would you build differently with 10 engineers?" (honest answer: almost nothing at this scale — that's the point).
 
 ---
