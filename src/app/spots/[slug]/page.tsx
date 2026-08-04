@@ -5,6 +5,7 @@ import { FlagButton } from "@/components/FlagButton";
 import { FollowUpPrompt } from "@/components/FollowUpPrompt";
 import { SpotViewTracker } from "@/components/SpotViewTracker";
 import { InlineUpdatePrompt } from "@/components/InlineUpdatePrompt";
+import { LegalFooter } from "@/components/LegalFooter";
 import { LiveRefresh } from "@/components/LiveRefresh";
 import { SpotStatusCard } from "@/components/SpotStatusCard";
 import { UpdateSheet } from "@/components/UpdateSheet";
@@ -189,15 +190,11 @@ export default async function SpotPage({
       </section>
 
       {/* §9 trademark posture: the unofficial disclaimer ships on the SSR
-          pages search engines index. Full legal footer + privacy note is
-          Phase 6. */}
-      <footer className="mt-8 border-t border-line pt-4">
-        <p className="text-[11px] leading-relaxed text-faint">
-          GritCheck is an unofficial student project and is not affiliated
-          with, endorsed by, or sponsored by UMBC. Hours and conditions are
-          community-reported and may be inaccurate.
-        </p>
-      </footer>
+          pages search engines index. Shared with the browse sheet so the two
+          can never drift apart. */}
+      <div className="mt-8">
+        <LegalFooter />
+      </div>
 
       {/* Viewing a detail makes this spot the session's follow-up candidate;
           the prompt itself can fire here or on the map page. */}

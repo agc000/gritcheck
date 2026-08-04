@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { FollowUpPrompt } from "@/components/FollowUpPrompt";
+import { LegalFooter } from "@/components/LegalFooter";
 import { MapCanvas } from "@/components/MapCanvas";
 import { LiveRefresh } from "@/components/LiveRefresh";
 import { Sheet } from "@/components/Sheet";
@@ -140,6 +141,13 @@ export default async function Home() {
             campusBuildings={campusBuildings}
           />
         )}
+        {/* Below the list, inside the sheet's scroll: reachable without being
+            in the way of the answer. Server-rendered — SpotBrowser is a client
+            component, so keeping the footer a sibling keeps it out of that
+            bundle entirely. */}
+        <div className="px-5 pb-2">
+          <LegalFooter />
+        </div>
       </Sheet>
       {/* Modal update flow; portals to <body>, opened by the FAB's event. */}
       {!error && <UpdateSheet items={items} />}
