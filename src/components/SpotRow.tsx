@@ -67,11 +67,12 @@ export function SpotRow({
         <div className="mt-[2.5px] text-xs leading-[1.4] text-muted">
           {subLine(item)}
         </div>
-        {best && item.consensus && (
-          <div className="mt-1 text-xs italic text-muted">
-            &ldquo;{item.consensus}&rdquo;
-          </div>
-        )}
+        {/* The §3.3 consensus sentence used to render here on the Best Bet row
+            (Alan, 2026-08-04: removed). The row already answers the question —
+            name, building, live verdict, freshness — and an editorial quote on
+            top of it competes with the status word for the same glance. The
+            sentence still exists in the data and on the spot detail page, where
+            there is room for editorial and the reader has already committed. */}
       </div>
       <div className="shrink-0 text-right">
         <StatusBadge word={verdict.word} tone={verdict.tone} />

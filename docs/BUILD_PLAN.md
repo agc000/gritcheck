@@ -168,6 +168,13 @@ create table events (
 Food: `{ "coffee": bool, "vegetarian": bool, "vegan": bool, "halal": bool, "open_late": bool, "meal_swipe": bool, "mobile_order": bool }`
 Study: `{ "silent": bool, "group_ok": bool, "outlets": "good"|"limited"|"bad", "whiteboards": bool, "open_24h": bool, "near_food": bool, "seating": "tables"|"couches"|"mixed" }`
 
+*Amended 2026-08-04 (Alan): the consensus sentence no longer renders on the
+Best Bet row in the browse sheet. It competed with the status word for the same
+glance — the row's job is one answer, and a quote sitting under it is a second
+thing to read before acting. The field is unchanged and still shows on the spot
+detail page, where the reader has already committed and there is room for
+editorial. Deleting the display, not the data.*
+
 ### 3.3 Consensus line
 One sentence per spot, Alan's editorial voice, quoted style in UI: *"Sweetest coffee on campus. Fastest line before 10am."* Stored as plain text so its **source can evolve** (manual → data-derived → LLM-summarized, §10) with zero UI change. Rules: ≤90 chars, present tense, specific, never cute.
 
