@@ -84,6 +84,74 @@ closed-all-week. Re-capture fixtures in late August for realistic fall data befo
 - [ ] **Piccolo vs Piccola Italia:** feed slug mapping stays `piccola-italia`; Alan will confirm
   the sign in person — the display name may flip.
 
+## 1b. Feed reconciliation — week of Aug 2 2026 (added 2026-08-04)
+
+*Source: live `apiv4.dineoncampus.com/locations/weekly_schedule` capture, 25
+locations (20 venues + 5 building rows). The join key is **dineoncampus
+`location.slug` ↔ `hours_source.source_slug`** — not the display name, and not
+our spot slug. Every currently mapped row still resolves; nothing is orphaned.*
+
+**PHYSICAL VERIFICATION NEEDED — the feed cannot settle these.** Three venues
+carry a signature no other venue has: **no building parent** (`building_id: ""`)
+and **zero payment methods configured**. All three are the "Additional
+Locations" group.
+
+| feed slug | feed name | building parent | pay methods | reading |
+|---|---|---|---|---|
+| `piccola-italia` | "Piccola Italia" | Commons | 4 | established, mapped |
+| `picola-italia` | "Picola Italia" | **none** | 0 | orphan — misspelling? |
+| `blends-and-bowls` | "Blends and Bowls" | Commons | 0 | mapped |
+| `blends-bowls` | "Blends & Bowls" | **none** | 0 | orphan — ampersand variant? |
+| `jerk-lime` | "Jerk + Lime" | **none** | 0 | orphan, but genuinely new |
+
+- [ ] **`picola-italia` — one spot or two?** The name is a misspelling of the
+  mapped `piccola-italia` and it has no building parent, which points hard at a
+  CMS duplicate. But `jerk-lime` shares that exact signature and is a real new
+  venue, so **orphan status does not prove duplicate**. Stand in the Commons and
+  count the counters. If duplicate: leave the mapping alone. If real: it needs
+  its own spot row.
+- [ ] **`blends-bowls` — same question.** "Blends & Bowls" vs the mapped
+  "Blends and Bowls". Same orphan signature.
+- [ ] **`jerk-lime` "Jerk + Lime" — CONFIRMED ABSENT from SPOT_DATA-3.md
+  entirely.** Not a naming mismatch; there is no row. Needs coords, tags, and a
+  consensus line before it can be seeded.
+- [ ] **`true-grit-s-retriever-market`** — in the feed with a True Grit's
+  building parent and full payment config (so it is a real, established venue),
+  but still unseeded. SPOT_DATA row 42 exists with `___` coords and `___` tags.
+  Decide: seed it or drop the row.
+
+**Name mismatches (all cosmetic — the join is on slug, so none of these break
+anything):**
+
+| our name | feed name |
+|---|---|
+| Piccolo Italia | Piccola Italia |
+| Yellas | Yella's |
+| Copperhead Jack's | Copperhead Jacks |
+| Einstein Bros | Einstein Brother's Bagels |
+| Skylight Room | The Skylight Room |
+| Admin Coffee Shop | The Coffee Shoppe |
+| Dunkin' | Dunkin |
+| Commons Retriever Market (was Yum Shoppe) | Commons Retriever Market |
+
+- [ ] Decide whether display names should follow the feed or stay as Alan writes
+  them. Currently ours win, which is correct — the feed is an hours source, not a
+  branding authority.
+
+**Roster reconciliation (SPOT_DATA Part 2 has 17 food rows; seed has 15):**
+
+- `True Grit's Retriever Market` — in the doc, **never seeded** (row is all `___`)
+- `Skylight Room` — was seeded, **removed 2026-08-04** on Alan's instruction
+  ("remove that from UMBC dining"). Still present and `active` in production
+  until `update spots set active = false where slug = 'skylight-room'` is run.
+
+17 − 2 = 15. Reconciles exactly; nothing is unaccounted for.
+
+**Not a gap, but worth recording:** True Grit's summer schedule in this capture
+is 7:30–9:00, 11:00–13:00, 17:00–18:30, identical all seven days. That is a
+scraper-shape reference only — **do not seed it as semester hours** (§Phase 6
+fixtures are summer session for exactly this reason).
+
 ## 2. Food spot gaps in SPOT_DATA-3.md
 
 - [ ] **Tags** missing for: Chick-fil-A, Yellas, Piccolo Italia, Pollo(?), Indian Kitchen,
