@@ -80,9 +80,29 @@ function MapLegend() {
 // server-rendered. Loading it this way is also our graceful degradation (§Phase
 // 3): the dark map-bg fallback, the brand chrome below, and the whole sheet/list
 // stay functional if the GL view or its tiles never arrive.
+// The map band is the top ~48% of the viewport (Sheet's static twin starts at
+// top-[48%]), so ~24% centres the label in visible map, clear of the brand
+// lockup above it.
+//
+// pointer-events-none is LOAD-BEARING, not polish: the map mounts off the
+// user's first gesture, so a placeholder that swallowed a pointerdown would
+// prevent the very thing it is announcing.
+function MapNotice({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="pointer-events-none absolute inset-x-0 top-[24%] flex justify-center px-6">
+      <p className="text-center text-[13px] font-semibold text-muted">{children}</p>
+    </div>
+  );
+}
+
 const MapView = dynamic(() => import("./MapView"), {
   ssr: false,
-  loading: () => <div className="absolute inset-0 bg-map-bg" />,
+  // State two: the chunk is genuinely fetching, so "loading" is now true.
+  loading: () => (
+    <div className="absolute inset-0 bg-map-bg">
+      <MapNotice>Loading the map…</MapNotice>
+    </div>
+  ),
 });
 
 // Phase 5 TBT adoption (gate decision 2026-07-23): idle-gating wasn't enough —
@@ -161,6 +181,14 @@ export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
       {mapReady && <MapView buildings={buildings} />}
       {/* Legend rides with the map — no map, nothing to explain. */}
       {mapReady && <MapLegend />}
+
+      {/* State one: nothing has been asked for yet. A spinner would be a LIE
+          here — the map deliberately waits for the first gesture, so a passive
+          viewer would watch it spin for the full 10s fallback and conclude the
+          app was broken. This says what is true and what to do about it.
+          Server-rendered (mapReady starts false), absolutely positioned, so it
+          costs no hydration work and cannot shift layout — CLS stays 0. */}
+      {!mapReady && <MapNotice>Tap to load the map</MapNotice>}
 
       {/* Top bar: Grits mark + wordmark (mockup .map-top). Visual only (§4.7).
           Padding clears the iOS notch/status bar in standalone PWA mode. */}
