@@ -27,6 +27,47 @@ All timestamps are UTC in the database; queries that group by day convert to
 
 ---
 
+## 0. LAUNCH DAY — the one query
+
+Paste this into Supabase → SQL Editor and hit Run. One row, everything that
+matters on the day. Save it so it's one click from then on.
+
+```sql
+with d as (
+  select (date_trunc('day', now() at time zone 'America/New_York')
+          at time zone 'America/New_York') as t0
+)
+select
+  count(distinct device_id) filter (
+    where name = 'open_app' and created_at >= (select t0 from d))      as people_today,
+  count(*) filter (
+    where name = 'open_app' and created_at >= (select t0 from d))      as opens_today,
+  count(*) filter (
+    where name = 'view_spot' and created_at >= (select t0 from d))     as spot_views_today,
+  count(*) filter (
+    where name = 'submit_update' and created_at >= (select t0 from d)) as updates_today,
+  count(distinct device_id) filter (where name = 'open_app')           as people_all_time_raw
+from events;
+```
+
+**Reading it on the day:**
+- `people_today` — humans who opened it today. **This is the launch number.**
+- `opens_today ÷ people_today` — greater than ~1.5 means people came back within
+  the day, which is the earliest signal the product is useful rather than novel.
+- `spot_views_today` near zero while `people_today` climbs = they looked and
+  left. That's a copy or first-screen problem, not a traffic problem.
+- `updates_today` — the number this product lives on (§7.4). Zero on day one is
+  normal; zero on day three is the thing to fix.
+- `people_all_time_raw` is inflated by iOS installs — use §1b before quoting it
+  anywhere.
+
+For raw traffic (page views, referrers, which post sent them), use the **Vercel
+dashboard → Analytics**. Nothing to write; it's already collecting.
+
+*⚠ Written 2026-08-04 but NOT executed — the local stack was down and `events`
+is deliberately not readable by the anon key. Run it once before launch day so
+a typo surfaces then and not while you are refreshing it in front of people.*
+
 ## 1. Did people show up? (DAU / WAU)
 
 ```sql
