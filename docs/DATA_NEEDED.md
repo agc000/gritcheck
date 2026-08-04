@@ -313,6 +313,79 @@ the 13 new buildings appear in the dining or library feeds, so every one of the
 - [ ] **Commons 3rd floor** has no study data from either source, yet
       `commons-top-floor` is already seeded with no hours at all.
 
+## 3c. SEEDED 2026-08-04 — what was assumed, and what to check on the walk
+
+30 study zones seeded from `STUDY_SPOTS_RECON.md` (roster 15 food + 36 study).
+§3.2 was amended to accept Alan's vocabulary rather than translate it. Every
+item below is an assumption or a gap — **nothing here was observed.**
+
+### Assumptions baked into 217 hour rows
+
+- [ ] **Opening time was never specified — 08:00 assumed for every zone.** Alan
+      gave closing times only. This is the single largest assumption in the
+      seed. If buildings open at 7:00 or 7:30, every row is wrong by an hour.
+- [ ] **Ranges resolved to the conservative (earlier) end** per instruction:
+      "8–9 PM" → **20:00**. Applies to all academic buildings, AOK, RAC.
+- [ ] **Commons Saturday unspecified** — Alan gave Mon–Thu 23:00, Fri 00:00,
+      Sun 21:00. Saturday fell through to the 18:00 weekend default.
+- [ ] **Weekend access for academic buildings is asserted, not verified.** Alan:
+      "all buildings ~6 PM on weekends", so all 7 days were seeded. The web file
+      says UMBC Police do **not** promise general weekend opening for academic
+      buildings. Direct conflict; Alan's firsthand call was followed.
+- [ ] **University Center hours** were not specified and fell to the academic
+      default (20:00). UC is a student center, not an academic building — likely
+      wrong.
+- [ ] **Alan's "AOK Library: 8–9 PM" rule was NOT applied.** The AOK floors are
+      LibCal-sourced and now carry *scraped* hours, which outrank
+      manual-provisional (§20260730000100). His rule is moot there unless the
+      scrape is wrong.
+
+### Values that could not be seeded because no source has them
+
+- [ ] **Outlets for the AOK floors and ILSB.** Alan asked for these to be
+      seeded, but ILSB's outlets are `UNKNOWN` in his own recon and AOK is
+      absent from the file entirely. **Only Public Policy 2F was seeded**
+      (`good`) — the one zone with a real observation. The other two need the
+      walk.
+- [ ] **Noise for 8 zones** — the recon records compound values (`quiet–mid`,
+      `mid–loud`) that are not in its own controlled vocabulary
+      (`silent|quiet|mid|loud|varies`). Left **unset** rather than guessed:
+      ENG-1, ENG-23, PAB-ALL, MEY-24 (quiet–mid); UC-2, UC-3, FA-ALL, MP-1
+      (mid–loud). Pick a single value or use `varies`.
+
+### Judgment calls made on seating — correct any that are wrong
+
+`seating` is a single enum, but several zones list two or more types. The
+distinctive one was kept:
+
+| zone | recon text | seeded |
+|---|---|---|
+| PP-2 | "desks (2 large), chairs" | `desks` |
+| PHY-34 | "tables, balcony" | `balcony` |
+| ILSB-2 | "tables, study rooms" | `tables` |
+| MP-1 | "desks w/ cubbies" | `cubbies` |
+| MP-24 | "cubbies, round tables" | `cubbies` |
+| BIO-UP | "tables (large), small spots" | `tables` |
+| CHM-1 | "booths, tables" | `booths` |
+| SH-3 | "tables, whiteboards" | `tables` + `whiteboards: true` |
+
+- [ ] **`half-rooms` is not in the recon's own seating vocabulary** yet appears
+      in MEY-24, SON-UP and CHM-UP. Seeded as `mixed`. Add the value to §3.2 or
+      confirm `mixed` is right.
+
+### Other
+
+- [ ] **The recon header says 28 zones; the table contains 30.** All 30 seeded.
+- [ ] **`fill_tendency` is stored but has no UI.** Nothing displays or filters
+      on it. A "Usually free" chip is the obvious surface and would make
+      `MP-BASE` findable — not built (UI scope).
+- [ ] **The roster is now 36 study to 15 food.** The app has become
+      study-dominant. Worth a look at whether the Study tab is usable at that
+      length before launch.
+- [ ] **Consensus lines: 0 of 36 study spots have one.**
+- [ ] **Baselines: 0 of the 30 new zones have one** — every one shows
+      `No recent data` until the Morning/Midday/Evening/Night pass.
+
 ## 4. Walk-time anchors (optional until Phase 2)
 
 - [ ] 2–3 anchor points with lat/lng ("center of Academic Row", etc.).

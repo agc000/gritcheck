@@ -483,6 +483,528 @@
       "hours_source": {
         "kind": "manual"
       }
+    },
+    {
+      "slug": "public-policy-2nd-floor",
+      "name": "Public Policy — 2nd Floor",
+      "category": "study",
+      "building": "Public Policy",
+      "lat": 39.255199,
+      "lng": -76.709128,
+      "attributes": {
+        "outlets": "good",
+        "noise": "quiet",
+        "seating": "desks",
+        "fill_tendency": "usually_taken"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "physics-2nd-floor",
+      "name": "Physics — 2nd Floor",
+      "category": "study",
+      "building": "Physics",
+      "lat": 39.254489,
+      "lng": -76.709574,
+      "attributes": {
+        "seating": "tables"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "physics-3rd-4th-floor",
+      "name": "Physics — 3rd/4th Floor",
+      "category": "study",
+      "building": "Physics",
+      "lat": 39.254489,
+      "lng": -76.709574,
+      "attributes": {
+        "noise": "mid",
+        "seating": "balcony",
+        "fill_tendency": "usually_taken"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "ilsb-1st-floor",
+      "name": "ILSB — 1st Floor",
+      "category": "study",
+      "building": "ILSB",
+      "lat": 39.25395,
+      "lng": -76.710844,
+      "attributes": {
+        "noise": "loud",
+        "seating": "tables",
+        "fill_tendency": "varies"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "ilsb-2nd-floor",
+      "name": "ILSB — 2nd Floor",
+      "category": "study",
+      "building": "ILSB",
+      "lat": 39.25395,
+      "lng": -76.710844,
+      "attributes": {
+        "seating": "tables",
+        "fill_tendency": "reliably_full"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "commons-1st-floor",
+      "name": "Commons — 1st Floor",
+      "category": "study",
+      "building": "Commons",
+      "lat": 39.2551,
+      "lng": -76.7112,
+      "attributes": {
+        "near_food": true,
+        "noise": "loud",
+        "seating": "tables",
+        "fill_tendency": "varies"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "commons-ground-floor",
+      "name": "Commons — Ground Floor",
+      "category": "study",
+      "building": "Commons",
+      "lat": 39.2551,
+      "lng": -76.7112,
+      "attributes": {
+        "near_food": true,
+        "noise": "loud",
+        "seating": "tables",
+        "fill_tendency": "varies"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "commons-2nd-floor-game-room",
+      "name": "Commons — 2nd Floor (Game Room side)",
+      "category": "study",
+      "building": "Commons",
+      "lat": 39.2551,
+      "lng": -76.7112,
+      "attributes": {
+        "near_food": true,
+        "noise": "quiet",
+        "fill_tendency": "usually_open"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "commons-2nd-floor-sushi",
+      "name": "Commons — 2nd Floor (Sushi Do side)",
+      "category": "study",
+      "building": "Commons",
+      "lat": 39.2551,
+      "lng": -76.7112,
+      "attributes": {
+        "near_food": true,
+        "noise": "loud",
+        "fill_tendency": "usually_taken"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "rac-entrance",
+      "name": "RAC — Entrance",
+      "category": "study",
+      "building": "RAC",
+      "lat": 39.252858,
+      "lng": -76.712553,
+      "attributes": {
+        "noise": "mid",
+        "seating": "tables",
+        "fill_tendency": "usually_taken"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "rac-2nd-floor",
+      "name": "RAC — 2nd Floor (far end)",
+      "category": "study",
+      "building": "RAC",
+      "lat": 39.252858,
+      "lng": -76.712553,
+      "attributes": {
+        "seating": "tables"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "administration-study",
+      "name": "Administration — Building-wide",
+      "category": "study",
+      "building": "Administration",
+      "lat": 39.252959,
+      "lng": -76.713397,
+      "attributes": {
+        "near_food": true,
+        "noise": "quiet",
+        "seating": "desks",
+        "fill_tendency": "reliably_open"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "ite-1st-floor",
+      "name": "ITE — 1st Floor",
+      "category": "study",
+      "building": "ITE",
+      "lat": 39.253837,
+      "lng": -76.714276,
+      "attributes": {
+        "noise": "quiet",
+        "fill_tendency": "varies"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "ite-2nd-4th-floor",
+      "name": "ITE — 2nd–4th Floor",
+      "category": "study",
+      "building": "ITE",
+      "lat": 39.253837,
+      "lng": -76.714276,
+      "attributes": {
+        "noise": "quiet",
+        "fill_tendency": "varies"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "engineering-entrance-floor",
+      "name": "Engineering — Entrance Floor",
+      "category": "study",
+      "building": "Engineering",
+      "lat": 39.254517,
+      "lng": -76.713956,
+      "attributes": {
+        "seating": "booths",
+        "fill_tendency": "usually_open"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "engineering-2nd-3rd-floor",
+      "name": "Engineering — 2nd/3rd Floor",
+      "category": "study",
+      "building": "Engineering",
+      "lat": 39.254517,
+      "lng": -76.713956,
+      "attributes": {
+        "seating": "tables",
+        "fill_tendency": "usually_open"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "uc-2nd-floor",
+      "name": "University Center — 2nd Floor",
+      "category": "study",
+      "building": "University Center",
+      "lat": 39.254109,
+      "lng": -76.713173,
+      "attributes": {
+        "near_food": true,
+        "seating": "tables",
+        "fill_tendency": "varies"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "uc-3rd-floor",
+      "name": "University Center — 3rd Floor",
+      "category": "study",
+      "building": "University Center",
+      "lat": 39.254109,
+      "lng": -76.713173,
+      "attributes": {
+        "near_food": true,
+        "seating": "tables",
+        "fill_tendency": "varies"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "uc-food-seating",
+      "name": "University Center — Food Court Seating",
+      "category": "study",
+      "building": "University Center",
+      "lat": 39.254109,
+      "lng": -76.713173,
+      "attributes": {
+        "near_food": true,
+        "noise": "loud",
+        "seating": "tables"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "performing-arts-study",
+      "name": "Performing Arts — Building-wide",
+      "category": "study",
+      "building": "Performing Arts",
+      "lat": 39.255312,
+      "lng": -76.715369,
+      "attributes": {},
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "fine-arts-study",
+      "name": "Fine Arts — Building-wide",
+      "category": "study",
+      "building": "Fine Arts",
+      "lat": 39.255178,
+      "lng": -76.713642,
+      "attributes": {},
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "meyerhoff-2nd-4th-floor",
+      "name": "Meyerhoff — 2nd–4th Floor",
+      "category": "study",
+      "building": "Meyerhoff",
+      "lat": 39.254922,
+      "lng": -76.712803,
+      "attributes": {
+        "seating": "mixed",
+        "fill_tendency": "usually_taken"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "sherman-hall-3rd-floor",
+      "name": "Sherman Hall — 3rd Floor",
+      "category": "study",
+      "building": "Sherman Hall",
+      "lat": 39.253641,
+      "lng": -76.713422,
+      "attributes": {
+        "whiteboards": true,
+        "seating": "tables",
+        "fill_tendency": "reliably_full"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "sondheim-upper-levels",
+      "name": "Sondheim Hall — Upper Levels",
+      "category": "study",
+      "building": "Sondheim Hall",
+      "lat": 39.253472,
+      "lng": -76.71279,
+      "attributes": {
+        "noise": "quiet",
+        "seating": "mixed",
+        "fill_tendency": "usually_open"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "math-psych-1st-floor",
+      "name": "Math & Psychology — 1st Floor",
+      "category": "study",
+      "building": "Math & Psychology",
+      "lat": 39.254102,
+      "lng": -76.71247,
+      "attributes": {
+        "seating": "cubbies",
+        "fill_tendency": "reliably_open"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "math-psych-base-floor",
+      "name": "Math & Psychology — Base Floor",
+      "category": "study",
+      "building": "Math & Psychology",
+      "lat": 39.254102,
+      "lng": -76.71247,
+      "attributes": {
+        "noise": "quiet",
+        "seating": "tables",
+        "fill_tendency": "reliably_open"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "math-psych-2nd-4th-floor",
+      "name": "Math & Psychology — 2nd–4th Floor",
+      "category": "study",
+      "building": "Math & Psychology",
+      "lat": 39.254102,
+      "lng": -76.71247,
+      "attributes": {
+        "seating": "cubbies",
+        "fill_tendency": "usually_taken"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "bio-sciences-upper-levels",
+      "name": "Biological Sciences — Upper Levels",
+      "category": "study",
+      "building": "Biological Sciences",
+      "lat": 39.254942,
+      "lng": -76.712089,
+      "attributes": {
+        "noise": "quiet",
+        "seating": "tables",
+        "fill_tendency": "usually_open"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "chemistry-entrance-floor",
+      "name": "Chemistry — Entrance Floor",
+      "category": "study",
+      "building": "Chemistry",
+      "lat": 39.254868,
+      "lng": -76.71259,
+      "attributes": {
+        "seating": "booths",
+        "fill_tendency": "varies"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "chemistry-upper-levels",
+      "name": "Chemistry — Upper Levels",
+      "category": "study",
+      "building": "Chemistry",
+      "lat": 39.254868,
+      "lng": -76.71259,
+      "attributes": {
+        "seating": "mixed",
+        "fill_tendency": "usually_taken"
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
     }
   ]
 }
