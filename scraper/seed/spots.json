@@ -79,7 +79,12 @@
         "mobile_order": true
       },
       "consensus": "Same Starbucks as anywhere. Mobile order skips the line.",
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "morning": "packed",
+          "midday": "normal"
+        }
+      },
       "hours_source": {
         "kind": "dining",
         "source_slug": "starbucks"
@@ -220,7 +225,13 @@
       "lng": -76.711377,
       "attributes": {},
       "consensus": "Mid Indian — fine, not the best.",
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "midday": "quiet",
+          "afternoon": "normal",
+          "evening": "quiet"
+        }
+      },
       "hours_source": {
         "kind": "dining",
         "source_slug": "indian-kitchen"
@@ -283,21 +294,6 @@
       "hours_source": {
         "kind": "dining",
         "source_slug": "commons-retriever-market"
-      }
-    },
-    {
-      "slug": "skylight-room",
-      "name": "Skylight Room",
-      "category": "food",
-      "building": "Commons 3rd floor",
-      "lat": 39.255087,
-      "lng": -76.711144,
-      "attributes": {},
-      "consensus": "Sit-down spot upstairs. Check what your plan covers first.",
-      "baseline": {},
-      "hours_source": {
-        "kind": "dining",
-        "source_slug": "the-skylight-room"
       }
     },
     {
