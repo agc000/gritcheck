@@ -261,9 +261,24 @@ Gold is a **signal**, not decoration: Update button, active filter state, Best b
 Food: `Short line / Normal line / Long line / Packed / Closed`. Study: `Quiet / Seats open / Filling up / Packed / No recent data / Closed`. Verdict word + color; details live in the detail view.
 
 *Amended 2026-08-04 (Alan, baseline-as-primary): with no live data a row now
-reads **`Usually quiet` / `Usually normal` / `Usually packed` / `Usually
-empty`** — the §3.4 baseline vocabulary with a qualifier — instead of
-`No recent data` with `typical: quiet` demoted to grey sub-text.*
+reads **`Empty` / `In between` / `Full`** with **`typically`** in small text
+beneath, instead of `No recent data` with `typical: quiet` demoted to grey
+sub-text.*
+
+*Three states, and they are **the map legend's words verbatim** — a student
+should not have to learn two vocabularies for one product, and the colour scale
+now reads identically whether you are looking at a dot or a row. §3.4's data
+keeps its four values (`empty`/`quiet`/`normal`/`packed`) because the seeded
+baselines already use them and the extra shade is worth storing; `quiet` simply
+shares a display bucket with `empty`. Storing more than you show is cheap;
+showing a distinction the reader did not ask for is not.*
+
+*The qualifier sits in the sub-line rather than inside the word (an earlier
+pass this same day tried `Usually packed` and it was wrong): the word should be
+the answer at a glance, and the caveat should be reachable without competing
+with it. "typically" renders in the UI face, not Spline Sans Mono — §4.1
+reserves mono for timestamps and data, and a qualifier is neither. `Verdict`
+gained a `freshMono` flag to carry that distinction.*
 
 *Why: the old rendering **inverted §5.3**, which already said "Low → UI shows
 baseline as primary with 'typical' framing". Leading with the absence meant
@@ -274,8 +289,7 @@ cold-start risk arriving through the copy rather than the data. The word
 dressed up as live — and the row answers the question instead of apologising
 for not having been asked yet.*
 
-*No new vocabulary was invented: the four words come straight from §3.4, and
-the tones follow the same go/hold/skip banding as the live scales (empty and
+*Tones follow the same go/hold/skip banding as the live scales (empty and
 quiet → go, normal → hold, packed → skip). `No recent data` survives for the
 case it was always right for — a spot with no live reading AND no baseline
 covering that day-part, where saying so remains the honest answer. The map's

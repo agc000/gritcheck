@@ -59,9 +59,9 @@ export function SpotStatusCard({
         <StatusBadge word={verdict.word} tone={verdict.tone} />
         {verdict.fresh && (
           <span
-            className={`font-mono text-xs ${
-              verdict.freshTone === "hold" ? "text-hold" : "text-muted"
-            }`}
+            className={`text-xs ${
+              verdict.freshMono === false ? "" : "font-mono"
+            } ${verdict.freshTone === "hold" ? "text-hold" : "text-muted"}`}
           >
             {verdict.fresh.startsWith("opens") || verdict.fresh.startsWith("typical")
               ? verdict.fresh

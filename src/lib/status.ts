@@ -12,10 +12,16 @@ export type Tone = "go" | "hold" | "skip" | "closed";
 export type Verdict = {
   word: string;
   tone: Tone;
-  /** Mono sub-line under the status word: freshness or "typical: X". */
+  /** Sub-line under the status word: a freshness stamp, or "typically". */
   fresh: string | null;
   /** §4.4: 1–3 h old freshness renders in --hold, everything else faint. */
   freshTone: "faint" | "hold";
+  /**
+   * §4.1 reserves Spline Sans Mono for timestamps and data. "8 min ago" is
+   * data; "typically" is a qualifier, so it sets this false and renders in the
+   * UI face instead.
+   */
+  freshMono?: boolean;
 };
 
 // Traffic-light semantics match the token names: short line = go, normal =
@@ -33,16 +39,24 @@ const STUDY_VERDICTS: Record<string, [string, Tone]> = {
   packed: ["Packed", "skip"],
 };
 
-// Baseline verdicts (§4.3 amendment 2026-08-04). Reuses §3.4's own vocabulary
-// rather than inventing words, so the only new thing on screen is the qualifier
-// — "Usually" is what keeps this honest, and it does the work the old
-// "No recent data" headline was doing. Tones follow the same go/hold/skip
-// banding as the live scales.
+// Baseline verdicts (§4.3 amendment 2026-08-04). THREE states, and they are the
+// map legend's words verbatim — Empty / In between / Full — so the colour scale
+// reads identically whether you are looking at a dot or a row. A student should
+// not have to learn two vocabularies for one product.
+//
+// §3.4's data vocabulary keeps its four values because the seeded baselines
+// already use them and the extra shade is worth storing; `quiet` simply lands
+// in the same bucket as `empty` for display. Storing more than you show is
+// cheap; showing a distinction the reader did not ask for is not.
+//
+// The "typically" qualifier lives in the sub-line, not in the word (Alan,
+// 2026-08-04): the word should be the answer at a glance, and the caveat
+// should be available without competing with it.
 const BASELINE_VERDICTS: Record<string, [string, Tone]> = {
-  empty: ["Usually empty", "go"],
-  quiet: ["Usually quiet", "go"],
-  normal: ["Usually normal", "hold"],
-  packed: ["Usually packed", "skip"],
+  empty: ["Empty", "go"],
+  quiet: ["Empty", "go"],
+  normal: ["In between", "hold"],
+  packed: ["Full", "skip"],
 };
 
 // Day-part boundaries for baseline lookup (§3.4). Constants, not magic
@@ -134,7 +148,13 @@ export function getVerdict(item: SpotListItem, now: Date): Verdict {
   const typical = baselineWord(item.baseline, now);
   const mapped = typical ? BASELINE_VERDICTS[typical] : undefined;
   if (mapped) {
-    return { word: mapped[0], tone: mapped[1], fresh: null, freshTone: "faint" };
+    return {
+      word: mapped[0],
+      tone: mapped[1],
+      fresh: "typically",
+      freshTone: "faint",
+      freshMono: false,
+    };
   }
 
   // Genuinely nothing known for this spot at this hour — no live data and no

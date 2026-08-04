@@ -78,9 +78,9 @@ export function SpotRow({
         <StatusBadge word={verdict.word} tone={verdict.tone} />
         {verdict.fresh && (
           <div
-            className={`mt-0.75 font-mono text-[10px] ${
-              verdict.freshTone === "hold" ? "text-hold" : "text-muted"
-            }`}
+            className={`mt-0.75 text-[10px] ${
+              verdict.freshMono === false ? "" : "font-mono"
+            } ${verdict.freshTone === "hold" ? "text-hold" : "text-muted"}`}
           >
             {verdict.fresh}
           </div>
