@@ -34,6 +34,17 @@ const STUDY_CHIPS: FilterChip[] = [
   { id: "whiteboards", label: "Whiteboards", match: (a) => a.whiteboards === true },
   { id: "open_24h", label: "Open 24h", match: (a) => a.open_24h === true },
   { id: "near_food", label: "Near food", match: (a) => a.near_food === true },
+  // §3.2 amendment 2026-08-04. fill_tendency is a STATIC tendency, not a live
+  // reading — which is exactly why it earns a chip: it is the one field that
+  // answers "where can I actually sit right now" with zero updates in the
+  // system. Without it, the best entry in the recon (Math & Psych base floor,
+  // "almost always empty, very quiet") is unreachable in the UI.
+  {
+    id: "usually_free",
+    label: "Usually free",
+    match: (a) =>
+      a.fill_tendency === "reliably_open" || a.fill_tendency === "usually_open",
+  },
 ];
 
 export const CHIPS_BY_CATEGORY: Record<Category, FilterChip[]> = {
