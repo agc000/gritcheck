@@ -1,7 +1,7 @@
 {
   "_meta": {
     "source": "docs/HOURS_BASELINES-1.md + LibCal api_hours_grid (2026-07-13)",
-    "note": "Provisional manual seed; Phase 6 scraper replaces rows tagged manual-provisional. Study-zone hours added 2026-08-04 from Alan's firsthand knowledge — ranges resolved to the conservative end; 08:00 opening is an ASSUMPTION pending the campus walk."
+    "note": "Provisional manual seed; Phase 6 scraper replaces rows tagged manual-provisional. Study-zone hours added 2026-08-04 from Alan's firsthand knowledge. Closing ranges resolved to the conservative (earlier) end; 07:00 opening is Alan's deliberate EARLY bias, flagged for the walk."
   },
   "hours": [
     {
@@ -787,1303 +787,1303 @@
     {
       "slug": "commons-top-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "21:00"
     },
     {
       "slug": "commons-top-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-top-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-top-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-top-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-top-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "00:00"
     },
     {
       "slug": "commons-top-floor",
       "day_of_week": 6,
-      "opens": "08:00",
-      "closes": "18:00"
+      "opens": "07:00",
+      "closes": "21:00"
     },
     {
       "slug": "public-policy-2nd-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "public-policy-2nd-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "public-policy-2nd-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "public-policy-2nd-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "public-policy-2nd-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "public-policy-2nd-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "public-policy-2nd-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "physics-2nd-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "physics-2nd-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-2nd-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-2nd-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-2nd-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-2nd-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-2nd-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "physics-3rd-4th-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "physics-3rd-4th-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-3rd-4th-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-3rd-4th-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-3rd-4th-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-3rd-4th-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "physics-3rd-4th-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "ilsb-1st-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "ilsb-1st-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-1st-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-1st-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-1st-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-1st-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-1st-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "ilsb-2nd-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "ilsb-2nd-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-2nd-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-2nd-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-2nd-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-2nd-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "ilsb-2nd-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "commons-1st-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "21:00"
     },
     {
       "slug": "commons-1st-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-1st-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-1st-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-1st-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-1st-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "00:00"
     },
     {
       "slug": "commons-1st-floor",
       "day_of_week": 6,
-      "opens": "08:00",
-      "closes": "18:00"
+      "opens": "07:00",
+      "closes": "21:00"
     },
     {
       "slug": "commons-ground-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "21:00"
     },
     {
       "slug": "commons-ground-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-ground-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-ground-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-ground-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-ground-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "00:00"
     },
     {
       "slug": "commons-ground-floor",
       "day_of_week": 6,
-      "opens": "08:00",
-      "closes": "18:00"
+      "opens": "07:00",
+      "closes": "21:00"
     },
     {
       "slug": "commons-2nd-floor-game-room",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "21:00"
     },
     {
       "slug": "commons-2nd-floor-game-room",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-2nd-floor-game-room",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-2nd-floor-game-room",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-2nd-floor-game-room",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-2nd-floor-game-room",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "00:00"
     },
     {
       "slug": "commons-2nd-floor-game-room",
       "day_of_week": 6,
-      "opens": "08:00",
-      "closes": "18:00"
+      "opens": "07:00",
+      "closes": "21:00"
     },
     {
       "slug": "commons-2nd-floor-sushi",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "21:00"
     },
     {
       "slug": "commons-2nd-floor-sushi",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-2nd-floor-sushi",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-2nd-floor-sushi",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-2nd-floor-sushi",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "23:00"
     },
     {
       "slug": "commons-2nd-floor-sushi",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "00:00"
     },
     {
       "slug": "commons-2nd-floor-sushi",
       "day_of_week": 6,
-      "opens": "08:00",
-      "closes": "18:00"
+      "opens": "07:00",
+      "closes": "21:00"
     },
     {
       "slug": "rac-entrance",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "rac-entrance",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-entrance",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-entrance",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-entrance",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-entrance",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-entrance",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "rac-2nd-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "rac-2nd-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-2nd-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-2nd-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-2nd-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-2nd-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "rac-2nd-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "administration-study",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "administration-study",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "administration-study",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "administration-study",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "administration-study",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "administration-study",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "administration-study",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "ite-1st-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "ite-1st-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-1st-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-1st-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-1st-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-1st-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-1st-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "ite-2nd-4th-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "ite-2nd-4th-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-2nd-4th-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-2nd-4th-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-2nd-4th-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-2nd-4th-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "ite-2nd-4th-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "engineering-entrance-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "engineering-entrance-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-entrance-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-entrance-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-entrance-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-entrance-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-entrance-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "engineering-2nd-3rd-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "engineering-2nd-3rd-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-2nd-3rd-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-2nd-3rd-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-2nd-3rd-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-2nd-3rd-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "engineering-2nd-3rd-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "uc-2nd-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "uc-2nd-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-2nd-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-2nd-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-2nd-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-2nd-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-2nd-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "uc-3rd-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "uc-3rd-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-3rd-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-3rd-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-3rd-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-3rd-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-3rd-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "uc-food-seating",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "uc-food-seating",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-food-seating",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-food-seating",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-food-seating",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-food-seating",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "uc-food-seating",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "performing-arts-study",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "performing-arts-study",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "performing-arts-study",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "performing-arts-study",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "performing-arts-study",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "performing-arts-study",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "performing-arts-study",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "fine-arts-study",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "fine-arts-study",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "fine-arts-study",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "fine-arts-study",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "fine-arts-study",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "fine-arts-study",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "fine-arts-study",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "meyerhoff-2nd-4th-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "meyerhoff-2nd-4th-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "meyerhoff-2nd-4th-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "meyerhoff-2nd-4th-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "meyerhoff-2nd-4th-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "meyerhoff-2nd-4th-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "meyerhoff-2nd-4th-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "sherman-hall-3rd-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "sherman-hall-3rd-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sherman-hall-3rd-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sherman-hall-3rd-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sherman-hall-3rd-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sherman-hall-3rd-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sherman-hall-3rd-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "sondheim-upper-levels",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "sondheim-upper-levels",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sondheim-upper-levels",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sondheim-upper-levels",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sondheim-upper-levels",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sondheim-upper-levels",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "sondheim-upper-levels",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "math-psych-1st-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "math-psych-1st-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-1st-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-1st-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-1st-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-1st-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-1st-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "math-psych-base-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "math-psych-base-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-base-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-base-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-base-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-base-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-base-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "math-psych-2nd-4th-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "math-psych-2nd-4th-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-2nd-4th-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-2nd-4th-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-2nd-4th-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-2nd-4th-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "math-psych-2nd-4th-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "bio-sciences-upper-levels",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "bio-sciences-upper-levels",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "bio-sciences-upper-levels",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "bio-sciences-upper-levels",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "bio-sciences-upper-levels",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "bio-sciences-upper-levels",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "bio-sciences-upper-levels",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "chemistry-entrance-floor",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "chemistry-entrance-floor",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-entrance-floor",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-entrance-floor",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-entrance-floor",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-entrance-floor",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-entrance-floor",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "chemistry-upper-levels",
       "day_of_week": 0,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     },
     {
       "slug": "chemistry-upper-levels",
       "day_of_week": 1,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-upper-levels",
       "day_of_week": 2,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-upper-levels",
       "day_of_week": 3,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-upper-levels",
       "day_of_week": 4,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-upper-levels",
       "day_of_week": 5,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "20:00"
     },
     {
       "slug": "chemistry-upper-levels",
       "day_of_week": 6,
-      "opens": "08:00",
+      "opens": "07:00",
       "closes": "18:00"
     }
   ]
