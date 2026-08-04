@@ -134,11 +134,13 @@ export default function PrivacyPage() {
           GritCheck is an unofficial student project and is not affiliated
           with, endorsed by, or sponsored by UMBC.
         </p>
-        <p className="mt-2 text-[11px]">
-          <Link href="/" className="text-muted underline underline-offset-2">
-            Back to the map
-          </Link>
-        </p>
+        {/* §4.8 tap target: standalone nav link, so it gets its 44px. */}
+        <Link
+          href="/"
+          className="inline-flex min-h-11 items-center text-[11px] text-muted underline underline-offset-2"
+        >
+          Back to the map
+        </Link>
       </footer>
     </main>
   );

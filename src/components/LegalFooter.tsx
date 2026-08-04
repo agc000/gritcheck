@@ -20,11 +20,15 @@ export function LegalFooter() {
         endorsed by, or sponsored by UMBC. Hours and conditions are
         community-reported and may be wrong.
       </p>
-      <p className="mt-2 text-[11px] leading-relaxed text-muted">
-        <Link href="/privacy" className="underline underline-offset-2">
-          What this app knows about you
-        </Link>
-      </p>
+      {/* inline-flex + min-h-11: a standalone navigation link is a tap target
+          and owes §4.8 its 44px, which 11px text does not give on its own.
+          Caught by the Phase 6 quality gate at 390×844, where it measured 15px. */}
+      <Link
+        href="/privacy"
+        className="mt-1 inline-flex min-h-11 items-center text-[11px] text-muted underline underline-offset-2"
+      >
+        What this app knows about you
+      </Link>
     </footer>
   );
 }
