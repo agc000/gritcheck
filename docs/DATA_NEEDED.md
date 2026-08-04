@@ -180,6 +180,101 @@ fixtures are summer session for exactly this reason).
 - [ ] Per-zone: outlets rating, tags, seating type, consensus line, typical pattern.
 - [ ] Add the 6–12 extra zones you actually study in.
 
+## 3b. Study recon reconciliation — two sources, 2026-08-04
+
+*Inputs: `docs/STUDY_SPOTS_RECON.md` (provenance `alan_personal`, 28 zones,
+HIGH trust) and `docs/umbc_study_spots_research_2026-08-04.md` (provenance
+`web_unverified`, URL-sourced, explicitly not physically inspected).
+**Nothing was seeded** — see the blocker below, which is absolute.*
+
+### THE BLOCKER: neither source contains a single coordinate
+
+`spots.lat` / `spots.lng` are NOT NULL and the seed schema enforces a campus
+bounding box (39.24–39.27, −76.73–−76.69). **Zero of the 28 zones can be seeded
+until Alan walks the buildings and records entrance lat/lng.** This is not a
+preference — the validator rejects the rows. 13 buildings need coordinates:
+Public Policy, Physics, RAC, ITE, Performing Arts, Fine Arts, Meyerhoff,
+Sherman Hall, Sondheim Hall, Math & Psychology, Biological Sciences, Chemistry,
+Administration.
+
+### The recon and the seeded roster do not overlap AT ALL
+
+- [ ] **Seeded study spots: 6, of which 5 are AOK and 1 is Commons Top Floor.**
+      **Alan's recon: 28 zones, none of them AOK, and its Commons notes stop at
+      the 2nd floor.** The intersection is empty. So this is not a
+      "fill in the blanks" pass — it is a proposed **6 → 34 expansion**, and
+      that is a product decision, not a data entry task. Decide the launch
+      roster before the walk, so the walk collects coordinates only for zones
+      that will actually ship.
+- [ ] **AOK is missing from Alan's personal file entirely** (his own Part 4
+      item 8). It is the most-used study building on campus and the only one
+      currently seeded. Its 5 rows still have `___` outlets and seating.
+
+### Fields the two sources produce that our schema has nowhere to put
+
+- [ ] **`fill tendency`** (`reliably_open` … `reliably_full`) is the single most
+      useful column in Alan's file — `MP-BASE` "almost always empty, very quiet"
+      is exactly the answer the product exists to give. It is **not** the §3.4
+      baseline (that is time-of-day) and **not** a §3.2 attribute. Decide where
+      it lives before the walk, or the walk collects data with no home.
+- [ ] **Provenance.** Alan's file mandates that every row carry one and that
+      `web_unverified` never overwrite `alan_personal`. **`spots` has no
+      provenance column.** Either add one (schema change, needs an amendment) or
+      accept that the distinction lives only in these docs.
+- [ ] **Noise vocabulary mismatch.** Recon uses `silent|quiet|mid|loud|varies`;
+      §3.2 has only a `silent` boolean. `mid` and `loud` have no representation.
+- [ ] **Seating vocabulary mismatch.** Recon uses `desks|cubbies|booths|balcony|
+      half-rooms`; §3.2 allows only `tables|couches|mixed`.
+- [ ] The web file proposes a much richer schema (`official_noise_policy` vs
+      `observed_noise_reports[]`, `source_claims[]`, `conflict_flags[]`,
+      `physical_audit_status`). **Not adopted** — it is a large §3.2 change for
+      a launch that has zero study updates. Recorded as a §10-style trigger: if
+      official policy and student reports keep disagreeing, revisit.
+
+### Where the two sources CONTRADICT each other — resolve on the walk
+
+- [ ] **ILSB study rooms.** Alan: *"require advance reservation and are always
+      full."* Web: the current official ILSB page says **first come, first
+      served**, and the reservation claims trace to 2020–2023 Reddit. One of
+      these is out of date. The web file's version is sourced to a live page;
+      Alan's is firsthand but may predate a policy change.
+- [ ] **ILSB hours conflict with each other officially.** ILSB's own page says
+      Mon–Fri 7:30a–10p; UMBC Police says exterior doors lock 4:55p. The web
+      file's advice — surface "check live" rather than pick one — is right, and
+      we have no UI state for it.
+- [ ] **Engineering access.** Old sources claim 24/7; current Police procedures
+      say doors lock by 11p weekdays. Do not ship Engineering as 24/7.
+- [ ] **AOK 5F/6F "absolute quiet"** is the official policy, but April 2025
+      student reports document talking and TikTok recording. Our `silent: true`
+      attribute currently asserts the policy as fact.
+
+### Where they AGREE — worth noting, it is the only corroborated outlet data
+
+- **Public Policy 2nd floor outlets = good.** Alan observed it firsthand; the
+  web file independently sources window tables beside outlets. This is the only
+  zone where two independent sources agree on outlets, and the only non-UNKNOWN
+  outlet value in Alan's entire file.
+
+### Still missing after BOTH files
+
+- [ ] **Outlets: 27 of 28 zones UNKNOWN.** Both files say explicitly that no web
+      source can supply this. Requires one dedicated physical pass. This is the
+      column repeatedly called the product's moat.
+- [ ] **Hours for all 13 new buildings.** The web file offers UMBC Police door
+      schedules as a backbone, but they are `web_unverified`, describe *door
+      unlock times* rather than *study availability*, and contradict ILSB's own
+      page. Do not seed them as hours.
+- [ ] **The Morning / Midday / Evening / Night crowd chart for all 28 zones AND
+      all 6 seeded study spots.** Neither file contains it. Alan's fill-tendency
+      column is a *static* tendency, not a time curve.
+- [ ] **Consensus lines for all 6 seeded study spots** (still zero).
+- [ ] **Zone-identity questions:** `ENG-1` vs the doc's `Engineering Atrium (?)`;
+      `SH-3` vs `UC-3` (Alan says Sherman runs "across 3rd floor of UC" — one
+      space or two?); `RAC-ENT` vs `RAC-2` (Alan calls 2F the entrance floor).
+      Naming these wrong makes them unfindable in the app.
+- [ ] **Commons 3rd floor** has no study data from either source, yet
+      `commons-top-floor` is already seeded with no hours at all.
+
 ## 4. Walk-time anchors (optional until Phase 2)
 
 - [ ] 2–3 anchor points with lat/lng ("center of Academic Row", etc.).
