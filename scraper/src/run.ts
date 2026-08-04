@@ -106,18 +106,46 @@ async function main() {
     console.log(`    ${spot.slug.padEnd(26)} ${detail}`);
   }
 
+  // GH Actions secrets (§0.10: the service key never reaches the client bundle).
+  // NEXT_PUBLIC_SUPABASE_URL is accepted too so a local --env-file run works.
+  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const missing = [
+    url ? null : "SUPABASE_URL",
+    serviceKey ? null : "SUPABASE_SERVICE_ROLE_KEY",
+  ].filter(Boolean);
+
+  // CHECKED BEFORE THE DRY-RUN RETURN, deliberately. This used to sit after it,
+  // so a dry run passed identically whether the secrets were correct or absent
+  // — which is how a misnamed secret (SUPABASE_SREVICE_ROLE_KEY) survived a
+  // green smoke test on 2026-08-04. A rehearsal that skips the one thing most
+  // likely to be wrong is the same silent success this phase exists to kill.
+  //
+  // In Actions it FAILS even on a dry run, because a dispatched dry run is a
+  // rehearsal of the scheduled write and must answer "would that work". Locally
+  // it only warns, since `--fixtures` runs legitimately have no credentials.
+  if (missing.length > 0 && dryRun && process.env.GITHUB_ACTIONS !== "true") {
+    console.log(
+      `  WARNING: missing ${missing.join(" and ")} — a real run would fail here.`,
+    );
+  }
+
+  // The rehearsal check: in Actions a dry run must answer "would the scheduled
+  // write work", so absent credentials fail here rather than at 06:30.
+  if (missing.length > 0 && (!dryRun || process.env.GITHUB_ACTIONS === "true")) {
+    throw new Error(
+      `missing ${missing.join(" and ")} — a real run cannot write. ` +
+        `Check the secret NAMES, not just their values.`,
+    );
+  }
+
   if (dryRun) {
     console.log("\nDry run — nothing written.");
     return;
   }
 
-  // GH Actions secrets (§0.10: the service key never reaches the client bundle).
-  // NEXT_PUBLIC_SUPABASE_URL is accepted too so a local --env-file run works.
-  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) {
-    throw new Error("Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY");
-  }
+  // Unreachable by the guard above; written as a narrowing the compiler can see.
+  if (!url || !serviceKey) throw new Error("missing Supabase credentials");
 
   const supabase = createClient(url, serviceKey);
   const { data, error } = await supabase.rpc("replace_scraped_hours", { payload });
