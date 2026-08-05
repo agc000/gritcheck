@@ -20,6 +20,7 @@ import {
   type SelectBuildingEventDetail,
 } from "@/lib/map-events";
 import { SORTS_BY_CATEGORY, sortSpots } from "@/lib/sort";
+import { baselineWord, liveVerdict } from "@/lib/status";
 import type { Category, SpotListItem } from "@/lib/types";
 
 // The sheet's tabs: the two spot categories plus Find Building (2026-07-25,
@@ -131,9 +132,21 @@ export function SpotBrowser({
   };
 
   // Best bet = the top row of the sorted list (§1.3) — the sort order IS the
-  // recommendation. Never crown a closed spot: recommending somewhere you
-  // can't go is worse than recommending nothing.
-  const bestBet = visible[0]?.isOpen ? visible[0] : null;
+  // recommendation. Two things disqualify a spot from wearing the crown, and
+  // both are the same principle: a recommendation must have something behind it.
+  //
+  //   1. Closed. Recommending somewhere you cannot go is worse than nothing.
+  //   2. Nothing known — no live verdict AND no baseline for this hour. The row
+  //      would read "Best bet / No recent data", which is a confident-looking
+  //      frame around an admission of ignorance (Alan, 2026-08-04). §4.4's
+  //      honesty rule arriving through the sort order rather than the badge.
+  //
+  // When nothing qualifies there is simply no Best bet — the list still sorts,
+  // it just stops pretending the top row is an answer.
+  const qualifies = (item: SpotListItem) =>
+    item.isOpen &&
+    (liveVerdict(item, now) !== null || baselineWord(item.baseline, now) !== null);
+  const bestBet = visible[0] && qualifies(visible[0]) ? visible[0] : null;
   const rest = bestBet ? visible.slice(1) : visible;
 
   // Seeing the Best bet counts as "viewed" for the §4.2 follow-up prompt —

@@ -734,6 +734,28 @@ probing one that is scrolled out of view returns a 1px hit area — an artifact 
 `elementFromPoint` hitting whatever is on top, not a finding. Scroll each into
 view before measuring, or four of the seven will look catastrophically broken.
 
+*Chip row overflow, measured 2026-08-04 at 390×844 on the Study tab (production
+build):*
+
+| metric | value |
+|---|---|
+| chip row `clientWidth` | **238px** (of a 390px viewport — the sort button takes the rest) |
+| chip row `scrollWidth` | **691px** |
+| overflow | **453px hidden** |
+| chips total | **8** (All · Silent · Group OK · Outlets · Whiteboards · Open 24h · Near food · Usually free) |
+| chips fully visible | **3** |
+
+So **5 of 8 filters are unreachable** unless the student discovers the row
+scrolls horizontally, and nothing signals that it does — no fade, no partial
+chip peeking, no affordance. The 8th chip ("Usually free", added 2026-08-04) made
+an existing problem worse rather than creating it; at 7 chips it was already 4
+of 7 hidden.
+
+Options for the audit, in rough order of effort: a right-edge fade so the row
+reads as scrollable · moving the sort control onto its own line to reclaim 152px
+· cutting Study to the 4 chips that actually discriminate now that
+`fill_tendency` exists · or a "Filters" sheet once the count justifies it.
+
 *Added to Phase 7 from Phase 6 (Alan, 2026-08-02 — raised mid-Phase-6, logged
 rather than built, per §0.2 and the drift lesson recorded above):*
 
