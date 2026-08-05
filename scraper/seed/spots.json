@@ -346,7 +346,7 @@
     },
     {
       "slug": "aok-rlc",
-      "name": "AOK — Retriever Learning Commons",
+      "name": "AOK (Library) — Retriever Learning Commons",
       "category": "study",
       "building": "AOK Library",
       "lat": 39.256313,
@@ -372,7 +372,7 @@
     },
     {
       "slug": "aok-3rd-4th-floor",
-      "name": "AOK — 3rd/4th Floor (Quiet)",
+      "name": "AOK (Library) — 3rd/4th Floor (Quiet)",
       "category": "study",
       "building": "AOK Library",
       "lat": 39.256313,
@@ -392,7 +392,7 @@
     },
     {
       "slug": "aok-5th-6th-floor",
-      "name": "AOK — 5th/6th Floor (Absolute Quiet)",
+      "name": "AOK (Library) — 5th/6th Floor (Absolute Quiet)",
       "category": "study",
       "building": "AOK Library",
       "lat": 39.256313,
@@ -436,7 +436,7 @@
     },
     {
       "slug": "aok-2nd-floor",
-      "name": "AOK — 2nd Floor Study Area",
+      "name": "AOK (Library) — 2nd Floor Study Area",
       "category": "study",
       "building": "AOK Library",
       "lat": 39.256313,
@@ -462,7 +462,7 @@
     },
     {
       "slug": "aok-atrium",
-      "name": "AOK — Atrium (24h)",
+      "name": "AOK (Library) — Atrium (24h)",
       "category": "study",
       "building": "AOK Library",
       "lat": 39.256313,
