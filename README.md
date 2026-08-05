@@ -1,6 +1,6 @@
 # GritCheck
 
-Live campus conditions for UMBC students — dining lines and study spot
+Live campus conditions for UMBC students, dining lines and study spot
 status, right now. Official hours as the foundation, anonymous student
 reports layered on top.
 
