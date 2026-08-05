@@ -461,30 +461,6 @@
       }
     },
     {
-      "slug": "aok-atrium",
-      "name": "AOK (Library) — Atrium (24h)",
-      "category": "study",
-      "building": "AOK Library",
-      "lat": 39.256313,
-      "lng": -76.711555,
-      "attributes": {
-        "group_ok": true,
-        "open_24h": true
-      },
-      "consensus": null,
-      "baseline": {
-        "mon-fri": {
-          "all": "normal"
-        },
-        "sat-sun": {
-          "all": "quiet"
-        }
-      },
-      "hours_source": {
-        "kind": "manual"
-      }
-    },
-    {
       "slug": "public-policy-2nd-floor",
       "name": "Public Policy — 2nd Floor",
       "category": "study",
