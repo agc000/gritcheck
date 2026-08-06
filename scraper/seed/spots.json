@@ -517,7 +517,17 @@
         "seating": "tables"
       },
       "consensus": null,
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "morning": "normal",
+          "midday": "normal",
+          "afternoon": "normal",
+          "evening": "normal"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
       "hours_source": {
         "kind": "manual"
       }
@@ -619,7 +629,17 @@
         "fill_tendency": "varies"
       },
       "consensus": null,
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "morning": "normal",
+          "midday": "packed",
+          "afternoon": "packed",
+          "evening": "normal"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
       "hours_source": {
         "kind": "manual"
       }
@@ -638,7 +658,17 @@
         "fill_tendency": "varies"
       },
       "consensus": null,
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "morning": "normal",
+          "midday": "packed",
+          "afternoon": "packed",
+          "evening": "normal"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
       "hours_source": {
         "kind": "manual"
       }
@@ -765,7 +795,16 @@
         "fill_tendency": "reliably_open"
       },
       "consensus": null,
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "morning": "quiet",
+          "midday": "normal",
+          "afternoon": "normal"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
       "hours_source": {
         "kind": "manual"
       }
@@ -951,7 +990,16 @@
         "seating": "tables"
       },
       "consensus": null,
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "midday": "packed",
+          "afternoon": "packed",
+          "evening": "packed"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
       "hours_source": {
         "kind": "manual"
       }
@@ -1160,7 +1208,17 @@
         "fill_tendency": "usually_taken"
       },
       "consensus": null,
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "morning": "quiet",
+          "midday": "normal",
+          "afternoon": "normal",
+          "evening": "normal"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
       "hours_source": {
         "kind": "manual"
       }
@@ -1232,7 +1290,17 @@
         "fill_tendency": "usually_taken"
       },
       "consensus": null,
-      "baseline": {},
+      "baseline": {
+        "mon-fri": {
+          "morning": "normal",
+          "midday": "normal",
+          "afternoon": "normal",
+          "evening": "quiet"
+        },
+        "sat-sun": {
+          "all": "quiet"
+        }
+      },
       "hours_source": {
         "kind": "manual"
       }
