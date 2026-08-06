@@ -676,6 +676,42 @@ data endpoint. Re-test with `npm run scrape -- --dry-run` from a runner; the
 dining parser, mapping, invariants and tests are all built and still pass, so
 restoring dining is a matter of changing `--feeds=library` back to `all`.
 
+### ✅ PHASE 6 CLOSED — 2026-08-06
+
+Both halves of the amended exit criterion met, and verified on production
+rather than asserted:
+
+- **Study hours update end-to-end with no human touch.** The GH Actions cron
+  has run **unattended three times across two days** — 2026-08-05 12:24Z,
+  2026-08-05 20:03Z, 2026-08-06 12:27Z — every one green, nobody watching.
+  Four library-fed spots carry `source='scraped'`, `hours_scraped_at` stamped
+  by the run itself.
+- **A deliberately broken fixture fails loudly.** Seven corruption cases in a
+  28-test suite: a new LibCal status, a renamed venue, a truncated feed,
+  reindexed days, garbled times, and a whole feed silently going closed — each
+  caught by a named error, plus the human-confirmed break-week override.
+
+Dining is manual by amendment (Cloudflare blocks CI *and* every non-browser
+client — evidence and rejected alternatives above). Error boundaries, first-party
+error logging, the legal footer and the privacy note are live.
+
+**Carried into the late-August pass (§7.1.1 item 5): re-capture both fixtures.**
+An earlier note in this file called that a *hard dependency of the exit
+criterion*. On reflection that was overstated, and the correction is worth
+recording: the parser has since been run repeatedly against the **live** feeds,
+which had already drifted materially from the July snapshots — LibCal gained a
+Sunday and a Wednesday (21 → 25 rows), dining went from 17 to 20 venues and grew
+the duplicate slugs. It parsed all of it correctly and caught the duplicates.
+So the validation the re-capture was meant to provide has largely arrived by
+another route. What it still adds is fall-specific shape: venues reopening,
+extended term hours, and any status LibCal only publishes in session. Worth
+doing on the walk; not worth holding a phase open for.
+
+**The phase's defining lesson** is recorded above as "the green result that
+proved nothing" — all three near-misses were in the verification, not the code.
+
+§12 Q+A recorded above. **Next: Phase 7.**
+
 ### Phase 7 — Polish sprint + private beta
 Tasks: full §4.8 audit of every screen; copy pass (§4.7); micro-interactions; 404/offline/empty states with Grits; seed **fresh real data week** (Alan updates statuses himself daily so the beta never looks dead); recruit 10–20 friends as beta users; fix the top 5 friction points they hit; tag `v1.0.0`.
 **Alan provides:** beta testers; a week of self-seeded updates; final consensus-line pass.
