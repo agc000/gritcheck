@@ -717,6 +717,80 @@ Tasks: full §4.8 audit of every screen; copy pass (§4.7); micro-interactions; 
 **Alan provides:** beta testers; a week of self-seeded updates; final consensus-line pass.
 **Exit:** a stranger handed the URL can install it, get a useful answer, and submit an update without explanation.
 
+*Amended 2026-08-06 (Alan, Phase 7 kickoff — three scope decisions, recorded
+before any Phase 7 code was written):*
+
+**① No private beta. Launching cold.** Alan does not have 10–20 people to
+recruit, and the honest options were a cohort of five non-UMBC testers
+(a roommate, a sibling, someone from a class — enough to surface most
+usability problems, since they test *comprehension*, which is what the exit
+criterion is actually about) or skipping the cohort entirely. Alan chose to
+skip it and let launch week be the feedback loop.
+
+The consequence is written here rather than smoothed over, because it is
+exactly the shape §Phase 6's lesson warns about: **the exit criterion is now
+an unobserved check.** "A stranger can install it and use it without
+explanation" cannot be verified by the person who built it — Alan knows where
+every button is, so he cannot fail the test he is administering. Phase 7
+therefore closes on the criterion as a *design target* met by audit, not as an
+observed result. Two things carry the weight the cohort would have carried:
+
+- The §4.8 audit and the copy pass become load-bearing rather than
+  finishing touches — they are now the only filter between a confusing screen
+  and a real student, so both are run against measurement and screenshots, not
+  judgement (§Phase 6: measure it, screenshot it, look at it).
+- **"Fix the top 5 friction points" moves to launch week and gets a response
+  commitment:** §7.2 already has Alan replying to every r/UMBC comment for
+  48 h. That thread *is* the usability study, arriving after the cost of a bad
+  screen is highest instead of before. Ship-fix cycles during orientation week
+  are the mitigation, and they only work if Alan is actually watching.
+
+**Revised task list:** full §4.8 audit → fix what it finds → copy pass (§4.7,
+~5th-grade) → micro-interactions → 404/offline/empty states with Grits →
+back-nav state loss (Phase-5 carry-in, sits on the exit path) → spot detail
+perf (Phase-5 carry-in, 89 vs the §4.8 ≥90 bar) → self-seeded data week, timed
+to **launch week rather than a beta week** (updates decay in 3 h, so seeding
+before an audience exists shows nobody anything) → tag `v1.0.0`. Recruiting and
+the friction-fix pass are struck.
+
+**② Study consensus lines deferred, deliberately non-blocking.** 0/35 written;
+they render only on spot detail, and their absence degrades a secondary surface
+rather than the answer. Food is 14/15. Alan fills them when he fills them; no
+phase gate depends on it.
+
+**③ The Skylight Room orphan is accepted, not fixed** — see the note below.
+
+*Production data finding, 2026-08-06 — **the seeder never deletes.***
+
+`scraper/seed/load.ts` upserts. It has no delete pass. So removing a spot from
+`spots.json` **does not remove it from any database that was ever seeded with
+it**, and the commit that removes it runs green having changed nothing a
+student sees. Two spots were dropped from the seed this way:
+
+| slug | dropped in | local DB | production |
+|---|---|---|---|
+| `skylight-room` (food) | `8fba02e` | present | **present — live** |
+| `aok-atrium` (study) | `f197327` | present | absent |
+
+So production carries **51 spots, and the 51st is a ghost**: `skylight-room`
+has zero `spot_hours` rows, an empty `baseline`, and empty `attributes`. It
+renders in the Food list as **`Closed`, permanently** — it can never be a Best
+bet (closed disqualifies, per the 2026-08-04 amendment), matches no filter
+chip, and has no baseline to fall back to. This also corrects the working spot
+count used in earlier notes: **the seed is the truth at 50 (15 food, 35 study)**;
+production's 16 food includes the ghost.
+
+Alan's call (2026-08-06): **leave it.** One dead row is not worth a production
+delete during a polish sprint. Recorded so it is not rediscovered as a bug.
+
+**The standing rule this earns**, filed beside §Phase 6's grants gotcha because
+it is the same family — *a green run that changed nothing*: **seed removals are
+not deletions.** Dropping a row from `spots.json` is a no-op against every
+seeded database. If a spot must actually go, it needs an explicit `delete`
+(and its `spot_hours` rows go with it, or they orphan too). Ask §Phase 6's
+question — *what should a successful run CHANGE?* — and then query for that
+change rather than trusting the exit code.
+
 *Carried into Phase 7 from Phase 5 (logged 2026-07-30, deliberately NOT built):*
 
 - **Realtime fan-out — filtered subscription.** `LiveRefresh` subscribes to
