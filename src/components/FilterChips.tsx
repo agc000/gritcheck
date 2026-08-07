@@ -16,6 +16,14 @@ export function FilterChips({
 }) {
   // before: pseudo stretches the hit area to ≥44px (§4.8) without touching
   // the 35px visual — the mockup's chip proportions are law.
+  //
+  // It was silently doing nothing until 2026-08-07. `overflow-x-auto` on the
+  // scroller below computes overflow-y to `auto` too (CSS: a `visible` axis
+  // paired with a non-visible one becomes `auto`), so the scrollport clipped
+  // the pseudo's 5px overhang and the hit area measured 36px — the chips'
+  // §4.8 failure was a *clipped fix*, not a missing one. The scroller now
+  // carries py-1.5 so the overhang lands inside its padding box, where
+  // overflow does not clip. Verified by re-probing with elementFromPoint.
   const chipClass = (selected: boolean) =>
     `relative flex-none rounded-md border px-3.5 py-1.75 text-[12.5px] font-semibold transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-1.25 motion-reduce:transition-none ${
       selected
@@ -24,7 +32,9 @@ export function FilterChips({
     }`;
 
   return (
-    <div className="flex flex-1 gap-1.5 overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
+    // py-1.5 gives the chips' hit-area pseudo room inside the scrollport;
+    // -my-1.5 cancels it in layout so the subbar keeps its exact height.
+    <div className="-my-1.5 flex flex-1 gap-1.5 overflow-x-auto py-1.5 scrollbar-none [&::-webkit-scrollbar]:hidden">
       <button
         aria-pressed={activeId === null}
         onClick={() => onChange(null)}
