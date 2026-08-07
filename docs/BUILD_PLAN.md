@@ -244,6 +244,32 @@ the Grits dog-face as logo/app icon; Grits remains the mascot for empty
 states, 404, and marketing art (§4.7 unchanged in spirit: mark ≠ mascot).*
 Gold is a **signal**, not decoration: Update button, active filter state, Best bet wash, selected building. If gold appears anywhere else, it's wrong. Green/amber/red/gray appear **only** as status colors.
 
+*Amended 2026-08-07 (Phase 7 audit — the second sanctioned gradient).* The
+filter chip row gains a **right-edge fade** from `--sheet` to transparent, ~24px
+wide, shown only while the row can still scroll right. The rule this bends is
+"exactly ONE sanctioned gradient" (§4.3, the 1–10 slider track), and it bends
+the same way that one did: **the ban targets decorative gradients**, and this
+one is not decoration — it is the only thing telling a student that 5 of 8
+filters exist off-screen. The audit measured the failure: 238px of chip row
+visible out of 691px, 3 of 8 chips reachable, and **no** affordance of any kind
+(no fade, no partial chip, nothing) — so the row reads as a deliberate boundary
+rather than as scrollable.
+
+Two alternatives were costed and rejected. **Wrapping to two rows** shows every
+chip with zero discovery cost, but adds ~80px of permanent sheet height — a
+full list row lost on every screen, forever, in a product whose whole job is
+scanning a list. **A solid chevron scroll button** needs no gradient but eats
+36px of the row's width and adds a control most students would never use over
+a swipe they already know. The fade costs zero vertical space and is the
+pattern every phone user has already been trained on.
+
+**Standing limit, so this does not become a third and fourth:** functional
+gradients are permitted *only* where the gradient itself carries information —
+the slider encodes a scale, the fade encodes "there is more this way."
+Decorative gradients (buttons, cards, backgrounds, headers) remain banned, and
+§4.8's "anything that looks AI-generated default — gradient buttons — kill it"
+is unchanged.
+
 ### 4.2 Screen architecture (locked, from v7)
 - **Home = full-screen MapLibre map** (custom dark-gold style, locked to campus bounds, **rotation disabled, pitch fixed at ~30° and non-interactive**) with buildings as tap targets; status glow halos on active buildings.
 
