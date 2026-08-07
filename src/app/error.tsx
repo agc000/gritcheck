@@ -27,7 +27,7 @@ export default function RouteError({
   }, [error]);
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center justify-center gap-4 bg-sheet px-6 text-center text-ink">
+    <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center justify-center gap-4 bg-sheet px-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center text-ink">
       <BrandLockup />
       <h1 className="text-lg font-extrabold">This page stopped working.</h1>
       <p className="text-sm text-muted">
