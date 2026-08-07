@@ -28,7 +28,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto w-full max-w-lg bg-sheet px-5 py-8 text-ink">
+    // pt clears the iOS status bar in standalone (see the spot detail page) —
+    // py-8 alone tucked the lockup under a 59px Dynamic Island.
+    <main className="mx-auto w-full max-w-lg bg-sheet px-5 pt-[max(2rem,calc(env(safe-area-inset-top)+0.5rem))] pb-[max(2rem,env(safe-area-inset-bottom))] text-ink">
       <BrandLockup />
 
       <h1 className="mt-6 text-lg font-extrabold">What this app knows about you</h1>

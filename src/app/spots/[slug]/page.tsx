@@ -93,13 +93,26 @@ export default async function SpotPage({
     // w-full matters: body is a flex column, and mx-auto on a flex item
     // otherwise collapses the page to fit-content width.
     <main className="animate-page-enter mx-auto min-h-dvh w-full max-w-lg bg-sheet px-4.5 pb-10 text-ink">
-      <nav className="pt-4">
-        {/* Padded to a ≥44px tap target (§4.8); negative margin keeps layout. */}
+      {/* Clears the iOS status bar. layout.tsx sets statusBarStyle
+          'black-translucent' + viewportFit 'cover', so in the installed PWA the
+          page paints UNDER the notch/Dynamic Island (47–59px). Every map overlay
+          already insets; these full-page routes did not, which put this link
+          physically beneath the clock on Alan's phone (Phase 7 audit). */}
+      <nav className="pt-[max(1rem,calc(env(safe-area-inset-top)+0.5rem))]">
+        {/* A surface, not a whisper: in standalone there is no browser chrome
+            and no edge-swipe, so this link is the ONLY way back — it earns a
+            visible control. Stays --ink rather than gold: §4.1 spends gold on
+            signal, and this screen already spends it on the primary action
+            ("How's it right now?"). Two golds would make leaving compete with
+            reporting. h-11 = the 44px floor exactly. */}
         <Link
           href="/"
-          className="-my-3 -ml-2 inline-block px-2 py-3 text-sm font-semibold text-muted"
+          className="inline-flex h-11 items-center gap-2 rounded-md border border-line bg-soft px-3.5 text-sm font-bold text-ink transition-transform duration-150 ease-out active:scale-97 motion-reduce:transition-none"
         >
-          ← Map
+          <span aria-hidden="true" className="text-base leading-none">
+            ←
+          </span>
+          Map
         </Link>
       </nav>
 
