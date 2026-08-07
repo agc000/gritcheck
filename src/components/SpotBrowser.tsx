@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { FilterChips } from "@/components/FilterChips";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SortMenu } from "@/components/SortMenu";
@@ -46,19 +47,71 @@ export function SpotBrowser({
   nowMs: number;
   campusBuildings: CampusBuilding[];
 }) {
-  const [tab, setTab] = useState<BrowseTab>("food");
+  // Browse state seeds from the URL so it survives a round trip to a spot page
+  // and back (§Phase 5 carry-in: tab/filter/sort were component-only, so
+  // tapping a row and pressing back dropped a student who had filtered the
+  // Study tab onto an unfiltered Food list). Read once, as the initial state —
+  // this is NOT a two-way binding, and the URL is written from handlers below.
+  const searchParams = useSearchParams();
+  const [tab, setTab] = useState<BrowseTab>(() => {
+    const t = searchParams.get("tab");
+    return t === "study" || t === "buildings" ? t : "food";
+  });
   // The spot-list machinery below (chips, sorts, rows) is category-driven;
   // null = the Find Building tab, which uses none of it.
   const category: Category | null = tab === "buildings" ? null : tab;
   // Chip selection is per-category so switching tabs doesn't carry a stale
-  // filter across ("Vegan" means nothing on the Study list).
+  // filter across ("Vegan" means nothing on the Study list). Only the restored
+  // tab's filter comes from the URL — the other category has never been shown.
   const [chipByCategory, setChipByCategory] = useState<
     Record<Category, string | null>
-  >({ food: null, study: null });
+  >(() => {
+    const base: Record<Category, string | null> = { food: null, study: null };
+    const f = searchParams.get("filter");
+    if (f && category && CHIPS_BY_CATEGORY[category].some((c) => c.id === f)) {
+      base[category] = f;
+    }
+    return base;
+  });
   // Defaults per §1.3: food "Shortest line", study "Best outlets" (index 0).
   const [sortByCategory, setSortByCategory] = useState<Record<Category, string>>(
-    { food: "shortest-line", study: "best-outlets" },
+    () => {
+      const base: Record<Category, string> = {
+        food: "shortest-line",
+        study: "best-outlets",
+      };
+      const s = searchParams.get("sort");
+      if (s && category && SORTS_BY_CATEGORY[category].some((o) => o.id === s)) {
+        base[category] = s;
+      }
+      return base;
+    },
   );
+
+  // Written with history.replaceState, deliberately NOT router.replace: this
+  // page is force-dynamic, so a router navigation per chip tap would be a full
+  // server render plus three Supabase queries for a state change the client
+  // already made (§Phase 5 perf posture — keep new client work off the wire).
+  // replaceState also keeps ONE history entry for the browse screen, so the
+  // back button leaves the app instead of unwinding every filter tap.
+  const writeUrl = (next: {
+    tab: BrowseTab;
+    filter: string | null;
+    sort: string;
+  }) => {
+    const params = new URLSearchParams(window.location.search);
+    // Defaults stay out of the URL — a shared link should be the short one.
+    if (next.tab === "food") params.delete("tab");
+    else params.set("tab", next.tab);
+    if (next.filter) params.set("filter", next.filter);
+    else params.delete("filter");
+    const isDefaultSort =
+      next.tab !== "buildings" && SORTS_BY_CATEGORY[next.tab][0]?.id === next.sort;
+    if (isDefaultSort) params.delete("sort");
+    else params.set("sort", next.sort);
+    const qs = params.toString();
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
+  };
   // §13.2: location is requested at first benefit — picking "Closest" — never
   // on load. Used in-memory only; never stored or sent anywhere.
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
@@ -91,6 +144,7 @@ export function SpotBrowser({
   const handleSortChange = (id: string) => {
     if (!category) return;
     setSortByCategory((prev) => ({ ...prev, [category]: id }));
+    writeUrl({ tab, filter: chipByCategory[category], sort: id });
     if (id === "closest" && !location && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) =>
@@ -168,6 +222,11 @@ export function SpotBrowser({
           value={tab}
           onChange={(next) => {
             setTab(next);
+            writeUrl({
+              tab: next,
+              filter: next === "buildings" ? null : chipByCategory[next],
+              sort: next === "buildings" ? "" : sortByCategory[next],
+            });
             // Tab switch drops the building scope — the map drops its gold
             // selection on the same signal (applyCategory), so the two stay
             // mirrored even when the map isn't mounted yet.
@@ -191,9 +250,10 @@ export function SpotBrowser({
             <FilterChips
               chips={chips}
               activeId={chipByCategory[category]}
-              onChange={(id) =>
-                setChipByCategory((prev) => ({ ...prev, [category]: id }))
-              }
+              onChange={(id) => {
+                setChipByCategory((prev) => ({ ...prev, [category]: id }));
+                writeUrl({ tab, filter: id, sort: sortByCategory[category] });
+              }}
             />
             <SortMenu
               options={sorts}
@@ -248,11 +308,19 @@ export function SpotBrowser({
 
       {category &&
         (visible.length === 0 ? (
-          // §4.7 voice: dry and factual. Grits artwork joins in Phase 7 polish.
+          // §4.7 voice: dry and factual.
+          // PLACEHOLDER — Alan to replace: §4.7 gives empty states to Grits
+          // (visually only). No artwork in the repo yet; the copy below is
+          // final and the illustration drops in above it.
           <div className="px-5 py-12 text-center">
             <p className="text-sm font-semibold">
+              {/* Phase 7 copy pass. Was "Nothing in AOK Library to study in
+                  yet." — grammatical but knotted. Leading with the plain noun
+                  reads at a glance and survives a long building name. */}
               {building
-                ? `Nothing in ${building}${activeChip ? ` matches “${activeChip.label}”` : category === "study" ? " to study in yet" : " to eat at yet"}.`
+                ? activeChip
+                  ? `No “${activeChip.label}” spots in ${building}.`
+                  : `No ${category === "study" ? "study" : "food"} spots in ${building} yet.`
                 : activeChip
                   ? `Nothing matches “${activeChip.label}”.`
                   : category === "study"
@@ -260,11 +328,14 @@ export function SpotBrowser({
                     : "No food spots yet."}
             </p>
             <p className="mt-1 text-xs text-muted">
+              {/* Was "Show all looks across campus." — a sentence whose subject
+                  is a button, which reads as a typo until you spot the control.
+                  Name the action instead. */}
               {building
-                ? "Show all looks across campus."
+                ? "Tap Show all to see the rest of campus."
                 : activeChip
                   ? "Try a different filter."
-                  : "Zones are being mapped now."}
+                  : "More spots are coming."}
             </p>
           </div>
         ) : (
