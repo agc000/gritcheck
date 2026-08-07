@@ -462,10 +462,13 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                 </>
               ) : (
                 <>
+                  {/* Slider ends are the same words the rows show (§4.3
+                      amendment 2026-08-07): a student describes what they see
+                      with the vocabulary they just read. Was "Packed". */}
                   <ScaleRow
                     label="Crowd"
                     lowHint="Empty"
-                    highHint="Packed"
+                    highHint="Full"
                     value={crowd}
                     onChange={setCrowd}
                   />

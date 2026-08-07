@@ -21,16 +21,28 @@ const FOOD_CHIPS: FilterChip[] = [
 ];
 
 const STUDY_CHIPS: FilterChip[] = [
-  // Accepts either field: `silent` predates the recon and is still set on the
-  // seeded AOK rows; `noise` came with the §3.2 amendment (2026-08-04).
+  // Was labelled "Silent" and matched only `noise === 'silent'` plus the legacy
+  // `silent` flag — which found exactly ONE spot, while eight zones marked
+  // `quiet` (including Math & Psych Base Floor, the recon's highest-value
+  // entry) stayed invisible. `silent` is a legal value in the recon vocabulary
+  // (silent|quiet|mid|loud|varies), it is just vanishingly rare; a filter that
+  // returns one row is a dead control. Widened to both and relabelled to the
+  // plainer word (Phase 7, §4.7 reading level).
+  //
+  // `silent` the boolean predates the recon and is still set on the seeded AOK
+  // 5th/6th row, so all three spellings are accepted.
   {
-    id: "silent",
-    label: "Silent",
-    match: (a) => a.silent === true || a.noise === "silent",
+    id: "quiet",
+    label: "Quiet",
+    match: (a) =>
+      a.silent === true || a.noise === "silent" || a.noise === "quiet",
   },
   { id: "group_ok", label: "Group OK", match: (a) => a.group_ok === true },
-  // "Outlets" chip means outlets worth going for, not merely present.
-  { id: "outlets", label: "Outlets", match: (a) => a.outlets === "good" },
+  // The "Outlets" chip is gone (Alan, 2026-08-07: outlets data abandoned).
+  // It matched `outlets === 'good'` — true for 1 of 35 study zones and never
+  // going to improve, so it burned one of the eight slots in a row where only
+  // three fit on screen. The attribute stays in §3.2 and on spot detail; only
+  // the filter is retired.
   { id: "whiteboards", label: "Whiteboards", match: (a) => a.whiteboards === true },
   { id: "open_24h", label: "Open 24h", match: (a) => a.open_24h === true },
   { id: "near_food", label: "Near food", match: (a) => a.near_food === true },

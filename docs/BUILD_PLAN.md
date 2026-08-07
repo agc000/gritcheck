@@ -244,6 +244,39 @@ the Grits dog-face as logo/app icon; Grits remains the mascot for empty
 states, 404, and marketing art (§4.7 unchanged in spirit: mark ≠ mascot).*
 Gold is a **signal**, not decoration: Update button, active filter state, Best bet wash, selected building. If gold appears anywhere else, it's wrong. Green/amber/red/gray appear **only** as status colors.
 
+*Amended 2026-08-07 (Alan, Phase 7 — `--mustard`, and food rows show location
+only).* New token **`--mustard: #C9A227`**, used for exactly one thing: the
+**location line under a food spot's name**. Food rows also stop listing
+attribute descriptors — the sub-line is now the building and nothing else.
+
+Reasoning for the sub-line cut: a food spot's *name* already says what it is, so
+"Chick-fil-A · Coffee · Vegan" spends the line restating the guessable when the
+only open question is where to walk. Study zones keep their descriptors, because
+"2nd Floor Study Area" tells you nothing about whether you can talk there.
+
+**How this does not break "gold is a signal, not decoration."** `--mustard` is
+not a dimmer of `--gold` and never marks status — it marks a *category*, which
+is why it sits well away from the signal hue (RGB distance 68 from `--gold`,
+against 196 for `--muted`). The signal set is untouched: Update button, active
+filter, Best bet wash, selected building. **Standing limit:** `--mustard` is
+permitted on the food location line and nowhere else; any second use needs its
+own amendment, or the distinction it is carrying stops meaning anything.
+
+Contrast computed from the tokens rather than eyeballed, and against **both**
+surfaces the line renders on — the plain sheet and the Best bet's gold-soft
+wash, which had to be composited (`rgba(255,194,14,.12)` over `#141A28` =
+**`#302E25`**, not the lighter value a first pass assumed):
+
+| | on `--sheet` | on Best bet wash | Δ from `--gold` |
+|---|---|---|---|
+| `#C9A227` **(chosen)** | **7.19:1** | **5.63:1** | 68 |
+| `#B8912B` | 5.90:1 | 4.62:1 | 91 |
+| `#A88420` | 4.95:1 | **3.88:1 FAIL** | 108 |
+| `--muted` `#99A0B2` (previous) | 6.64:1 | 5.20:1 | 196 |
+
+A darker mustard reads as more clearly distinct from gold but fails 4.5:1 on
+the Best bet row, which is the one row that most needs to be legible.
+
 *Amended 2026-08-07 (Phase 7 audit — the second sanctioned gradient).* The
 filter chip row gains a **right-edge fade** from `--sheet` to transparent, ~24px
 wide, shown only while the row can still scroll right. The rule this bends is
@@ -284,7 +317,52 @@ is unchanged.
 - **Follow-up prompt:** if the user viewed a Best bet / spot detail and ~10 min elapse (app re-open or visibility change), show a one-tap bar: "Did ILSB pan out?" [Yes, good / Meh / Packed]. Answers insert as `kind='followup'` updates. Cap: max 1 prompt per session; never nag.
 
 ### 4.3 Status verdicts (UI words, not raw data)
-Food: `Short line / Normal line / Long line / Packed / Closed`. Study: `Quiet / Seats open / Filling up / Packed / No recent data / Closed`. Verdict word + color; details live in the detail view.
+Food: `Short line / Normal line / Long line / Packed / Closed`. Study: `Quiet / Seats open / Filling up / Packed / No recent data / Closed`.
+
+*Amended 2026-08-07 (Alan, Phase 7 — one scale, three bands). The verdict
+vocabulary above is **superseded**:*
+
+| band | food | study | map legend |
+|---|---|---|---|
+| go | **Short line** | **Empty** | Empty |
+| hold | **In between** | **In between** | In between |
+| skip | **Full** | **Full** | Full |
+| — | Closed | Closed | Closed |
+
+*Five words in the whole product: `Short line` · `Empty` · `In between` ·
+`Full` · `Closed`. Down from eight.*
+
+**Why.** The 2026-08-04 amendment gave the *baseline* case the map legend's
+words and stated the principle — "a student should not have to learn two
+vocabularies for one product" — but only applied it to rows with no live data.
+Live rows kept the older set, so **the same room said "Seats open" with a report
+and "Empty" without one**, while the map said "Empty" for both. One condition,
+three names, and the word changed based on something invisible to the reader
+(whether anyone had reported recently).
+
+**The mismatch was structural, not cosmetic.** The stored data is already three
+bands — the 1–10 sliders band at 1–3 / 4–6 / 7–10 (§4.3 line-scale amendment)
+and §5.2 aggregates as a three-way band vote. Eight display words over three
+stored bands meant the extra words were never carrying information.
+
+**Two defects this closes**, both live in `src/lib/status.ts` before the change:
+
+1. **Study had no hold band.** `normal` mapped to `["Seats open", "go"]` — an
+   averagely-crowded study room rendered go-**green** while an averagely-busy
+   food line rendered hold-amber. Identical underlying value, opposite advice,
+   purely because of which lookup table it hit.
+2. **The open §4.3 ruling is now made.** A comment in that file flagged the
+   mockup's green "Normal line" as awaiting a decision. Resolved: the hold band
+   is amber in both categories, and it is named `In between`.
+
+**Food keeps a line-shaped word for the go band on purpose.** "Empty" answers
+the study question (can I sit?) but misreads for food, where an empty room and
+a short line are different claims and "Empty" hints at closed. The hold and
+skip bands are shared because at that end the two questions converge — a full
+room and a long line are the same instruction: go elsewhere.
+
+*`No recent data` is unchanged and still correct for its one case: no live
+reading AND no baseline covering that day-part (§4.4).* Verdict word + color; details live in the detail view.
 
 *Amended 2026-08-04 (Alan, baseline-as-primary): with no live data a row now
 reads **`Empty` / `In between` / `Full`** with **`typically`** in small text

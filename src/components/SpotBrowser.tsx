@@ -76,9 +76,12 @@ export function SpotBrowser({
   // Defaults per §1.3: food "Shortest line", study "Best outlets" (index 0).
   const [sortByCategory, setSortByCategory] = useState<Record<Category, string>>(
     () => {
+      // Read from the sort lists rather than repeating their ids: the previous
+      // hardcoded "best-outlets" default outlived the option itself, which is
+      // exactly the drift a second copy invites (§1.3 — index 0 IS the default).
       const base: Record<Category, string> = {
-        food: "shortest-line",
-        study: "best-outlets",
+        food: SORTS_BY_CATEGORY.food[0].id,
+        study: SORTS_BY_CATEGORY.study[0].id,
       };
       const s = searchParams.get("sort");
       if (s && category && SORTS_BY_CATEGORY[category].some((o) => o.id === s)) {

@@ -15,6 +15,13 @@ import type { SpotListItem } from "@/lib/types";
 // Study Area" does not locate itself the way "Chick-fil-A" does, so whichever
 // line carries the building has to surface it first.
 function subLine(item: SpotListItem, title: string): string {
+  // Food rows show the location and nothing else (Alan, 2026-08-07). A food
+  // spot's name already tells you what it is — "Chick-fil-A · Coffee · Vegan"
+  // spends the line on things you could guess, when the only open question is
+  // where to walk. Study zones still carry descriptors: "2nd Floor Study Area"
+  // says nothing about whether you can talk there.
+  if (item.category === "food") return item.building;
+
   const a = item.attributes;
   const descriptors =
     typeof a === "object" && a !== null && !Array.isArray(a)
@@ -81,7 +88,14 @@ export function SpotRow({
         <div className="text-[15.5px] font-bold tracking-[-0.015em]">
           {title}
         </div>
-        <div className="mt-[2.5px] text-xs leading-[1.4] text-muted">
+        {/* Food's location line wears --mustard (§4.1 amendment 2026-08-07);
+            study keeps --muted, because its sub-line is a list of attributes
+            rather than a place and colouring it would be decoration. */}
+        <div
+          className={`mt-[2.5px] text-xs leading-[1.4] ${
+            item.category === "food" ? "text-mustard" : "text-muted"
+          }`}
+        >
           {subLine(item, title)}
         </div>
         {/* The §3.3 consensus sentence used to render here on the Best Bet row

@@ -352,6 +352,7 @@
       "lat": 39.256313,
       "lng": -76.711555,
       "attributes": {
+        "noise": "mid",
         "group_ok": true,
         "whiteboards": true,
         "open_24h": true
@@ -380,7 +381,9 @@
       "building": "AOK Library",
       "lat": 39.256313,
       "lng": -76.711555,
-      "attributes": {},
+      "attributes": {
+        "noise": "quiet"
+      },
       "consensus": null,
       "baseline": {
         "mon-fri": {
@@ -406,6 +409,7 @@
       "lat": 39.256313,
       "lng": -76.711555,
       "attributes": {
+        "noise": "silent",
         "silent": true
       },
       "consensus": null,
@@ -459,6 +463,7 @@
       "lat": 39.256313,
       "lng": -76.711555,
       "attributes": {
+        "noise": "mid",
         "group_ok": true,
         "whiteboards": true,
         "seating": "tables"

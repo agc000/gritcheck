@@ -1,4 +1,3 @@
-import type { Json } from "./database.types";
 import { baselineWord } from "./status";
 import { minutesUntilClose, nyClock } from "./time";
 import type { Category, SpotListItem } from "./types";
@@ -48,12 +47,6 @@ function distanceKey(item: SpotListItem, ctx: SortContext): number {
   return dLat * dLat + dLng * dLng;
 }
 
-function attr(item: SpotListItem, key: string): Json | undefined {
-  const a = item.attributes;
-  if (typeof a !== "object" || a === null || Array.isArray(a)) return undefined;
-  return (a as Record<string, Json | undefined>)[key];
-}
-
 const LINE_RANK: Record<string, number> = { short: 0, normal: 1, long: 2 };
 
 const FOOD_SORTS: SortOption[] = [
@@ -81,17 +74,16 @@ const FOOD_SORTS: SortOption[] = [
   },
 ];
 
-const OUTLETS_RANK: Record<string, number> = { good: 0, limited: 1, bad: 2 };
-
+// Index 0 is the default sort, and for study that IS the recommendation
+// (§1.3). It used to be "Best outlets", which was retired 2026-08-07 when Alan
+// dropped the outlets data: `outlets === 'good'` was true for 1 of 35 zones, so
+// the default ordering ranked 34 spots identically and the list opened on
+// noise. "Most seats" replaces it because it keys off the crowd baselines,
+// which are the one study field at full coverage (35/35) — the default should
+// sort on the best-populated column, not the emptiest one.
 const STUDY_SORTS: SortOption[] = [
-  {
-    id: "best-outlets",
-    label: "Best outlets",
-    key: (item) => {
-      const rating = attr(item, "outlets");
-      return typeof rating === "string" ? (OUTLETS_RANK[rating] ?? 3) : 3;
-    },
-  },
+  // Proxy until real seat counts exist: emptier = more seats open.
+  { id: "most-seats", label: "Most seats", key: liveOrTypicalCrowd },
   {
     id: "quietest",
     label: "Quietest",
@@ -102,8 +94,6 @@ const STUDY_SORTS: SortOption[] = [
       return liveOrTypicalCrowd(item, ctx);
     },
   },
-  // Proxy until real seat counts exist: emptier = more seats open.
-  { id: "most-seats", label: "Most seats", key: liveOrTypicalCrowd },
   { id: "closest", label: "Closest", key: distanceKey },
 ];
 

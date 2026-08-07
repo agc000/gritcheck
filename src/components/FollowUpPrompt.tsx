@@ -17,12 +17,14 @@ import { supabase } from "@/lib/supabase";
 //
 // Answer mapping (reworded 2026-07-24, Alan: no slangy "Meh" — §4.7 dry):
 // "Worth it" / "Not worth it" feed worth-it (the 7-day quality signal);
-// "Packed" feeds crowd — 9 on the 1–10 scale (§3.1 amendment), which both
-// categories' verdict paths read as the packed band.
+// "Full" feeds crowd — 9 on the 1–10 scale (§3.1 amendment), which both
+// categories' verdict paths read as the packed band. Labelled "Full" rather
+// than "Packed" since the §4.3 amendment (2026-08-07): the button offers the
+// student the same word the row would have shown them.
 const ANSWERS = [
   { label: "Worth it", body: { worth_it: true } },
   { label: "Not worth it", body: { worth_it: false } },
-  { label: "Packed", body: { crowd: 9 } },
+  { label: "Full", body: { crowd: 9 } },
 ] as const;
 
 export function FollowUpPrompt() {

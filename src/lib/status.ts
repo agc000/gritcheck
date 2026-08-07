@@ -24,19 +24,30 @@ export type Verdict = {
   freshMono?: boolean;
 };
 
-// Traffic-light semantics match the token names: short line = go, normal =
-// hold, long/packed = skip. (Deliberate deviation from the mockup, which
-// colored "Normal line" green — flagged to Alan for a §4.3 ruling.)
+// ONE scale, three bands (§4.3 amendment 2026-08-07). Live rows and baseline
+// rows now speak the same words, and those words are the map legend's, so a
+// spot reads identically as a dot, as a row with a fresh report, and as a row
+// with none. Before this, the same study room said "Seats open" with a report
+// and "Empty" without — the word changed on something the reader cannot see.
+//
+// Food keeps a line-shaped word at the go end because "Empty" answers the study
+// question, not the food one. The hold and skip bands are shared: a full room
+// and a long line carry the same instruction.
+//
+// This also resolves the §4.3 ruling that was pending here — the mockup colored
+// "Normal line" green; the hold band is amber, in both categories. Study
+// previously had NO hold band (`normal` was ["Seats open", "go"]), so an
+// average study room advised go while an average food line advised hold.
 const FOOD_VERDICTS: Record<string, [string, Tone]> = {
   short: ["Short line", "go"],
-  normal: ["Normal line", "hold"],
-  long: ["Long line", "skip"],
+  normal: ["In between", "hold"],
+  long: ["Full", "skip"],
 };
 
 const STUDY_VERDICTS: Record<string, [string, Tone]> = {
-  empty: ["Quiet", "go"],
-  normal: ["Seats open", "go"],
-  packed: ["Packed", "skip"],
+  empty: ["Empty", "go"],
+  normal: ["In between", "hold"],
+  packed: ["Full", "skip"],
 };
 
 // Baseline verdicts (§4.3 amendment 2026-08-04). THREE states, and they are the
@@ -114,8 +125,11 @@ export function liveVerdict(item: SpotListItem, now: Date): Verdict | null {
     item.confidence === "high" || item.confidence === "medium";
   if (!live || !hasConfidence) return null;
   if (item.category === "food") {
+    // A packed room overrides the line: a short line inside a jammed dining
+    // hall is not a short wait. "Full", not "Packed" — same word as every
+    // other skip-band reading (§4.3 amendment 2026-08-07).
     if (item.crowd === "packed") {
-      return { word: "Packed", tone: "skip", ...live };
+      return { word: "Full", tone: "skip", ...live };
     }
     const mapped = item.line ? FOOD_VERDICTS[item.line] : undefined;
     if (mapped) return { word: mapped[0], tone: mapped[1], ...live };

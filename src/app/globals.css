@@ -19,6 +19,12 @@
 
   --color-gold: #ffc20e;
   --color-gold-soft: rgba(255, 194, 14, 0.12);
+  /* Mustard — the food row's location line (§4.1 amendment 2026-08-07). NOT a
+     dimmer of --gold and never a signal: it marks a category, which is why it
+     sits well away from the signal hue. Contrast computed, not eyeballed:
+     7.19:1 on --sheet and 5.63:1 on the Best bet's gold-soft wash composited
+     over the sheet (#302e25) — both clear 4.5:1 at the 12px it renders at. */
+  --color-mustard: #c9a227;
 
   --color-line: #242c3e;
   --color-soft: #1b2232;
