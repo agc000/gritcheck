@@ -12,6 +12,7 @@ import {
   OPEN_UPDATE_EVENT,
   type OpenUpdateEventDetail,
 } from "@/lib/map-events";
+import { zoneName } from "@/lib/spot-name";
 import { supabase } from "@/lib/supabase";
 import type { SpotListItem } from "@/lib/types";
 
@@ -383,7 +384,7 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
                     >
                       <span className="min-w-0">
                         <span className="block truncate text-[14px] font-semibold">
-                          {item.name}
+                          {zoneName(item.name, item.building)}
                         </span>
                         <span className="block truncate text-[12px] text-muted">
                           {item.building}

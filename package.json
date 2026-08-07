@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node scraper/seed/validate.ts && node --test \"scraper/test/*.test.ts\"",
+    "test": "node scraper/seed/validate.ts && node --test \"scraper/test/*.test.ts\" \"src/lib/*.test.ts\"",
     "scrape": "node scraper/src/run.ts",
     "test:decay": "npx supabase test db",
     "test:limits": "node scripts/test-submit-update.mjs",

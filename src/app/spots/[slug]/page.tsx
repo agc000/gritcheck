@@ -10,6 +10,7 @@ import { LiveRefresh } from "@/components/LiveRefresh";
 import { SpotStatusCard } from "@/components/SpotStatusCard";
 import { UpdateSheet } from "@/components/UpdateSheet";
 import { CHIPS_BY_CATEGORY } from "@/lib/filters";
+import { zoneName } from "@/lib/spot-name";
 import { getSpotDetail } from "@/lib/spots";
 import { formatMinutes } from "@/lib/time";
 
@@ -118,7 +119,7 @@ export default async function SpotPage({
 
       <header className="mt-4">
         <h1 className="text-2xl font-extrabold tracking-[-0.015em]">
-          {item.name}
+          {zoneName(item.name, item.building)}
         </h1>
         <p className="mt-1 text-sm text-muted">{item.building}</p>
       </header>
