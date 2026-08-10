@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { PATH_COLOR } from "@/lib/map-colors";
 import { BrandLockup } from "./BrandMark";
+import { MapBoundary, webglAvailable } from "./MapBoundary";
 import type { BuildingMarker } from "./MapView";
 
 // Pedestrian glyph for the walking-path row (Alan asked for "person walking
@@ -119,6 +120,9 @@ const POST_GESTURE_IDLE_TIMEOUT_MS = 2_000;
 
 export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
   const [mapReady, setMapReady] = useState(false);
+  // Device cannot render the map at all — a third state, distinct from "not
+  // asked yet" and "loading". Older phones and iOS Low Power Mode land here.
+  const [noWebgl, setNoWebgl] = useState(false);
   useEffect(() => {
     let armed = false;
     let done = false;
@@ -129,6 +133,13 @@ export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
       if (done) return;
       done = true;
       cleanup();
+      // Ask the device before loading ~800KB of maplibre it cannot use. On a
+      // phone without a usable WebGL context this is the difference between a
+      // one-line notice and a crashed page (production telemetry 2026-08-09).
+      if (!webglAvailable()) {
+        setNoWebgl(true);
+        return;
+      }
       setMapReady(true);
     };
     // Post-gesture: take the next idle slot rather than mounting inside a
@@ -178,7 +189,17 @@ export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
 
   return (
     <div className="absolute inset-0">
-      {mapReady && <MapView buildings={buildings} />}
+      {/* The boundary is the guarantee, not the polish: a WebGL context can
+          also be lost mid-session (backgrounded tab, driver reset), which no
+          up-front check can predict. Either way the sheet survives — that is
+          where the answer lives (§4.2). */}
+      {mapReady && (
+        <MapBoundary
+          fallback={<MapNotice>The map can&rsquo;t load on this phone.</MapNotice>}
+        >
+          <MapView buildings={buildings} />
+        </MapBoundary>
+      )}
       {/* Legend rides with the map — no map, nothing to explain. */}
       {mapReady && <MapLegend />}
 
@@ -188,7 +209,16 @@ export function MapCanvas({ buildings }: { buildings: BuildingMarker[] }) {
           app was broken. This says what is true and what to do about it.
           Server-rendered (mapReady starts false), absolutely positioned, so it
           costs no hydration work and cannot shift layout — CLS stays 0. */}
-      {!mapReady && <MapNotice>Tap to load the map</MapNotice>}
+      {!mapReady && !noWebgl && <MapNotice>Tap to load the map</MapNotice>}
+
+      {/* State three: the device told us it cannot. Says so plainly rather than
+          leaving "Tap to load the map" sitting there after a tap did nothing —
+          §4.7, and the list below still works. */}
+      {noWebgl && (
+        <MapNotice>
+          The map can&rsquo;t load on this phone. The list below still works.
+        </MapNotice>
+      )}
 
       {/* Top bar: Grits mark + wordmark (mockup .map-top). Visual only (§4.7).
           Padding clears the iOS notch/status bar in standalone PWA mode. */}

@@ -111,6 +111,14 @@ export default function MapView({
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    // If this throws (no WebGL context, driver reset), the error is NOT caught
+    // here on purpose. React forwards effect errors to the nearest boundary,
+    // and MapCanvas now wraps this component in MapBoundary — so the failure
+    // costs the map and nothing else. Before Phase 7 there was no such
+    // boundary, so the throw travelled all the way to Next's route boundary
+    // and replaced the entire page, list included (telemetry 2026-08-09).
+    // Catching it locally would need setState-in-effect, a CI error, and would
+    // duplicate the boundary's job.
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: "/map-style.json",

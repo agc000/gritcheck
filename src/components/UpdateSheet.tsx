@@ -298,10 +298,17 @@ export function UpdateSheet({ items }: { items: SpotListItem[] }) {
     // verdicts into the browse list; Realtime covers other clients.
     logEvent("submit_update", { slug: spot.slug, kind: spot.category });
     setSent(true);
+    // 1600ms, was 700 (Phase 7, Alan: "I don't think update works"). The
+    // submission was succeeding — 201, row written, event logged — but "Sent."
+    // plus a line of sub-text held for 700ms is shorter than it takes to read,
+    // so the sheet appeared to close on its own and the report felt lost. §4.2
+    // asks for a SUBTLE confirmation, not an unreadable one; the fix is dwell
+    // time, not more chrome. This is the only feedback a contributor ever gets,
+    // and contribution rate is the number the product lives on (§7.4).
     setTimeout(() => {
       setOpen(false);
       router.refresh();
-    }, 700);
+    }, 1600);
   };
 
   // Open spots first; closed still selectable — hours data has known gaps

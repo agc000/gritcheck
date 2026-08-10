@@ -11,7 +11,12 @@ import { logEvent } from "./events";
 /** Long messages are usually stack-ish noise; the first line identifies it. */
 const MAX_MESSAGE = 200;
 
-export type ErrorBoundaryKind = "route" | "global";
+// "map" (Phase 7) is a COMPONENT-level boundary, unlike the other two: it
+// contains a failure instead of replacing the screen, so a "map" error means
+// the student still had a working app. Worth telling apart in the events
+// table — a spike in "map" is a device-support story, a spike in "route" is an
+// outage.
+export type ErrorBoundaryKind = "route" | "global" | "map";
 
 export function logClientError(
   error: Error & { digest?: string },
