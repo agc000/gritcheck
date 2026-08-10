@@ -9,7 +9,7 @@ import { SpotBrowser } from "@/components/SpotBrowser";
 import { UpdateSheet } from "@/components/UpdateSheet";
 import { buildingKey, type CampusBuilding } from "@/lib/buildings";
 import { getSpotList } from "@/lib/spots";
-import { liveVerdict, type Tone } from "@/lib/status";
+import { expectedTone, liveVerdict, type Tone } from "@/lib/status";
 
 // Rendered per-request so the sheet always shows live rows.
 export const dynamic = "force-dynamic";
@@ -21,12 +21,27 @@ export default async function Home() {
   // vendors on one roof (§4.2: buildings are the tap targets). Anchor at the
   // mean of the building's spot coords. Naming normalized by buildingKey
   // (src/lib/buildings.ts — shared with the sheet's building filter).
-  // Building glow tone: the BEST live tone among the building's spots of a
-  // category (go beats hold beats skip). The map's job is "where should I
-  // go" — one short-line vendor inside the Commons makes the building worth
-  // walking to even if its neighbors are slammed; the per-spot warning lives
-  // in the list and detail views. Null when nothing inside has a live,
-  // confident verdict (glow off; dot falls back to open/closed).
+  // Building tone: the BEST tone among the building's spots of a category (go
+  // beats hold beats skip). The map's job is "where should I go" — one
+  // short-line vendor inside the Commons makes the building worth walking to
+  // even if its neighbors are slammed; the per-spot warning lives in the list
+  // and detail views.
+  //
+  // TWO signals, split 2026-08-07 (Alan: "the map should be accurate to the
+  // tabs"). Before this both the dot and the glow keyed off live data alone, so
+  // with no reports in the system every tone was null — the dots were plain
+  // open-green / closed-grey and carried no crowding signal at all, while the
+  // rows an inch below read "Empty / In between / Full". Same spot, two answers.
+  //
+  //   toneFor{Food,Study} — live reading, else the hour's baseline. Drives the
+  //                         DOT, and matches the row exactly.
+  //   {food,study}Live    — is there a live confident reading? Drives the GLOW.
+  //
+  // The §Phase 3 rule that "the building glow keys off LIVE data only" is
+  // preserved exactly: the glow still does. What changed is the dot, which was
+  // never the thing carrying that promise. The split is what lets the map be
+  // useful on day one without dressing a baseline up as a live report — colour
+  // says what to expect, the halo says someone actually looked.
   type GlowTone = Exclude<Tone, "closed"> | null;
   const bestTone = (a: GlowTone, b: Tone | null): GlowTone => {
     const next = b === "closed" ? null : b; // liveVerdict never yields it, but the type allows it
@@ -48,6 +63,8 @@ export default async function Home() {
       open: boolean;
       foodTone: GlowTone;
       studyTone: GlowTone;
+      foodLive: boolean;
+      studyLive: boolean;
     }
   >();
   for (const item of items) {
@@ -57,8 +74,12 @@ export default async function Home() {
       {
         lat: 0, lng: 0, n: 0, slugs: [], food: false, study: false,
         open: false, foodTone: null, studyTone: null,
+        foodLive: false, studyLive: false,
       };
-    const tone = liveVerdict(item, now)?.tone ?? null;
+    // Dot tone: what the row would say (live, else baseline).
+    const tone = expectedTone(item, now);
+    // Glow: only a live, confident reading earns the halo.
+    const isLive = liveVerdict(item, now) !== null;
     acc.set(key, {
       lat: a.lat + item.lat,
       lng: a.lng + item.lng,
@@ -72,6 +93,8 @@ export default async function Home() {
         item.category === "food" ? bestTone(a.foodTone, tone) : a.foodTone,
       studyTone:
         item.category === "study" ? bestTone(a.studyTone, tone) : a.studyTone,
+      foodLive: a.foodLive || (item.category === "food" && isLive),
+      studyLive: a.studyLive || (item.category === "study" && isLive),
     });
   }
   const buildings = [...acc.entries()].map(([building, a]) => ({
@@ -85,6 +108,8 @@ export default async function Home() {
     open: a.open,
     foodTone: a.foodTone,
     studyTone: a.studyTone,
+    foodLive: a.foodLive,
+    studyLive: a.studyLive,
   }));
 
   // Find Building tab roster: the interactive five + the roster-flagged OSM

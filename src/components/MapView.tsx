@@ -28,14 +28,25 @@ export type BuildingMarker = {
   food: boolean;
   study: boolean;
   open: boolean;
-  /** Best live tone among the building's spots per category (page.tsx). */
+  /**
+   * Best tone among the building's spots per category — live reading if one
+   * exists, else the hour's baseline (page.tsx). This is what the DOT paints,
+   * and it is the same answer the list row gives.
+   */
   foodTone: "go" | "hold" | "skip" | null;
   studyTone: "go" | "hold" | "skip" | null;
+  /**
+   * Whether a live, confident reading exists for that category. Drives the GLOW
+   * only — §Phase 3's "the glow keys off LIVE data only" is unchanged. Colour
+   * says what to expect; the halo says somebody actually reported it.
+   */
+  foodLive: boolean;
+  studyLive: boolean;
 };
 
 // Status colors (§4.1 tokens) — the only place they touch the map. Dot falls
-// back to open-green/closed-gray when no live tone exists; the glow layer is
-// filtered out entirely in that case.
+// back to open-green/closed-gray only when nothing at all is known (closed, or
+// no baseline for this hour); the glow layer is filtered to live readings.
 const TONE_COLORS = [
   "go", "#2CB56E",
   "hold", "#D9952E",
@@ -48,9 +59,6 @@ const toneColor = (prop: "foodTone" | "studyTone") =>
     ...TONE_COLORS,
     ["case", ["==", ["get", "open"], true], "#2CB56E", "#8B93A4"],
   ] as maplibregl.ExpressionSpecification;
-const hasTone = (prop: "foodTone" | "studyTone") =>
-  ["!=", ["coalesce", ["get", prop], "none"], "none"] as const;
-
 // Which buildings read as "in play" for the active tab. The two tabs ask
 // genuinely different questions, so they read from different sources:
 //   Food  — feature-state, set from the spot roster: only buildings that
@@ -201,6 +209,8 @@ export default function MapView({
           open: b.open,
           foodTone: b.foodTone,
           studyTone: b.studyTone,
+          foodLive: b.foodLive,
+          studyLive: b.studyLive,
         },
       })),
     };
@@ -441,6 +451,7 @@ export default function MapView({
     const applyCategory = (category: Category) => {
       const hasCategory = ["==", ["get", category], true] as maplibregl.FilterSpecification;
       const tone = category === "food" ? ("foodTone" as const) : ("studyTone" as const);
+      const liveProp = category === "food" ? "foodLive" : "studyLive";
       map.setFilter("spot-buildings-dot", hasCategory);
       map.setFilter("spot-buildings-label", null); // every name tag, always
       map.setPaintProperty("spot-buildings-label", "text-color", [
@@ -449,11 +460,14 @@ export default function MapView({
         "#DAD7CE", // has spots of this category — full emphasis (13.1:1)
         "#9A9488", // context only — recessive but legible (6.3:1)
       ]);
-      // Glow only where the active category has a live tone.
+      // Glow ONLY where the active category has a live confident reading —
+      // deliberately not `hasTone`, which now also matches baseline-derived
+      // dots. This is the line that keeps §Phase 3's promise: the halo means
+      // "someone reported this", never "we guessed from a typical week".
       map.setFilter("spot-buildings-glow", [
         "all",
         hasCategory,
-        hasTone(tone),
+        ["==", ["get", liveProp], true],
       ] as unknown as maplibregl.FilterSpecification);
       map.setPaintProperty("spot-buildings-dot", "circle-color", toneColor(tone));
       map.setPaintProperty("spot-buildings-glow", "circle-color", toneColor(tone));

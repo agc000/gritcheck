@@ -140,6 +140,33 @@ export function liveVerdict(item: SpotListItem, now: Date): Verdict | null {
   return null;
 }
 
+/**
+ * The tone a spot's ROW would show — live reading if there is one, otherwise
+ * the hour's baseline. Null when the spot is closed, or when nothing is known
+ * for this hour.
+ *
+ * Exists so the map's dots can say the same thing the list says. Deliberately
+ * derived from the same two functions the rows use rather than reimplemented:
+ * a second copy of "what colour is this spot" would drift, which is the whole
+ * reason `liveVerdict` was exported in the first place.
+ *
+ * Note it never returns "hold" for ignorance. `getVerdict` falls through to
+ * `No recent data` with a hold tone, which is right for a row (the word carries
+ * the meaning) and wrong for a dot (an amber dot with no word beside it is an
+ * amber claim). Unknown must stay colourless on the map.
+ */
+export function expectedTone(
+  item: SpotListItem,
+  now: Date,
+): Exclude<Tone, "closed"> | null {
+  if (!item.isOpen) return null;
+  const live = liveVerdict(item, now);
+  if (live) return live.tone === "closed" ? null : live.tone;
+  const typical = baselineWord(item.baseline, now);
+  const mapped = typical ? BASELINE_VERDICTS[typical] : undefined;
+  return mapped ? (mapped[1] as Exclude<Tone, "closed">) : null;
+}
+
 export function getVerdict(item: SpotListItem, now: Date): Verdict {
   if (!item.isOpen) {
     // "opens 7 AM" when there's a later opening today (mockup's closed row).
