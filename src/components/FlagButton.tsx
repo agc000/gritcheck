@@ -34,7 +34,7 @@ export function FlagButton({ updateId }: { updateId: number }) {
       // ≈ 45px; the matching negative margin cancels the padding so the
       // comment row's height is unaffected. Visual stays an 11px whisper —
       // flagging is a rare corrective action, not a call to action.
-      className="-my-4 px-2 py-4 text-[11px] font-semibold text-faint disabled:text-muted"
+      className="-my-4 px-2 py-4 text-[11px] font-semibold text-faint transition-transform duration-150 ease-out active:scale-97 disabled:text-muted motion-reduce:transition-none"
     >
       {flagged ? "Flagged" : "Flag"}
     </button>

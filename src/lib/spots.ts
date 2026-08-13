@@ -125,20 +125,34 @@ export const getSpotDetail = cache(async function getSpotDetail(
   const nowMs = Date.now();
   const { dow } = nyClock(new Date(nowMs));
 
-  const { data: spot } = await supabase
-    .from("spots")
-    .select("id,slug,name,category,building,lat,lng,consensus,attributes,baseline")
-    .eq("slug", slug)
-    .maybeSingle();
+  // TWO stages, not three deep. `spot_current_status` keys on slug — the same
+  // key we already have — so it does NOT need to wait for the spots row, and it
+  // is the expensive one here (the §5 decay/vote aggregation). Hoisting it into
+  // the first stage runs it concurrently with a trivial indexed lookup instead
+  // of serially after it, which takes it off the critical path entirely.
+  //
+  // Hours and comments genuinely need `spot.id`, so they stay in stage two.
+  // Collapsing all of it into ONE round trip via PostgREST embedding was
+  // considered and not done: `spot_effective_hours` is a CTE-based view, and
+  // whether PostgREST can trace an embeddable FK through it is a question that
+  // has to be answered against a live database, not guessed at (§Phase 6 —
+  // assert the state). Left as the next step, with the reason recorded.
+  const [{ data: spot }, { data: live }] = await Promise.all([
+    supabase
+      .from("spots")
+      .select("id,slug,name,category,building,lat,lng,consensus,attributes,baseline")
+      .eq("slug", slug)
+      .maybeSingle(),
+    supabase
+      .from("spot_current_status")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle(),
+  ]);
   if (!spot) return null;
 
-  const [{ data: live }, { data: hours }, { data: comments }] =
+  const [{ data: hours }, { data: comments }] =
     await Promise.all([
-      supabase
-        .from("spot_current_status")
-        .select("*")
-        .eq("slug", slug)
-        .maybeSingle(),
       supabase
         .from("spot_effective_hours")
         .select("spot_id,day_of_week,opens,closes")

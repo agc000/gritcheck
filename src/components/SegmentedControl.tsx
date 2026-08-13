@@ -39,7 +39,7 @@ export function SegmentedControl<T extends string>({
           role="tab"
           aria-selected={value === opt.value}
           onClick={() => onChange(opt.value)}
-          className={`relative z-1 flex-1 rounded-[5px] py-2.5 text-[13.5px] font-bold transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-0.5 motion-reduce:transition-none ${
+          className={`relative z-1 flex-1 rounded-[5px] py-2.5 text-[13.5px] font-bold transition-[color,transform] duration-150 ease-out active:scale-97 before:absolute before:inset-x-0 before:-inset-y-0.5 motion-reduce:transition-none ${
             value === opt.value ? "text-ink" : "text-muted"
           }`}
         >

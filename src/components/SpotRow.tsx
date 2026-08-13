@@ -68,9 +68,14 @@ export function SpotRow({
       // entry, so the tap-to-detail transition is instant in production.
       // ~16 spots × a small RSC payload — cheap insurance.
       prefetch={true}
-      className={`flex items-center justify-between gap-3 transition-colors duration-100 ${
+      // Two different tap feedbacks on purpose (§4.6). The Best bet is a CARD,
+      // so it scales like every other card-shaped control. A plain list row is
+      // full-bleed against hairline dividers — scaling it would drag the
+      // dividers with it and read as a glitch, so it flashes its surface
+      // instead. Same signal, shape-appropriate.
+      className={`flex items-center justify-between gap-3 transition-[background-color,transform] duration-100 ease-out motion-reduce:transition-none ${
         best
-          ? "mx-2.5 mb-1.5 rounded-card bg-gold-soft px-3.5 py-3.75"
+          ? "mx-2.5 mb-1.5 rounded-card bg-gold-soft px-3.5 py-3.75 active:scale-98"
           : "px-4.5 py-3.75 active:bg-soft"
       }`}
     >

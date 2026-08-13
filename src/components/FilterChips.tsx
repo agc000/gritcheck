@@ -26,7 +26,7 @@ export function FilterChips({
   // carries py-1.5 so the overhang lands inside its padding box, where
   // overflow does not clip. Verified by re-probing with elementFromPoint.
   const chipClass = (selected: boolean) =>
-    `relative flex-none rounded-md border px-3.5 py-1.75 text-[12.5px] font-semibold transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-1.25 motion-reduce:transition-none ${
+    `relative flex-none rounded-md border px-3.5 py-1.75 text-[12.5px] font-semibold transition-[color,background-color,border-color,transform] duration-150 ease-out active:scale-97 before:absolute before:inset-x-0 before:-inset-y-1.25 motion-reduce:transition-none ${
       selected
         ? "border-black bg-black text-gold"
         : "border-line bg-sheet text-muted"

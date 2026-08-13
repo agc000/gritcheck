@@ -34,7 +34,7 @@ export function SortMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="relative flex items-center gap-1.25 whitespace-nowrap rounded-md bg-soft px-3.25 py-2 text-xs font-bold text-ink before:absolute before:inset-x-0 before:-inset-y-1.5"
+        className="relative flex items-center gap-1.25 whitespace-nowrap rounded-md bg-soft px-3.25 py-2 text-xs font-bold text-ink transition-transform duration-150 ease-out active:scale-97 before:absolute before:inset-x-0 before:-inset-y-1.5 motion-reduce:transition-none"
       >
         <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
           <path d="M4 7h16M7 12h10M10 17h4" />
