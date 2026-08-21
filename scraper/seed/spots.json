@@ -181,7 +181,7 @@
     },
     {
       "slug": "piccolo-italia",
-      "name": "Piccolo Italia",
+      "name": "Piccola Italia",
       "category": "food",
       "building": "Commons",
       "lat": 39.255089,
@@ -360,7 +360,7 @@
     },
     {
       "slug": "true-grits-market",
-      "name": "True Grit's Market",
+      "name": "True Grit's Retriever Market",
       "category": "food",
       "building": "True Grit's (residential side)",
       "lat": 39.255866,
@@ -372,6 +372,21 @@
       "baseline": {},
       "hours_source": {
         "kind": "manual"
+      }
+    },
+    {
+      "slug": "skylight-room",
+      "name": "Skylight Room",
+      "category": "food",
+      "building": "Commons 3rd floor",
+      "lat": 39.255087,
+      "lng": -76.711144,
+      "attributes": {},
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "dining",
+        "source_slug": "the-skylight-room"
       }
     },
     {

@@ -1033,35 +1033,52 @@ arrives at move-in, and writing them early stakes launch on remembering to
 re-run. Provisional hours are biased toward term time, which is the correct
 bias for the students who show up.
 
-*Amended 2026-08-13 (Alan supplied the official UMBC dining sheet for
-**Aug 18–23 2026** — move-in week). All 15 dining venues were rewritten in
-`scraper/seed/hours.json` from that sheet, replacing the provisional term-biased
-guesses. Transcription verified row-by-row against the source.*
+*Amended 2026-08-13 (Alan supplied two official UMBC dining sheets). The
+**Aug 18–23** move-in sheet was written first and is now **superseded** by the
+**Aug 23–29** first-term-week sheet, which is what is seeded. Every cell of both
+was verified against the source — 119 day-cells across 17 venues for the current
+one.*
 
-**⚠ THIS DATA EXPIRES 2026-08-23.** Two properties of it are load-bearing and
-easy to forget:
+**Why the second sheet is the better base:** it covers **all seven days**, which
+removes the Monday blackout the move-in sheet caused (that sheet had no Monday
+column, and `spot_hours` is keyed by day-of-week with no date range, so every
+dining venue read closed on Mondays). It is also term hours rather than move-in
+hours, so it is the right shape for the students who actually arrive.
 
-- **The source covers Tue–Sun only. There is NO Monday data**, and `spot_hours`
-  is keyed by day-of-week with no date range — so every dining venue now reads
-  **closed on Mondays, permanently**, until term hours replace this. Harmless
-  inside Aug 18–23 (that range contains no Monday); wrong the moment the data
-  outlives its window.
-- **Several venues are closed on specific days during move-in that will be open
-  in term** (Chick-fil-A is Fri/Sat only; Sushi Do and Dunkin' don't open until
-  Thursday). Those are correct for the launch week and wrong for September.
+**⚠ Still time-boxed.** The source says explicitly: *"This schedule applies only
+to August 23–29, 2026. Do not assume the hours repeat in later weeks."* Re-run
+the dining write when the next sheet publishes.
 
-Two venues carry **no hours at all**: `einstein-bros` (listed in the sheet with
-no hours on any day) and `blends-and-bowls` (absent from the sheet entirely).
-Both now render `Closed`, which is the honest reading — but `blends-and-bowls`
-is an *inference from absence*, not a stated closure, and is worth confirming on
-the walk.
+**What the sheets settled, and what changed as a result:**
 
-The sheet also settles three open items below: **Jerk + Lime is real** (Thu/Fri
-11–4, Sat 11–3), **True Grit's Market is real** (Thu–Sat 12PM–1AM, Sun 8AM–1AM),
-and **Skylight Room has no hours on any day** — which retro-justifies leaving the
-orphan row in place, since `Closed` is now the accurate rendering. Jerk + Lime
-and True Grit's Market are NOT seeded as spots yet; they need `spots.json` rows
-with coordinates before their hours can attach.
+- **The Skylight Room is OPEN**, Mon–Fri 11:00–1:30 PM. It had been dropped from
+  the seed as a dead venue and left as an orphan row rendering `Closed` — which
+  was correct under the move-in sheet (no hours any day) and **wrong** under this
+  one. Re-added to `spots.json` using the coordinates the production orphan
+  already carried, so seed and database agree again. This is the seed-removal
+  gotcha cutting the other way: the row surviving deletion is what made the fix a
+  one-line re-add instead of a re-survey.
+- **Jerk + Lime and True Grit's Retriever Market are real** and are now seeded
+  spots (they were open questions in §7.1.1 item 3). ⚠ Both carry **placeholder
+  coordinates** borrowed from a neighbouring venue and the parent building —
+  right building, wrong metre. Flagged for the walk.
+- **The duplicate slugs are resolved by evidence** (§7.1.1 item 2). The sheet
+  lists `piccola-italia` (The Commons, real hours) and `picola-italia`
+  (Additional Locations, closed every day) as *separate* venues, and likewise
+  `blends-and-bowls` / `blends-bowls`. The live one is the Commons entry; the
+  Additional Locations entries are dead. Display name corrected to the official
+  **Piccola Italia** (was "Piccolo Italia", flagged as pending since the Phase 3
+  seed).
+- **The Coffee Shoppe (Admin) is closed all week** — stated, not inferred. Its
+  hours were removed; it now renders `Closed`.
+- **Blends and Bowls is closed all week** — stated in this sheet, which confirms
+  the inference-from-absence made against the move-in sheet.
+
+**⚠ Starbucks is absent from the Aug 23–29 sheet entirely** — not listed as
+closed, simply not present, though it appeared in the move-in sheet. Its rows
+were **left untouched** rather than guessed in either direction: silently closing
+a high-traffic venue is as wrong as advertising stale hours. It currently serves
+move-in-week hours and **needs Alan's answer**.
 
 1. **Run the dining write** (`--feeds=dining`, procedure in §Phase 6), diff
    against provisional, and confirm the summer→fall transition was captured
