@@ -1033,6 +1033,36 @@ arrives at move-in, and writing them early stakes launch on remembering to
 re-run. Provisional hours are biased toward term time, which is the correct
 bias for the students who show up.
 
+*Amended 2026-08-13 (Alan supplied the official UMBC dining sheet for
+**Aug 18–23 2026** — move-in week). All 15 dining venues were rewritten in
+`scraper/seed/hours.json` from that sheet, replacing the provisional term-biased
+guesses. Transcription verified row-by-row against the source.*
+
+**⚠ THIS DATA EXPIRES 2026-08-23.** Two properties of it are load-bearing and
+easy to forget:
+
+- **The source covers Tue–Sun only. There is NO Monday data**, and `spot_hours`
+  is keyed by day-of-week with no date range — so every dining venue now reads
+  **closed on Mondays, permanently**, until term hours replace this. Harmless
+  inside Aug 18–23 (that range contains no Monday); wrong the moment the data
+  outlives its window.
+- **Several venues are closed on specific days during move-in that will be open
+  in term** (Chick-fil-A is Fri/Sat only; Sushi Do and Dunkin' don't open until
+  Thursday). Those are correct for the launch week and wrong for September.
+
+Two venues carry **no hours at all**: `einstein-bros` (listed in the sheet with
+no hours on any day) and `blends-and-bowls` (absent from the sheet entirely).
+Both now render `Closed`, which is the honest reading — but `blends-and-bowls`
+is an *inference from absence*, not a stated closure, and is worth confirming on
+the walk.
+
+The sheet also settles three open items below: **Jerk + Lime is real** (Thu/Fri
+11–4, Sat 11–3), **True Grit's Market is real** (Thu–Sat 12PM–1AM, Sun 8AM–1AM),
+and **Skylight Room has no hours on any day** — which retro-justifies leaving the
+orphan row in place, since `Closed` is now the accurate rendering. Jerk + Lime
+and True Grit's Market are NOT seeded as spots yet; they need `spots.json` rows
+with coordinates before their hours can attach.
+
 1. **Run the dining write** (`--feeds=dining`, procedure in §Phase 6), diff
    against provisional, and confirm the summer→fall transition was captured
    rather than assumed.
