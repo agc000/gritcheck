@@ -345,6 +345,36 @@
       }
     },
     {
+      "slug": "jerk-and-lime",
+      "name": "Jerk + Lime",
+      "category": "food",
+      "building": "Commons",
+      "lat": 39.255193,
+      "lng": -76.71136,
+      "attributes": {},
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
+      "slug": "true-grits-market",
+      "name": "True Grit's Market",
+      "category": "food",
+      "building": "True Grit's (residential side)",
+      "lat": 39.255866,
+      "lng": -76.707668,
+      "attributes": {
+        "open_late": true
+      },
+      "consensus": null,
+      "baseline": {},
+      "hours_source": {
+        "kind": "manual"
+      }
+    },
+    {
       "slug": "aok-rlc",
       "name": "AOK (Library) — Retriever Learning Commons",
       "category": "study",
