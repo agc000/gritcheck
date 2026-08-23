@@ -464,6 +464,23 @@ A view (or function) `spot_current_status` computing: latest weighted verdict pe
 1. Per **device**: 1 update per spot per 10 min; 12/day.
 2. Per **IP**: 3 updates per spot per 10 min; 30/day. (Defends against the sybil hole: clearing localStorage mints a new device ID, but rotating IPs on a phone is costly. Read the IP from the request headers server-side; store hashed.)
 
+*Amended 2026-08-23 (launch day) — **IP limits raised to 20 per spot per 10 min
+and 400/day.** Device limits unchanged.*
+
+*The original numbers rested on "rotating IPs on a phone is costly", which
+silently assumes **one IP ≈ one person**. That holds on cellular and breaks
+completely on campus WiFi, where the entire university egresses through a
+handful of NAT'd addresses. Under the old ceiling **UMBC collectively got 30
+updates per day**, and the fourth student to report a busy spot inside 10
+minutes was refused — throttling precisely the lunch rush the product exists to
+cover, and capping §7.4's contribution rate for everybody at once. The failure
+mode was invisible in testing because one laptop is one IP.*
+
+*The device keys still carry the anti-abuse weight, and they are the ones that
+map to a person. The IP key keeps the job it is actually good at — catching a
+single machine scripting thousands — which 400/day still does comfortably while
+sitting well above plausible human traffic from one campus at 1k users.*
+
 **False-report (data poisoning) model — why a lie is weak by design:** status is a decay-weighted *vote*, so one false report is outvoted by any honest one; a lone report is labeled "Low confidence · 1 report this hour," never presented as truth; it decays toward baseline within ~1 h (§5.1); and follow-up prompts from students who went anyway generate corrective data. The attacker's payoff (mildly misleading strangers about a lunch line) is far below the effort of sustaining it. 
 
 **Escalation tools (build in Phase 4, hope to never use):**

@@ -364,6 +364,14 @@ export default function MapView({
           detail: { building: null },
         }),
       );
+      // ...and put the sheet back where the user left it. Picking a building
+      // COLLAPSES the sheet to the peek sliver so the camera landing is
+      // visible (SpotBrowser.pickBuilding), and before this the clear chip
+      // undid the highlight but not the collapse — so tapping ✕ appeared to do
+      // nothing except remove the chip, stranding the user on a map with a
+      // sliver of list (Alan, launch-day report: "the X may not close the
+      // screen"). Clearing has to undo BOTH halves of what picking did.
+      window.dispatchEvent(new CustomEvent(EXPAND_SHEET_EVENT));
     };
     // A pick completed before this map mounted parked its target here. The
     // microtask keeps applyFind's setState out of the synchronous effect

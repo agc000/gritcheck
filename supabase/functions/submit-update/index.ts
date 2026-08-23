@@ -13,10 +13,26 @@ import { z } from "npm:zod@3";
 
 // §5.5 rate limits. Two keys because clearing localStorage mints a new device
 // ID (cheap), while rotating IPs on a phone is costly.
+// §5.5 rate limits, amended 2026-08-23 (launch day) — see BUILD_PLAN.
+//
+// DEVICE limits are the real per-person control and are UNCHANGED: one update
+// per spot per 10 minutes, 12 a day. A person cannot flood a spot.
+//
+// IP limits were raised 3 -> 20 and 30 -> 400. The original numbers assumed one
+// IP ≈ one person ("rotating IPs on a phone is costly"), which holds on
+// cellular and FAILS on campus WiFi, where the whole university leaves through
+// a handful of NAT'd addresses. At the old ceiling UMBC as a whole got 30
+// updates per day and the 4th person to report a busy spot within 10 minutes
+// was refused — throttling exactly the lunch rush the product exists for, and
+// capping contribution rate (§7.4) for everyone at once.
+//
+// The IP key keeps its actual job: catching one machine scripting thousands.
+// 400/day from a single campus egress is plausible human traffic at 1k users;
+// a script blows past it in minutes and still gets stopped.
 const DEVICE_PER_SPOT_10MIN = 1;
 const DEVICE_PER_DAY = 12;
-const IP_PER_SPOT_10MIN = 3;
-const IP_PER_DAY = 30;
+const IP_PER_SPOT_10MIN = 20;
+const IP_PER_DAY = 400;
 
 // Browser callers only; supabase-js functions.invoke sends the anon JWT.
 const ALLOWED_ORIGINS = new Set([
