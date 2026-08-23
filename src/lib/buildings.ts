@@ -4,11 +4,27 @@
 // the map (geojson feature keys match this), and the sheet (building-filter
 // matching). TODO(seed): a canonical building key in spots.json is the honest
 // fix; flagged for Alan's next data pass.
-export const buildingKey = (b: string) =>
-  b
+// Spot `building` values are what students say; the footprint geojson uses the
+// university's official names. Where they differ the map tap silently did
+// nothing — the handler looks the tapped key up in the spot roster and bails
+// when it misses — so five study buildings were untappable for a naming
+// reason, not a data one (Alan, 2026-08-23: "study buildings need to be
+// selectable just as they are in food"). Keyed by the spot-side name.
+const FOOTPRINT_ALIASES: Record<string, string> = {
+  "Math & Psychology": "Mathematics & Psychology",
+  Meyerhoff: "Meyerhoff Hall",
+  "Performing Arts": "Performing Arts & Humanities",
+  RAC: "Retriever Activities Center",
+  Chemistry: "Chemistry Lecture Hall",
+};
+
+export const buildingKey = (b: string) => {
+  const stripped = b
     .replace(/\s*\(.+\)$/, "")
     .replace(/\s+(ground|\d+(?:st|nd|rd|th))\s+floor$/i, "")
     .trim();
+  return FOOTPRINT_ALIASES[stripped] ?? stripped;
+};
 
 // One row of the Find Building tab: every campus building (the 5 interactive
 // spot buildings merged with the OSM label points), assembled server-side in

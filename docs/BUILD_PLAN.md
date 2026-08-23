@@ -67,6 +67,28 @@ User accounts/auth · reviews or star ratings · chat rooms · gym category · p
 | Map | **MapLibre GL JS** + custom dark-gold style, tiles via **OpenFreeMap** (MapTiler free tier as fallback) | GPU vector map = premium feel; style JSON = brand; $0 with no usage billing |
 | PWA | **Serwist** | Maintained Next.js service-worker toolchain |
 | Hosting | **Vercel** (Hobby) | Zero-ops, preview deploys |
+
+*Correction 2026-08-23 (launch day): **this Vercel project is NOT connected to
+a Git repository.** Pushing to `main` does nothing — the CLI prints "To deploy
+every commit automatically, connect a Git Repository". Every frontend change
+requires `npx vercel --prod` by hand, and the CLI must be logged in
+(`npx vercel login`) or it fails with a bare `Error: Not authorized`.*
+
+*This was assumed the other way for weeks and cost a real launch-day scare: a
+committed, pushed, green-CI fix (the Find-Building ✕ not restoring the sheet)
+was simply not live, and the only reason it surfaced was driving the actual
+flow against production and comparing sheet positions — 743 collapsed vs 405
+restored — rather than trusting that "pushed" meant "shipped". The habit that
+caught it is §Phase 6's: **verify the state a change should produce, on the
+surface that serves users.**
+
+**Deploy checklist, all three manual:**
+1. `npx supabase db push` — migrations, BEFORE functions
+2. `npx supabase functions deploy submit-update` — edge function
+3. `npx vercel --prod` — frontend
+
+*Connecting the Git repo would remove step 3 and is worth doing between
+semesters; it is deliberately NOT done mid-launch.*
 | Scraper | **GitHub Actions cron + TypeScript script** | Free scheduled compute; upserts hours into Supabase |
 | Analytics | **Vercel Analytics** + a tiny `events` table for product events | Enough to measure the launch; no third-party bloat |
 

@@ -87,7 +87,23 @@ export function baselineWord(baseline: Json, now: Date): string | null {
   // Campus time, not server time — Vercel renders in UTC (§5.4).
   const { dow, minutes } = nyClock(now);
   const dayKey = dow === 0 || dow === 6 ? "sat-sun" : "mon-fri";
-  const slots = (baseline as Record<string, Json>)[dayKey];
+  const table = baseline as Record<string, Json>;
+  // Weekend fallback (2026-08-23). Only 2 of 18 food spots carry a `sat-sun`
+  // block — the Phase 1 food baselines were captured as weekday patterns — so
+  // on Saturday and Sunday sixteen open venues fell through to "No recent
+  // data", which is the one outcome §4.3's baseline-as-primary amendment
+  // exists to prevent. Falling back to the weekday pattern uses Alan's own
+  // observed data rather than a guess, and the row still says "typically", so
+  // nothing is dressed up as a live reading.
+  //
+  // Known bias, deliberately accepted: campus weekends are QUIETER than
+  // weekdays, so a borrowed weekday value errs toward reporting a place busier
+  // than it is. That direction is the safe one — it may send a student
+  // elsewhere unnecessarily, never into a queue we implied was short. Real
+  // `sat-sun` values replace this per spot the moment Alan supplies them; no
+  // code change needed, because a present block always wins.
+  const slots =
+    table[dayKey] ?? (dayKey === "sat-sun" ? table["mon-fri"] : undefined);
   if (typeof slots !== "object" || slots === null || Array.isArray(slots)) {
     return null;
   }
