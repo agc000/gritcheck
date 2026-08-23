@@ -383,8 +383,31 @@ a short line are different claims and "Empty" hints at closed. The hold and
 skip bands are shared because at that end the two questions converge — a full
 room and a long line are the same instruction: go elsewhere.
 
-*`No recent data` is unchanged and still correct for its one case: no live
-reading AND no baseline covering that day-part (§4.4).* Verdict word + color; details live in the detail view.
+*Amended 2026-08-23 (Alan): **`No recent data` is retired from the UI.** When
+there is no live reading and no baseline for the day-part, the row shows the
+middle band — `In between`, with `typically` beneath — and the map dot takes the
+matching amber.*
+
+*The reasoning reverses the earlier call and is worth keeping. The honesty this
+product owes a student is about **how old a live report is**, not about the
+provenance of the typical pattern. The baselines are Alan's own observations
+from prior semesters: that IS the data, not a placeholder awaiting real data,
+and the `typically` qualifier already tells the reader they are looking at a
+pattern rather than a report. `No recent data` answered a question nobody asked
+— "is this live?" — with a phrase that reads as "we know nothing about this
+place", understating what we know and leaving a row a student cannot act on.*
+
+*`normal` is the chosen default precisely because it is the middle band: it
+neither promises a short line nor warns of one. A real baseline always wins,
+since the fallback is only reached when none exists — so filling baselines
+still improves the answer, it just no longer gates having one.*
+
+*Weekend fallback, same date: only 2 of 18 food spots carried a `sat-sun`
+block, so every Saturday and Sunday sixteen open venues fell through. A missing
+`sat-sun` now borrows `mon-fri`. Known bias, accepted: campus weekends run
+quieter, so a borrowed weekday value errs toward reporting a place busier than
+it is — the safe direction, since it may send a student elsewhere
+unnecessarily but never into a line we implied was short.* Verdict word + color; details live in the detail view.
 
 *Amended 2026-08-04 (Alan, baseline-as-primary): with no live data a row now
 reads **`Empty` / `In between` / `Full`** with **`typically`** in small text

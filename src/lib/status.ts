@@ -166,10 +166,13 @@ export function liveVerdict(item: SpotListItem, now: Date): Verdict | null {
  * a second copy of "what colour is this spot" would drift, which is the whole
  * reason `liveVerdict` was exported in the first place.
  *
- * Note it never returns "hold" for ignorance. `getVerdict` falls through to
- * `No recent data` with a hold tone, which is right for a row (the word carries
- * the meaning) and wrong for a dot (an amber dot with no word beside it is an
- * amber claim). Unknown must stay colourless on the map.
+ * Mirrors `getVerdict` exactly, including its `normal` fallback when no
+ * baseline covers this day-part (amended 2026-08-23). An earlier version
+ * deliberately returned null there, on the reasoning that an amber dot with no
+ * word beside it is an unearned claim — but now that the ROW says "In between"
+ * for that case, a colourless dot would put the map and the list back into
+ * disagreement about the same spot, which is the exact bug this function was
+ * written to end.
  */
 export function expectedTone(
   item: SpotListItem,
@@ -180,7 +183,10 @@ export function expectedTone(
   if (live) return live.tone === "closed" ? null : live.tone;
   const typical = baselineWord(item.baseline, now);
   const mapped = typical ? BASELINE_VERDICTS[typical] : undefined;
-  return mapped ? (mapped[1] as Exclude<Tone, "closed">) : null;
+  // Same `normal` fallback the row uses — an open spot the list calls
+  // "In between" must not be a colourless dot, or the map and the list are
+  // back to disagreeing about the same spot.
+  return (mapped?.[1] ?? BASELINE_VERDICTS["normal"][1]) as Exclude<Tone, "closed">;
 }
 
 export function getVerdict(item: SpotListItem, now: Date): Verdict {
@@ -214,7 +220,23 @@ export function getVerdict(item: SpotListItem, now: Date): Verdict {
     };
   }
 
-  // Genuinely nothing known for this spot at this hour — no live data and no
-  // baseline covering this day-part. Saying so is still the right answer.
-  return { word: "No recent data", tone: "hold", fresh: null, freshTone: "faint" };
+  // No live reading and no baseline for this day-part. Falls back to the middle
+  // band rather than "No recent data" (Alan, 2026-08-23).
+  //
+  // The reasoning, because it reverses an earlier call: the honesty this app
+  // owes the reader is about **how old a live report is**, not about where the
+  // typical pattern came from. Every baseline here is Alan's observation from
+  // prior semesters — that IS the data, not a placeholder standing in for it,
+  // and "typically" already tells the reader they are looking at a pattern
+  // rather than a report. "No recent data" was answering a question nobody
+  // asked (is this live?) with a word that reads as "we know nothing about
+  // this place", which understates what we know and leaves a row that cannot
+  // be acted on.
+  //
+  // `normal` is the deliberate default: it is the middle band, so it neither
+  // promises a short line nor warns of one. Filling a real baseline for the
+  // spot always wins over it, since this branch is only reached when none
+  // exists.
+  const [word, tone] = BASELINE_VERDICTS["normal"];
+  return { word, tone, fresh: "typically", freshTone: "faint", freshMono: false };
 }
