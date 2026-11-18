@@ -7,9 +7,11 @@ import { SpotViewTracker } from "@/components/SpotViewTracker";
 import { InlineUpdatePrompt } from "@/components/InlineUpdatePrompt";
 import { LegalFooter } from "@/components/LegalFooter";
 import { LiveRefresh } from "@/components/LiveRefresh";
+import { PausedNotice } from "@/components/PausedNotice";
 import { SpotStatusCard } from "@/components/SpotStatusCard";
 import { UpdateSheet } from "@/components/UpdateSheet";
 import { CHIPS_BY_CATEGORY } from "@/lib/filters";
+import { isPaused } from "@/lib/paused";
 import { zoneName } from "@/lib/spot-name";
 import { getSpotDetail } from "@/lib/spots";
 import { formatMinutes } from "@/lib/time";
@@ -73,6 +75,8 @@ export default async function SpotPage({
 
   const { item, comments, nowMs } = detail;
   const now = new Date(nowMs);
+  // Paused mode: no write affordances and no unmoderated comment text.
+  const paused = isPaused();
 
   const hoursToday = item.hours
     .filter((h) => h.dayOffset === 0)
@@ -179,7 +183,7 @@ export default async function SpotPage({
         </section>
       )}
 
-      {comments.length > 0 && (
+      {!paused && comments.length > 0 && (
         <section className="mt-5 border-t border-line pt-4">
           <h2 className="text-xs font-extrabold uppercase tracking-[0.09em] text-muted">
             Recent comments
@@ -200,7 +204,7 @@ export default async function SpotPage({
       )}
 
       <section className="mt-6">
-        <InlineUpdatePrompt slug={item.slug} />
+        {paused ? <PausedNotice /> : <InlineUpdatePrompt slug={item.slug} />}
       </section>
 
       {/* §9 trademark posture: the unofficial disclaimer ships on the SSR
@@ -213,10 +217,10 @@ export default async function SpotPage({
       {/* Viewing a detail makes this spot the session's follow-up candidate;
           the prompt itself can fire here or on the map page. */}
       <SpotViewTracker id={item.id} slug={item.slug} name={item.name} />
-      <FollowUpPrompt />
+      {!paused && <FollowUpPrompt />}
       {/* Update flow preset to this spot (single-item mount: no picker). */}
-      <UpdateSheet items={[item]} />
-      <LiveRefresh />
+      {!paused && <UpdateSheet items={[item]} />}
+      {!paused && <LiveRefresh />}
     </main>
   );
 }

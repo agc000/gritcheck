@@ -22,7 +22,14 @@ const SNAP_FULL = 0.9;
 // to answer "has hydration happened", no subscription involved.
 const emptySubscribe = () => () => {};
 
-export function Sheet({ children }: { children: React.ReactNode }) {
+export function Sheet({
+  children,
+  canUpdate = true,
+}: {
+  children: React.ReactNode;
+  /** false in paused mode (src/lib/paused.ts): no Update FAB. */
+  canUpdate?: boolean;
+}) {
   const [snap, setSnap] = useState<number | string | null>(SNAP_DEFAULT);
   // SSR strategy (PSI audit 2026-07-13): vaul/Radix only render drawer
   // content client-side (portal or not), which kept the entire sheet out of
@@ -86,7 +93,7 @@ export function Sheet({ children }: { children: React.ReactNode }) {
     <>
       {/* Inside the sheet so it rides the edge through every snap and drag —
           §4.2 "riding above the sheet edge". */}
-      <UpdateButton />
+      {canUpdate && <UpdateButton />}
       {/* Recenter: utility control, so ink-on-dark, not gold (§4.1 — gold is
           signal only). Mirrors the FAB on the left edge. */}
       <button

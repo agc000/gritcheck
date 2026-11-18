@@ -4,10 +4,12 @@ import { FollowUpPrompt } from "@/components/FollowUpPrompt";
 import { LegalFooter } from "@/components/LegalFooter";
 import { MapCanvas } from "@/components/MapCanvas";
 import { LiveRefresh } from "@/components/LiveRefresh";
+import { PausedNotice } from "@/components/PausedNotice";
 import { Sheet } from "@/components/Sheet";
 import { SpotBrowser } from "@/components/SpotBrowser";
 import { UpdateSheet } from "@/components/UpdateSheet";
 import { buildingKey, type CampusBuilding } from "@/lib/buildings";
+import { isPaused } from "@/lib/paused";
 import { getSpotList } from "@/lib/spots";
 import { expectedTone, liveVerdict, type Tone } from "@/lib/status";
 
@@ -16,6 +18,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const { items, nowMs, error } = await getSpotList();
+  const paused = isPaused();
 
   // One map label per *building*, not per spot — the Commons alone holds ~10
   // vendors on one roof (§4.2: buildings are the tap targets). Anchor at the
@@ -154,7 +157,8 @@ export default async function Home() {
   return (
     <main className="fixed inset-0 bg-map-bg">
       <MapCanvas buildings={buildings} />
-      <Sheet>
+      <Sheet canUpdate={!paused}>
+        {paused && <PausedNotice className="mx-5 mt-1 mb-3" />}
         {error ? (
           <p className="px-5 py-4 text-sm text-skip">
             Failed to load spots: {error}
@@ -175,11 +179,11 @@ export default async function Home() {
         </div>
       </Sheet>
       {/* Modal update flow; portals to <body>, opened by the FAB's event. */}
-      {!error && <UpdateSheet items={items} />}
+      {!error && !paused && <UpdateSheet items={items} />}
       {/* Realtime: any INSERT on updates re-pulls server data (idle-gated). */}
-      <LiveRefresh />
+      {!paused && <LiveRefresh />}
       {/* One-per-session "Did X pan out?" bar (§4.2). */}
-      <FollowUpPrompt />
+      {!paused && <FollowUpPrompt />}
     </main>
   );
 }

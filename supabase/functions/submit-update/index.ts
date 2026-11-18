@@ -120,6 +120,16 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return json(405, { error: "POST only" }, origin);
   }
+  // Paused mode (src/lib/paused.ts): the UI hides every report entry point,
+  // but cached PWA shells and direct POSTs would still reach here. Refuse
+  // before touching the DB. Resume: supabase secrets unset PAUSED.
+  if (Deno.env.get("PAUSED") === "true") {
+    return json(
+      503,
+      { error: "GritCheck is paused. Live reports are off right now." },
+      origin,
+    );
+  }
 
   let raw: unknown;
   try {
