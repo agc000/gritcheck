@@ -107,7 +107,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      // Seasonal palette: "original" all year, "christmas" in December.
+      // Seasonal palette: "christmas" Nov 18 to Dec 31, "original" otherwise.
       data-theme={activeTheme()}
       className={`${figtree.variable} ${splineMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
