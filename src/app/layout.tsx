@@ -5,6 +5,7 @@ import { InstallPrompt } from "@/components/InstallPrompt";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import { OpenTracker } from "@/components/OpenTracker";
 import { SwRegister } from "@/components/SwRegister";
+import { activeTheme } from "@/lib/theme";
 import "./globals.css";
 
 // UI type is Avenir Next (§4.1, amended 2026-07-10) — an Apple system font
@@ -106,6 +107,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      // Seasonal palette: "original" all year, "christmas" in December.
+      data-theme={activeTheme()}
       className={`${figtree.variable} ${splineMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">

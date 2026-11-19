@@ -10,7 +10,8 @@
 @theme {
   --color-*: initial;
 
-  /* Navy palette per §4.1 (amended 2026-07-11): UMBC-dining navy sheet,
+  /* ORIGINAL GRITCHECK — the default palette, all year (src/lib/theme.ts).
+     Navy palette per §4.1 (amended 2026-07-11): UMBC-dining navy sheet,
      light-on-dark neutrals, status colors brightened for dark surfaces. */
   --color-black: #121110;
   --color-map-bg: #191813;
@@ -53,6 +54,27 @@
   --radius-control: 6px;
 
   /* Spacing stays on Tailwind's default 4px grid. */
+}
+
+/*
+ * CHRISTMAS GRITCHECK — December only (src/lib/theme.ts sets
+ * <html data-theme="christmas">). Navy surfaces become evergreen, ink becomes
+ * snow. Gold stays (it's the star on the tree, and it's the signal), and
+ * go/hold/skip/closed are untouched: red is already "skip", so it is NOT used
+ * as festive decoration. Contrast computed 2026-11-18 on --sheet: ink 14.59,
+ * muted 7.93 (6.92 on --soft), faint 6.21, closed 6.24, go 6.17, hold 6.44,
+ * skip 4.52, gold 10.08, mustard 6.75 (5.21 on the gold-soft wash) — all
+ * clear 4.5:1. Map, icons, OG cards and the crash page stay Original.
+ */
+html[data-theme="christmas"] {
+  --color-black: #0b1510;
+  --color-sheet: #0f2419;
+  --color-soft: #15301f;
+  --color-line: #1e3e2b;
+  --color-ink: #f5f2ea;
+  --color-muted: #a8b9ad;
+  --color-faint: #8fa596;
+  --color-closed: #94a499;
 }
 
 @layer base {
