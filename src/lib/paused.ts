@@ -13,4 +13,4 @@ export function isPaused(): boolean {
 }
 
 export const PAUSED_MESSAGE =
-  "GritCheck is paused. Live reports are off because I can’t moderate them right now. The map and spot info still work. For hours, check UMBC Dining and the library’s site.";
+  "GritCheck is paused. Live reports are off as they cannot be moderated at the moment. Map and spot info still work, and hours will be updated shortly.";
