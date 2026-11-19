@@ -126,7 +126,8 @@ export function Sheet({
           page overscroll. Outside the scroll container, so it drags at any
           scroll position. */}
       <div className="shrink-0 touch-none pt-2.5 pb-2.5" aria-hidden>
-        <div className="mx-auto h-1 w-9 rounded-full bg-line" />
+        {/* seasonal-grabber: candy cane in the Christmas theme (globals.css). */}
+        <div className="seasonal-grabber mx-auto h-1 w-9 rounded-full bg-line" />
       </div>
       {/* Scroll the list at the default AND full snaps — only lock it at the
           peek sliver, where the gesture should expand the sheet, not scroll. */}
@@ -151,7 +152,7 @@ export function Sheet({
   );
 
   const sheetClasses =
-    "fixed inset-x-0 bottom-0 z-10 flex h-full max-h-[97%] flex-col rounded-t-sheet bg-sheet text-ink outline-none";
+    "seasonal-trim fixed inset-x-0 bottom-0 z-10 flex h-full max-h-[97%] flex-col rounded-t-sheet bg-sheet text-ink outline-none";
   // Twin positions with top/bottom, NOT a transform: transform-positioned
   // fixed elements failed to rasterize in headless/software-GL renderers
   // (laid out + hit-testable but zero pixels — and Lighthouse runs the same

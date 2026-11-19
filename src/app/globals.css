@@ -58,23 +58,64 @@
 
 /*
  * CHRISTMAS GRITCHECK — Nov 18 to Dec 31 (src/lib/theme.ts sets
- * <html data-theme="christmas">). Navy surfaces become evergreen, ink becomes
- * snow. Gold stays (it's the star on the tree, and it's the signal), and
- * go/hold/skip/closed are untouched: red is already "skip", so it is NOT used
- * as festive decoration. Contrast computed 2026-11-18 on --sheet: ink 14.59,
- * muted 7.93 (6.92 on --soft), faint 6.21, closed 6.24, go 6.17, hold 6.44,
- * skip 4.52, gold 10.08, mustard 6.75 (5.21 on the gold-soft wash) — all
- * clear 4.5:1. Map, icons, OG cards and the crash page stay Original.
+ * <html data-theme="christmas">). Evergreen surfaces, snow ink, icy-blue
+ * secondary text and frost dividers; a strand of lights (red, gold, ice blue,
+ * white) along the top of the sheet and spot pages; a candy-cane drag handle.
+ *
+ * Red and white appear ONLY as decoration shapes (bulbs, stripes), never as
+ * text or fills — red text already means "skip". Gold and go/hold/skip/closed
+ * are untouched. Contrast (computed 2026-11-18, on --sheet): ink 14.59, muted
+ * 9.71 (8.47 on --soft), faint 7.30, closed 6.24, go 6.17, hold 6.44, skip
+ * 4.52, gold 10.08, mustard 6.75 — all clear 4.5:1. Logo, map, icons, OG
+ * cards and the crash page stay Original.
  */
 html[data-theme="christmas"] {
   --color-black: #0b1510;
   --color-sheet: #0f2419;
   --color-soft: #15301f;
-  --color-line: #1e3e2b;
-  --color-ink: #f5f2ea;
-  --color-muted: #a8b9ad;
-  --color-faint: #8fa596;
+  --color-line: #24463f; /* frost: green leaning blue */
+  --color-ink: #f5f2ea; /* snow */
+  --color-muted: #a9cde0; /* ice blue */
+  --color-faint: #8db3c6;
   --color-closed: #94a499;
+}
+
+/* String of lights. .seasonal-trim marks the sheet panel and the spot page;
+   it does nothing outside the Christmas theme. Pure CSS, pointer-events off,
+   absolutely positioned — no layout shift, nothing to tap by accident. */
+html[data-theme="christmas"] .seasonal-trim::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 18px;
+  right: 18px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 7px 5px, #e8434f 0 3.5px, transparent 4px) 0 0 / 56px 10px repeat-x,
+    radial-gradient(circle at 21px 5px, #ffc20e 0 3.5px, transparent 4px) 0 0 / 56px 10px repeat-x,
+    radial-gradient(circle at 35px 5px, #8fd3f4 0 3.5px, transparent 4px) 0 0 / 56px 10px repeat-x,
+    radial-gradient(circle at 49px 5px, #f5f2ea 0 3.5px, transparent 4px) 0 0 / 56px 10px repeat-x,
+    linear-gradient(#3a5a48, #3a5a48) 0 4.5px / 100% 1px no-repeat;
+  filter: drop-shadow(0 0 3px rgba(255, 240, 200, 0.35));
+}
+
+/* Spot pages: hang the strand just under the iOS status bar (the installed
+   PWA paints beneath it), above the back button. */
+html[data-theme="christmas"] main.seasonal-trim::before {
+  top: max(2px, calc(env(safe-area-inset-top) - 2px));
+}
+
+/* Candy-cane drag handle. */
+html[data-theme="christmas"] .seasonal-grabber {
+  height: 5px;
+  width: 44px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #e8434f 0 5px,
+    #f5f2ea 5px 10px
+  );
 }
 
 @layer base {

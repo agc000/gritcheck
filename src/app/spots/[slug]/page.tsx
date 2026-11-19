@@ -97,7 +97,7 @@ export default async function SpotPage({
   return (
     // w-full matters: body is a flex column, and mx-auto on a flex item
     // otherwise collapses the page to fit-content width.
-    <main className="animate-page-enter mx-auto min-h-dvh w-full max-w-lg bg-sheet px-4.5 pb-10 text-ink">
+    <main className="seasonal-trim relative animate-page-enter mx-auto min-h-dvh w-full max-w-lg bg-sheet px-4.5 pb-10 text-ink">
       {/* Clears the iOS status bar. layout.tsx sets statusBarStyle
           'black-translucent' + viewportFit 'cover', so in the installed PWA the
           page paints UNDER the notch/Dynamic Island (47–59px). Every map overlay
